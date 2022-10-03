@@ -1,0 +1,14 @@
+## MYSQL ##
+datasource:
+  url: jdbc:mysql://geeksasaeng.c9twbcv7lrn6.ap-northeast-2.rds.amazonaws.com/geeksasaeng_db
+  username: geeksasaeng
+  password: rlrtktod12
+  driver-class-name: com.mysql.cj.jdbc.Driver
+
+## JWT SECRET ##
+secret:
+    jwt_secret_key: dsafdfasdfsdasew2r-*k.ap9kje-wxBHb9wdXsdgsadgsdaerwrqwer-Nu
+
+## serverName ##
+server:
+  url: libertyform_api.shop
