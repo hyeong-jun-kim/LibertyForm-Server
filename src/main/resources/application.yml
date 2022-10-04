@@ -1,9 +1,18 @@
-## MYSQL ##
-datasource:
-  url: jdbc:mysql://geeksasaeng.c9twbcv7lrn6.ap-northeast-2.rds.amazonaws.com/geeksasaeng_db
-  username: geeksasaeng
-  password: rlrtktod12
-  driver-class-name: com.mysql.cj.jdbc.Driver
+spring:
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+
+  ## MYSQL
+  datasource:
+    url: jdbc:mysql://210.109.63.18:10011
+    username: admin
+    password: 1q2w3e4r!
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  logging:
+    level:
+      org.hibernate.SQL:debug
 
 ## JWT SECRET ##
 secret:
