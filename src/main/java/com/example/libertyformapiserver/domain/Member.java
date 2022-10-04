@@ -1,6 +1,7 @@
 package com.example.libertyformapiserver.domain;
 
 import com.example.libertyformapiserver.config.domain.BaseEntity;
+import com.example.libertyformapiserver.config.status.EmailValidStatus;
 import com.example.libertyformapiserver.config.status.MemberType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,9 +20,7 @@ public class Member extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "email_id")
-    private Email email;
+    private String email;
 
     private String password;
 
@@ -29,4 +28,14 @@ public class Member extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     private MemberType member_type;
+
+    @Enumerated(EnumType.STRING)
+    private EmailValidStatus email_valid_status;
+
+    // 연관 관계 편의 메서드
+    public Member(String email, String password, String name){
+        this.email = email;
+        this.password = password;
+        this.name = name;
+    }
 }
