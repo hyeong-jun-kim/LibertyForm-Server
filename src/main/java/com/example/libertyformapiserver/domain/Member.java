@@ -19,8 +19,7 @@ public class Member extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @ManyToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name = "id")
+    @OneToOne(mappedBy = "member")
     private Email email;
 
     private String password;

@@ -2,7 +2,6 @@ package com.example.libertyformapiserver.domain;
 
 import com.example.libertyformapiserver.config.domain.BaseEntity;
 import com.example.libertyformapiserver.config.status.EmailValidStatus;
-import com.example.libertyformapiserver.domain.Member;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -20,7 +19,8 @@ public class Email extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @OneToOne(mappedBy = "member")
+    @OneToOne
+    @JoinColumn(name = "member_id")
     private Member member;
 
     private String address;
