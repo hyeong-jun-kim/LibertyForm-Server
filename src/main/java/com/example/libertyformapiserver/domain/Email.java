@@ -19,8 +19,7 @@ public class Email extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @OneToOne
-    @JoinColumn(name = "member_id")
+    @OneToOne(mappedBy = "email")
     private Member member;
 
     private String address;
