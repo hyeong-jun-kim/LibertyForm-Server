@@ -5,6 +5,7 @@ import com.example.libertyformapiserver.utils.jwt.JwtService;
 import com.example.libertyformapiserver.utils.jwt.NoIntercept;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.autoconfigure.web.servlet.error.BasicErrorController;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 
@@ -20,7 +21,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception{
         // @NoIntercept -> not apply intercept
-        boolean check = checkAnnotation(handler, NoIntercept.class);
+        boolean check = checkNoIntercept(handler, NoIntercept.class);
         if(check) return true;
 
         LinkedHashMap jwtInfo = jwtService.getJwtInfo();
@@ -29,7 +30,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
         return true;
     }
 
-    private boolean checkAnnotation(Object handler, Class c){
+    private boolean checkNoIntercept(Object handler, Class c){
         HandlerMethod handlerMethod = (HandlerMethod) handler;
         if(handlerMethod.getMethodAnnotation(c) != null){
             return true;

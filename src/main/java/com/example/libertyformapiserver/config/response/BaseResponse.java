@@ -1,5 +1,6 @@
 package com.example.libertyformapiserver.config.response;
 
+import com.example.libertyformapiserver.advice.GlobalExceptionAdvice;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
@@ -31,5 +32,13 @@ public class BaseResponse<T> {
         this.isSuccess = status.isSuccess();
         this.message = status.getMessage();
         this.code = status.getCode();
+    }
+
+    // @Valid 예외 처리
+    public BaseResponse(ErrorResponse errorResponse){
+        BaseResponseStatus status = BaseResponseStatus.VALIDATED_ERROR;
+        this.isSuccess = status.isSuccess();
+        this.code = status.getCode();
+        this.message = errorResponse.getMessage();
     }
 }

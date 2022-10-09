@@ -1,6 +1,7 @@
 package com.example.libertyformapiserver.domain;
 
 import com.example.libertyformapiserver.config.domain.BaseEntity;
+import com.example.libertyformapiserver.config.status.BaseStatus;
 import com.example.libertyformapiserver.config.status.EmailValidStatus;
 import com.example.libertyformapiserver.config.status.MemberType;
 import lombok.AllArgsConstructor;
@@ -37,5 +38,9 @@ public class Member extends BaseEntity {
         this.email = email;
         this.password = password;
         this.name = name;
+    }
+
+    public void changeStatusActive(){
+        super.setStatus(BaseStatus.ACTIVE);
     }
 }

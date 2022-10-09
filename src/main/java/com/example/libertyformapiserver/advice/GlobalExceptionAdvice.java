@@ -3,6 +3,8 @@ package com.example.libertyformapiserver.advice;
 import com.example.libertyformapiserver.config.exception.BaseException;
 import com.example.libertyformapiserver.config.response.BaseResponse;
 import com.example.libertyformapiserver.config.response.BaseResponseStatus;
+import com.example.libertyformapiserver.config.response.ErrorResponse;
+import com.example.libertyformapiserver.utils.jwt.NoIntercept;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -24,26 +26,16 @@ import java.net.URISyntaxException;
 public class GlobalExceptionAdvice {
     private final MessageSource ms;
 
-    @Getter
-    public class ErrorResponse {
-        String message;
-
-        public ErrorResponse(String message) {
-            this.message = message;
-        }
-    }
-
-    @ExceptionHandler(MethodNotAllowedException.class)
+    // @Valid 예외처리
+    @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse MemberNotFoundException(MethodArgumentNotValidException exception) {
+    public BaseResponse<ErrorResponse> MemberNotFoundException(MethodArgumentNotValidException exception) {
         BindingResult bindingResult = exception.getBindingResult();
         String[] codes = bindingResult.getAllErrors().get(0).getCodes();
-        for (String code : codes) {
-            System.out.println("code = " + code);
-        }
 
         String code = codes[1];
-        return new ErrorResponse(ms.getMessage(code, null, null));
+        ErrorResponse errorResponse = new ErrorResponse(code);
+        return new BaseResponse<>(errorResponse);
     }
 
     @ExceptionHandler(BaseException.class)
