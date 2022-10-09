@@ -12,7 +12,7 @@ import java.util.Arrays;
 
 // Swagger local, remote 설정을 위한 스웨거 필터 클래스
 @Component
-public class Workaround implements WebMvcOpenApiTransformationFilter {
+public class WorkaroundFilter implements WebMvcOpenApiTransformationFilter {
 
     @Override
     public OpenAPI transform(OpenApiTransformationContext<HttpServletRequest> context) {

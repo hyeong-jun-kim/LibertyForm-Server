@@ -7,6 +7,8 @@ import com.example.libertyformapiserver.dto.member.post.PostRegisterReq;
 import com.example.libertyformapiserver.dto.member.post.PostRegisterRes;
 import com.example.libertyformapiserver.repository.MemberRepository;
 import com.example.libertyformapiserver.utils.encrypt.SHA256;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
