@@ -22,6 +22,6 @@ public class AppConfig implements WebMvcConfigurer {
         registry.addInterceptor(new AuthenticationInterceptor(jwtService, objectMapper))
                 .order(0) // order는 인터셉터의 우선 순위를 정의한다.
                 .addPathPatterns("/**")
-                .excludePathPatterns("/swagger-ui/**", "/swagger-resources/**", "/v2/api-docs");
+                .excludePathPatterns("/swagger-ui/**", "/swagger-resources/**", "/v3/api-docs");
     }
 }
