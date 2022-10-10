@@ -8,12 +8,10 @@ import com.example.libertyformapiserver.utils.jwt.NoIntercept;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/login")
@@ -36,5 +34,21 @@ public class LoginController {
     public BaseResponse<PostLoginRes> login(@Validated @RequestBody PostLoginReq dto){
         PostLoginRes postLoginRes = loginService.login(dto);
         return new BaseResponse<>(postLoginRes);
+    }
+
+    // 카카오 로그인 후 accessToken 받기 (테스트 용)
+    @GetMapping("/kakao/accessToken")
+    @NoIntercept
+    public void kakaoCallback(@RequestParam String code){
+        System.out.println("Kakao accessCode:" + code);
+        loginService.getKakaoAccessToken(code);
+    }
+
+    // 카카오 로그인
+    @PostMapping("/kakao")
+    @NoIntercept
+    public void kakaoLogin(@RequestBody String accessToken){
+        loginService.getKakaoUserInfo(accessToken);
+        // TODO jwt 및 사용자 정보 반환
     }
 }
