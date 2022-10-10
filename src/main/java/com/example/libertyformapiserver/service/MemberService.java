@@ -34,6 +34,7 @@ public class MemberService {
 
         dto.setPassword(SHA256.encrypt(dto.getPassword()));
         Member member = dto.toEntity(dto.getEmail(), dto.getPassword(), dto.getName());
+        member.changeStatusActive();
         memberRepository.save(member);
         PostRegisterRes postRegisterRes = PostRegisterRes.toDto(member);
         return postRegisterRes;

@@ -56,6 +56,7 @@ public class LoginService {
                 .jwt(jwt)
                 .email(member.getEmail())
                 .name(member.getName())
+                .memberType(member.getMember_type())
                 .build();
     }
 
