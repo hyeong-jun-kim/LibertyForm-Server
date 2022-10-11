@@ -10,7 +10,7 @@ import springfox.documentation.spi.DocumentationType;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
 
-// Swagger local, remote 설정을 위한 스웨거 필터 클래스
+// Swagger3 local, remote 설정을 위한 스웨거 필터 클래스
 @Component
 public class WorkaroundFilter implements WebMvcOpenApiTransformationFilter {
 

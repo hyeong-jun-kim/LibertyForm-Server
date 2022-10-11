@@ -24,6 +24,8 @@ public enum BaseResponseStatus {
     NOT_EXIST_EMAIL(false, 2006, "존재하지 않는 이메일 입니다."),
     INVALID_PASSWORD(false, 2007, "비밀번호가 일치하지 않습니다."),
     INACTIVE_STATUS(false, 2008, "삭제된 데이터입니다."),
+    KAKAO_TOKEN_ERROR(false, 2009, "카카오 토큰을 받아오는 수행 작업 중에 오류가 발생했습니다."),
+    KAKAO_LOGIN_ERROR(false, 2009, "카카오 로그인을 시도하는 중에 오류가 발생했습니다."),
     /**
      * 3000 : Response 오류
      */
