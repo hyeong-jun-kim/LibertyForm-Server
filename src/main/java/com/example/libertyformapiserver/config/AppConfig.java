@@ -1,7 +1,7 @@
 package com.example.libertyformapiserver.config;
 
 import com.example.libertyformapiserver.interceptor.AuthenticationInterceptor;
-import com.example.libertyformapiserver.utils.jwt.JwtService;
+import com.example.libertyformapiserver.controller.jwt.JwtService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

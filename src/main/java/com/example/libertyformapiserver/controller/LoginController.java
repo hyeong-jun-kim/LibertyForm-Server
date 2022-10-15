@@ -5,7 +5,7 @@ import com.example.libertyformapiserver.dto.login.kakao.post.PostKakaoLoginReq;
 import com.example.libertyformapiserver.dto.login.post.PostLoginReq;
 import com.example.libertyformapiserver.dto.login.post.PostLoginRes;
 import com.example.libertyformapiserver.service.LoginService;
-import com.example.libertyformapiserver.utils.jwt.NoIntercept;
+import com.example.libertyformapiserver.controller.jwt.NoIntercept;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;

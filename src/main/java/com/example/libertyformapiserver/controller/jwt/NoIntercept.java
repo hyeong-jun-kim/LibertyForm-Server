@@ -1,4 +1,4 @@
-package com.example.libertyformapiserver.utils.jwt;
+package com.example.libertyformapiserver.controller.jwt;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

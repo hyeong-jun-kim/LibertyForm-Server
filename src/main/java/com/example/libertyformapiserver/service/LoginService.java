@@ -10,7 +10,7 @@ import com.example.libertyformapiserver.dto.login.post.PostLoginRes;
 import com.example.libertyformapiserver.dto.member.kakao.post.PostKakaoRegisterReq;
 import com.example.libertyformapiserver.repository.MemberRepository;
 import com.example.libertyformapiserver.utils.encrypt.SHA256;
-import com.example.libertyformapiserver.utils.jwt.JwtService;
+import com.example.libertyformapiserver.controller.jwt.JwtService;
 import com.example.libertyformapiserver.utils.kakao.KakaoTokenDTO;
 import com.example.libertyformapiserver.utils.kakao.KakaoUserDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -21,7 +21,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.Optional;
 
 import static com.example.libertyformapiserver.config.response.BaseResponseStatus.*;
 
@@ -61,6 +60,7 @@ public class LoginService {
     }
 
     // access_token을 사용해서 카카오 로그인
+    @Transactional(readOnly = false)
     public PostLoginRes kakaoLogin(PostKakaoLoginReq dto) {
         // access_token request
         String accessToken = dto.getAccessToken();
@@ -97,7 +97,7 @@ public class LoginService {
             // login
             // 사용자가 존재하지 않으면 회원가입 후 멤버 반환
             Member member = memberRepository.findMemberByEmail(kakaoUserDTO.getKakao_account().getEmail())
-                    .orElse(memberService.registerKakaoMember(kakaoRegisterReqDTO));
+                        .orElseGet(() -> memberService.registerKakaoMember(kakaoRegisterReqDTO));
 
             checkUserActive(member);
 

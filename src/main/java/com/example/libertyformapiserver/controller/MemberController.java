@@ -4,7 +4,7 @@ import com.example.libertyformapiserver.config.response.BaseResponse;
 import com.example.libertyformapiserver.dto.member.post.PostRegisterReq;
 import com.example.libertyformapiserver.dto.member.post.PostRegisterRes;
 import com.example.libertyformapiserver.service.MemberService;
-import com.example.libertyformapiserver.utils.jwt.NoIntercept;
+import com.example.libertyformapiserver.controller.jwt.NoIntercept;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -14,8 +14,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/members")

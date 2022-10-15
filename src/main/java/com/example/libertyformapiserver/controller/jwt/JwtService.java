@@ -1,4 +1,4 @@
-package com.example.libertyformapiserver.utils.jwt;
+package com.example.libertyformapiserver.controller.jwt;
 
 import com.example.libertyformapiserver.config.exception.BaseException;
 import com.example.libertyformapiserver.config.response.BaseResponseStatus;

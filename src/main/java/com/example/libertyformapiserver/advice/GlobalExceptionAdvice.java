@@ -4,9 +4,6 @@ import com.example.libertyformapiserver.config.exception.BaseException;
 import com.example.libertyformapiserver.config.response.BaseResponse;
 import com.example.libertyformapiserver.config.response.BaseResponseStatus;
 import com.example.libertyformapiserver.config.response.ErrorResponse;
-import com.example.libertyformapiserver.utils.jwt.NoIntercept;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.MessageSource;
@@ -16,9 +13,6 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.server.MethodNotAllowedException;
-
-import java.net.URISyntaxException;
 
 @Slf4j
 @RequiredArgsConstructor
