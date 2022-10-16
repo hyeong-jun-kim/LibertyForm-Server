@@ -85,7 +85,6 @@ public class LoginService {
                 result += line;
             }
             System.out.println("response body : " + result);
-
             ObjectMapper objectMapper = new ObjectMapper();
             KakaoUserDTO kakaoUserDTO = objectMapper.readValue(result, KakaoUserDTO.class);
             br.close();
@@ -93,11 +92,10 @@ public class LoginService {
             String email = kakaoUserDTO.getKakao_account().getEmail();
             String name = kakaoUserDTO.getKakao_account().getProfile().getNickname();
             PostKakaoRegisterReq kakaoRegisterReqDTO = new PostKakaoRegisterReq(email, name);
-
             // login
             // 사용자가 존재하지 않으면 회원가입 후 멤버 반환
             Member member = memberRepository.findMemberByEmail(kakaoUserDTO.getKakao_account().getEmail())
-                        .orElseGet(() -> memberService.registerKakaoMember(kakaoRegisterReqDTO));
+                    .orElseGet(() -> memberService.registerKakaoMember(kakaoRegisterReqDTO));
 
             checkUserActive(member);
 

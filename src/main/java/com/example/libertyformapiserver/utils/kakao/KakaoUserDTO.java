@@ -21,6 +21,7 @@ public class KakaoUserDTO {
 
         @Getter
         @NoArgsConstructor
+        @JsonIgnoreProperties(ignoreUnknown = true)
         public class Profile {
             String nickname;
         }
