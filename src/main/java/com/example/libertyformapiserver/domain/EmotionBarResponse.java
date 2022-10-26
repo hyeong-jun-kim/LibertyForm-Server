@@ -8,17 +8,17 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
-@Entity
 @Getter
-public class LongQuestion extends BaseEntity {
+@Entity
+public class EmotionBarResponse extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     @OneToOne
-    @JoinColumn(name = "longAnswer_id")
-    private LongAnswer longAnswer;
+    @JoinColumn(name = "numbericResponseId")
+    private NumericResponse numericResponse;
 }

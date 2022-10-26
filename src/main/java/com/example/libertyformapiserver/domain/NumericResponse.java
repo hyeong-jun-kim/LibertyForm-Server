@@ -1,6 +1,7 @@
 package com.example.libertyformapiserver.domain;
 
 import com.example.libertyformapiserver.config.domain.BaseEntity;
+import com.fasterxml.jackson.databind.ser.Serializers;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -8,22 +9,23 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
-@Entity
 @Getter
-public class MultipleChoiceAnswer extends BaseEntity {
+@Entity
+public class NumericResponse extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @OneToOne
-    @JoinColumn(name = "question_id")
-    Question question;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "responseId")
+    private Response response;
 
-    @OneToOne(mappedBy = "multipleChoiceAnswer")
-    private MultipleChoiceQuestion multipleChoiceQuestion;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn
+    private Question question;
 
-    private int number;
+    private int value;
 }

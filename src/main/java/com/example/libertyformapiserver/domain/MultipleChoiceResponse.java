@@ -1,6 +1,5 @@
 package com.example.libertyformapiserver.domain;
 
-import com.example.libertyformapiserver.config.domain.BaseEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -8,19 +7,21 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
-@Entity
 @Getter
-public class MultipleChoiceQuestion extends BaseEntity {
+@Entity
+public class MultipleChoiceResponse {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @OneToOne
-    @JoinColumn(name = "multipleChoiceAnswer_id")
-    private MultipleChoiceAnswer multipleChoiceAnswer;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "response_id")
+    private Response response;
 
-    private int number;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "question_id")
+    private Question question;
 }

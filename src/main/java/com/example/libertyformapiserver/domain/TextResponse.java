@@ -8,18 +8,23 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
-@Entity
 @Getter
-public class LongAnswer extends BaseEntity {
+@Entity
+public class TextResponse extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @OneToOne(mappedBy = "longAnswer")
-    LongQuestion longQuestion;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "responseId")
+    private Response response;
 
-    String content;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "questionId")
+    private Question question;
+
+    private String value;
 }

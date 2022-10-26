@@ -8,18 +8,17 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
-@Entity
 @Getter
-public class ShortAnswer extends BaseEntity {
+@Entity
+public class LinearAlgebraResponse extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @OneToOne(mappedBy = "shortAnswer")
-    private ShortQuestion shortQuestion;
-
-    String content;
+    @OneToOne
+    @JoinColumn(name = "numbericResponseId")
+    private NumericResponse numericResponse;
 }

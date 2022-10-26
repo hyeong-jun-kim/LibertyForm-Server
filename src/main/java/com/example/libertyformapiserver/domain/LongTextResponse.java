@@ -10,19 +10,15 @@ import javax.persistence.*;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
 @Builder
 @Getter
-public class ShortQuestion extends BaseEntity {
+@Entity
+public class LongTextResponse extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     @OneToOne
-    @JoinColumn(name = "shortAnswer_id")
-    private ShortAnswer shortAnswer;
-
-    int max_length;
-
-    String placeholder;
+    @JoinColumn(name = "textResponseId")
+    private TextResponse textResponse;
 }

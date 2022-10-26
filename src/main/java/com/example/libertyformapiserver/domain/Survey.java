@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,10 +25,16 @@ public class Survey extends BaseEntity {
     @JoinColumn(name = "member_id")
     private Member member;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "question_id")
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "survey")
     private List<Question> questions = new ArrayList<>();
 
-    private String title;
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "survey")
+    private List<Response> responses = new ArrayList<>();
+
+    private String name;
+
+    private String description;
+
+    private Timestamp expirationDate;
 
 }

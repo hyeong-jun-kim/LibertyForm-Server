@@ -7,15 +7,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
 @Builder
 @Getter
-public class Question extends BaseEntity {
+@Entity
+public class Response extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -24,19 +22,7 @@ public class Question extends BaseEntity {
     @JoinColumn(name = "survey_id")
     private Survey survey;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "question_id")
-    private QuestionType questionType;
-
-    private int number;
-
-    private String name;
-
-    private String description;
-
-    private String backgroundImgUrl;
-
-    private String questionImgUrl;
-
-    private boolean answerRequired;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    private Member member;
 }
