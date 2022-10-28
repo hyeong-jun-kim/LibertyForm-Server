@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,6 +36,6 @@ public class Survey extends BaseEntity {
 
     private String description;
 
-    private Timestamp expirationDate;
+    private LocalDateTime expirationDate;
 
 }

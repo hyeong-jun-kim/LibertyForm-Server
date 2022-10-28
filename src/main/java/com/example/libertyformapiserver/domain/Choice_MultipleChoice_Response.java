@@ -13,7 +13,7 @@ import javax.persistence.*;
 @Builder
 @Getter
 @Entity
-public class Choice_MultipleChoiceResponse extends BaseEntity {
+public class Choice_MultipleChoice_Response extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
