@@ -1,8 +1,8 @@
 package com.example.libertyformapiserver.interceptor;
 
 import com.example.libertyformapiserver.dto.jwt.JwtInfo;
-import com.example.libertyformapiserver.controller.jwt.JwtService;
-import com.example.libertyformapiserver.controller.jwt.NoIntercept;
+import com.example.libertyformapiserver.jwt.JwtService;
+import com.example.libertyformapiserver.jwt.NoIntercept;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.method.HandlerMethod;

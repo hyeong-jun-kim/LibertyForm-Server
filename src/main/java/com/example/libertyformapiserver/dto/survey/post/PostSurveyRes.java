@@ -4,19 +4,20 @@ import com.example.libertyformapiserver.domain.Member;
 import com.example.libertyformapiserver.domain.Survey;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-@AllArgsConstructor
-@NoArgsConstructor
 @Getter
-@Setter
-public class PostSurveyReq {
+@Builder
+public class PostSurveyRes {
+    @ApiModelProperty(
+            example = "5"
+    )
+    private long memberId;
+
     @ApiModelProperty(
             example = "설문지 제목"
     )
@@ -33,12 +34,12 @@ public class PostSurveyReq {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
     private LocalDate expirationDate;
 
-    public Survey toEntity(Member member){
-        return Survey.builder()
-                .member(member)
-                .name(name)
-                .description(description)
-                .expirationDate(expirationDate)
+    static public PostSurveyRes toDto(Survey survey){
+        return PostSurveyRes.builder()
+                .memberId(survey.getMember().getId())
+                .name(survey.getName())
+                .description(survey.getDescription())
+                .expirationDate(survey.getExpirationDate())
                 .build();
     }
 }

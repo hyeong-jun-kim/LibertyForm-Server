@@ -1,9 +1,7 @@
-package com.example.libertyformapiserver.dto.survey.generate;
+package com.example.libertyformapiserver.dto.survey.create;
 
-import com.example.libertyformapiserver.domain.Survey;
-import com.example.libertyformapiserver.dto.question.choice.psot.PostChoiceQuestionReq;
+import com.example.libertyformapiserver.dto.question.post.PostChoiceQuestionReq;
 import com.example.libertyformapiserver.dto.question.post.PostQuestionReq;
-import com.example.libertyformapiserver.dto.question.post.PostQuestionsReq;
 import com.example.libertyformapiserver.dto.survey.post.PostSurveyReq;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -16,8 +14,8 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Setter
-public class PostGenerateSurveyReq {
-    private PostSurveyReq postSurveyReq;
+public class PostCreateSurveyReq {
+    private PostSurveyReq survey;
 
     private List<PostQuestionReq> questions;
 

@@ -26,6 +26,7 @@ public enum BaseResponseStatus {
     INACTIVE_STATUS(false, 2008, "삭제된 데이터입니다."),
     KAKAO_TOKEN_ERROR(false, 2009, "카카오 토큰을 받아오는 수행 작업 중에 오류가 발생했습니다."),
     KAKAO_LOGIN_ERROR(false, 2009, "카카오 로그인을 시도하는 중에 오류가 발생했습니다."),
+    INVALID_MEMBER(false, 2010, "존재하지 않는 유저입니다."),
     /**
      * 3000 : Response 오류
      */
@@ -34,7 +35,8 @@ public enum BaseResponseStatus {
     /**
      * 4000 : Database, Server 오류
      */
-    INTERNAL_SERVER_ERROR(false, 4000, "서버 오류입니다");
+    INTERNAL_SERVER_ERROR(false, 4000, "서버 오류입니다"),
+    NOT_VALID_QUESTION_TYPE(false, 4001, "존재하지 않는 질문 유형입니다.");
 
 
     private final boolean isSuccess;

@@ -1,15 +1,18 @@
-package com.example.libertyformapiserver.dto.question.choice.psot;
+package com.example.libertyformapiserver.dto.choice.post;
 
 import com.example.libertyformapiserver.domain.Choice;
+import com.example.libertyformapiserver.domain.Question;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Builder
-public class ChoiceVO {
+public class PostChoiceReq {
     @ApiModelProperty(
             example = "내용을 입력해주세요."
     )
@@ -20,10 +23,18 @@ public class ChoiceVO {
     )
     private int number;
 
-    public Choice toEntity(){
+    public Choice toEntity(Question question){
         return Choice.builder()
+                .question(question)
                 .name(name)
                 .number(number)
+                .build();
+    }
+
+    public PostChoiceReq toVO(Choice choice){
+        return PostChoiceReq.builder()
+                .name(choice.getName())
+                .number(choice.getNumber())
                 .build();
     }
 }

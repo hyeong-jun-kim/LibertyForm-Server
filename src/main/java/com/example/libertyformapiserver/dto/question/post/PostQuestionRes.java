@@ -4,14 +4,19 @@ import com.example.libertyformapiserver.domain.Question;
 import com.example.libertyformapiserver.domain.QuestionType;
 import com.example.libertyformapiserver.domain.Survey;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
 @Getter
 @Setter
-public class PostQuestionReq {
+@Builder
+public class PostQuestionRes {
+    @ApiModelProperty(
+            example = "2"
+    )
+    private long surveyId;
+
     @ApiModelProperty(
             example = "1"
     )
@@ -47,21 +52,9 @@ public class PostQuestionReq {
     )
     private boolean answerRequired;
 
-    public Question toEntity(Survey survey, QuestionType questionType){
-        return Question.builder()
-                .survey(survey)
-                .questionType(questionType)
-                .name(name)
-                .description(description)
-                .number(number)
-                .backgroundImgUrl(backgroundImgUrl)
-                .questionImgUrl(questionImgUrl)
-                .answerRequired(answerRequired)
-                .build();
-    }
-
-    public PostQuestionReq toVO(Question question){
-        return PostQuestionReq.builder()
+    static public PostQuestionRes toDto(Question question){
+        return PostQuestionRes.builder()
+                .surveyId(question.getSurvey().getId())
                 .questionTypeId(question.getQuestionType().getId())
                 .name(question.getName())
                 .description(question.getDescription())

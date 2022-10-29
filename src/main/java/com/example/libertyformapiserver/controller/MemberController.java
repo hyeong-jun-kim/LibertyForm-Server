@@ -4,7 +4,7 @@ import com.example.libertyformapiserver.config.response.BaseResponse;
 import com.example.libertyformapiserver.dto.member.post.PostRegisterReq;
 import com.example.libertyformapiserver.dto.member.post.PostRegisterRes;
 import com.example.libertyformapiserver.service.MemberService;
-import com.example.libertyformapiserver.controller.jwt.NoIntercept;
+import com.example.libertyformapiserver.jwt.NoIntercept;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
