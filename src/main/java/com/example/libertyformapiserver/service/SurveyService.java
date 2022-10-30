@@ -57,7 +57,7 @@ public class SurveyService {
      * 편의 메서드
      */
     // 주관식, 감정 바, 선형 대수 질문 저장
-    public List<PostQuestionRes> getQuestionListEntity(List<PostQuestionReq> postQuestionReqList, Survey survey){
+    private List<PostQuestionRes> getQuestionListEntity(List<PostQuestionReq> postQuestionReqList, Survey survey){
         List<PostQuestionRes> questionResList = new ArrayList<>();
 
         // Question 에 Survey, QuestionType 넣기
@@ -73,6 +73,7 @@ public class SurveyService {
             QuestionType questionType = questionTypeRepository.findById(questionTypeId).orElseThrow(
                     () -> new BaseException(NOT_VALID_QUESTION_TYPE));
 
+            checkQuestionNumber(i, postQuestionReq.getNumber());
 
             Question question = postQuestionReq.toEntity(survey, questionType);
             question.changeStatusActive();
@@ -84,7 +85,7 @@ public class SurveyService {
     }
 
     // 객관식 질문 저장
-    public PostCreateSurveyRes getChoiceQuestionListEntity(List<PostChoiceQuestionReq> postChoiceQuestionReqList, PostCreateSurveyRes surveyResDto, Survey survey){
+    private PostCreateSurveyRes getChoiceQuestionListEntity(List<PostChoiceQuestionReq> postChoiceQuestionReqList, PostCreateSurveyRes surveyResDto, Survey survey){
         if(postChoiceQuestionReqList == null)
             return surveyResDto;
 
@@ -115,7 +116,7 @@ public class SurveyService {
             // 객관식 문항 저장
             List<PostChoiceReq> postChoiceReqList = choiceQuestionReq.getChoices();
             for(int j = 0; j < postChoiceReqList.size(); j++){
-                PostChoiceReq postChoiceReq = postChoiceReqList.get(i);
+                PostChoiceReq postChoiceReq = postChoiceReqList.get(j);
 
                 Choice choice = postChoiceReq.toEntity(question);
                 choice.changeStatusActive();
@@ -128,5 +129,11 @@ public class SurveyService {
         surveyResDto.setChoices(choiceResList);
 
         return surveyResDto;
+    }
+
+    // 설문 문항 번호가 올바른지 체크
+    private void checkQuestionNumber(int i, int num){
+        if(i+1 != num)
+            throw new BaseException(NOT_SEQUENCE_QUESTION_NUMBER);
     }
 }

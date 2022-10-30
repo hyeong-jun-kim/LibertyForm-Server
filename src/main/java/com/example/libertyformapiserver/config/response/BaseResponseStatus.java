@@ -10,7 +10,6 @@ public enum BaseResponseStatus {
     /**
      * 1000 : 요청 성공
      */
-
     SUCCESS(true, 1000, "요청에 성공하였습니다."),
 
     /**
@@ -28,6 +27,8 @@ public enum BaseResponseStatus {
     KAKAO_LOGIN_ERROR(false, 2009, "카카오 로그인을 시도하는 중에 오류가 발생했습니다."),
     INVALID_MEMBER(false, 2010, "존재하지 않는 유저입니다."),
     NOT_MATCH_QUESTION_TYPE(false, 2011, "질문 유형 번호를 다시한번 확인해주시길 바랍니다."),
+    NOT_SEQUENCE_QUESTION_NUMBER(false, 2012, "질문 번호 순서가 올바르지 않습니다. 질문 번호를 다시한번 확인해주시기 바랍니다."),
+
     /**
      * 3000 : Response 오류
      */
