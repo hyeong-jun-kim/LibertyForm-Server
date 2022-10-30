@@ -13,7 +13,7 @@ import lombok.*;
 @Setter
 public class PostQuestionReq {
     @ApiModelProperty(
-            example = "1"
+            example = "3"
     )
     private long questionTypeId;
 
@@ -28,7 +28,7 @@ public class PostQuestionReq {
     private String description;
 
     @ApiModelProperty(
-            example = "1"
+            example = "2"
     )
     private Integer number;
 

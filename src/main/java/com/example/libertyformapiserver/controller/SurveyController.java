@@ -32,6 +32,7 @@ public class SurveyController {
             @ApiResponse(code = 1000, message = "요청에 성공하였습니다."),
             @ApiResponse(code = 2010, message = "존재하지 않는 유저입니다."),
             @ApiResponse(code = 2011, message = "질문 유형 번호를 다시한번 확인해주시길 바랍니다."),
+            @ApiResponse(code = 2012, message = "질문 번호 순서가 올바르지 않습니다. 질문 번호를 다시한번 확인해주시기 바랍니다."),
             @ApiResponse(code = 4001, message = "존재하지 않는 질문 유형입니다.")}
     )
     @PostMapping("/create")
