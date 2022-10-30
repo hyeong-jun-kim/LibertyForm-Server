@@ -1,6 +1,7 @@
 package com.example.libertyformapiserver.service;
 
 import com.example.libertyformapiserver.config.exception.BaseException;
+import com.example.libertyformapiserver.config.response.BaseResponseStatus;
 import com.example.libertyformapiserver.domain.*;
 import com.example.libertyformapiserver.dto.choice.post.PostChoiceRes;
 import com.example.libertyformapiserver.dto.question.post.PostChoiceQuestionReq;
@@ -16,7 +17,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import static com.example.libertyformapiserver.config.response.BaseResponseStatus.*;
 
@@ -31,7 +35,7 @@ public class SurveyService {
     private final QuestionTypeRepository questionTypeRepository;
 
     // 설문지 생성
-    @Transactional(readOnly = false)
+    @Transactional(readOnly = false, rollbackFor = {Exception.class, BaseException.class})
     public PostCreateSurveyRes createSurvey(PostCreateSurveyReq surveyReqDto){
         PostSurveyReq postSurveyReq = surveyReqDto.getSurvey();
 
@@ -49,7 +53,7 @@ public class SurveyService {
         createSurveyResDto.setQuestions(questionResList);
 
         createSurveyResDto = getChoiceQuestionListEntity(postChoiceQuestionReqList, createSurveyResDto, survey);
-
+        checkQuestionNumber(createSurveyResDto.getQuestions());
         return createSurveyResDto;
     }
 
@@ -78,9 +82,6 @@ public class SurveyService {
             question.changeStatusActive();
 
             questionResList.add(PostQuestionRes.toDto(question));
-
-            checkQuestionNumber(questionResList.size(), question.getNumber());
-
             questionRepository.save(question);
         }
         return questionResList;
@@ -113,13 +114,12 @@ public class SurveyService {
             question.changeStatusActive();
 
             questionResList.add(PostQuestionRes.toDto(question));
-
-            checkQuestionNumber(questionResList.size(), question.getNumber());
-
             questionRepository.save(question);
 
             // 객관식 문항 저장
             List<PostChoiceReq> postChoiceReqList = choiceQuestionReq.getChoices();
+            checkChoiceNumber(postChoiceReqList);
+
             for(int j = 0; j < postChoiceReqList.size(); j++){
                 PostChoiceReq postChoiceReq = postChoiceReqList.get(j);
 
@@ -127,8 +127,6 @@ public class SurveyService {
                 choice.changeStatusActive();
 
                 choiceResList.add(PostChoiceRes.toDto(choice));
-
-                checkQuestionNumber(j+1, choice.getNumber());
 
                 choiceRepository.save(choice);
             }
@@ -140,8 +138,28 @@ public class SurveyService {
     }
 
     // 설문 문항 번호가 올바른지 체크
-    private void checkQuestionNumber(int i, int num){
-        if(i != num)
-            throw new BaseException(NOT_SEQUENCE_QUESTION_NUMBER);
+    private void checkQuestionNumber(List<PostQuestionRes> questionList){
+        List<Integer> numberList = new ArrayList<>();
+        questionList.forEach(q -> numberList.add(q.getNumber()));
+
+        Collections.sort(numberList);
+
+        for(int i = 0; i < numberList.size() - 1; i++){
+            if(numberList.get(i+1) - numberList.get(i) != 1)
+                throw new BaseException(NOT_SEQUENCE_QUESTION_NUMBER);
+        }
+    }
+
+    // 객관식 문항 번호가 올바른지 체크
+    private void checkChoiceNumber(List<PostChoiceReq> choiceList){
+        List<Integer> numberList = new ArrayList<>();
+        choiceList.forEach(q -> numberList.add(q.getNumber()));
+
+        Collections.sort(numberList);
+
+        for(int i = 0; i < numberList.size() - 1; i++){
+            if(numberList.get(i+1) - numberList.get(i) != 1)
+                throw new BaseException(NOT_SEQUENCE_QUESTION_NUMBER);
+        }
     }
 }
