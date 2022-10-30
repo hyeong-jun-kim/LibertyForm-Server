@@ -73,13 +73,15 @@ public class SurveyService {
             QuestionType questionType = questionTypeRepository.findById(questionTypeId).orElseThrow(
                     () -> new BaseException(NOT_VALID_QUESTION_TYPE));
 
-            checkQuestionNumber(i, postQuestionReq.getNumber());
 
             Question question = postQuestionReq.toEntity(survey, questionType);
             question.changeStatusActive();
-            questionRepository.save(question);
 
             questionResList.add(PostQuestionRes.toDto(question));
+
+            checkQuestionNumber(questionResList.size(), question.getNumber());
+
+            questionRepository.save(question);
         }
         return questionResList;
     }
@@ -109,9 +111,12 @@ public class SurveyService {
 
             Question question = questionReq.toEntity(survey, questionType);
             question.changeStatusActive();
-            questionRepository.save(question);
 
             questionResList.add(PostQuestionRes.toDto(question));
+
+            checkQuestionNumber(questionResList.size(), question.getNumber());
+
+            questionRepository.save(question);
 
             // 객관식 문항 저장
             List<PostChoiceReq> postChoiceReqList = choiceQuestionReq.getChoices();
@@ -120,9 +125,12 @@ public class SurveyService {
 
                 Choice choice = postChoiceReq.toEntity(question);
                 choice.changeStatusActive();
-                choiceRepository.save(choice);
 
                 choiceResList.add(PostChoiceRes.toDto(choice));
+
+                checkQuestionNumber(j+1, choice.getNumber());
+
+                choiceRepository.save(choice);
             }
         }
         surveyResDto.addListQuestion(questionResList);
@@ -133,7 +141,7 @@ public class SurveyService {
 
     // 설문 문항 번호가 올바른지 체크
     private void checkQuestionNumber(int i, int num){
-        if(i+1 != num)
+        if(i != num)
             throw new BaseException(NOT_SEQUENCE_QUESTION_NUMBER);
     }
 }
