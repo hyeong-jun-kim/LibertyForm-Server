@@ -25,4 +25,5 @@ public class Choice extends BaseEntity {
     private int number;
 
     private String name;
+
 }

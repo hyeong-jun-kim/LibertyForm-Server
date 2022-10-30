@@ -75,6 +75,7 @@ public class SurveyService {
 
 
             Question question = postQuestionReq.toEntity(survey, questionType);
+            question.changeStatusActive();
             questionRepository.save(question);
 
             questionResList.add(PostQuestionRes.toDto(question));
@@ -89,7 +90,6 @@ public class SurveyService {
 
         List<PostQuestionRes> questionResList = new ArrayList<>();
         List<PostChoiceRes> choiceResList = new ArrayList<>();
-
 
         // 객관식 문항 저장
         for(int i = 0; i < postChoiceQuestionReqList.size(); i++){
@@ -107,7 +107,9 @@ public class SurveyService {
 
 
             Question question = questionReq.toEntity(survey, questionType);
+            question.changeStatusActive();
             questionRepository.save(question);
+
             questionResList.add(PostQuestionRes.toDto(question));
 
             // 객관식 문항 저장
@@ -116,7 +118,9 @@ public class SurveyService {
                 PostChoiceReq postChoiceReq = postChoiceReqList.get(i);
 
                 Choice choice = postChoiceReq.toEntity(question);
+                choice.changeStatusActive();
                 choiceRepository.save(choice);
+
                 choiceResList.add(PostChoiceRes.toDto(choice));
             }
         }

@@ -25,4 +25,5 @@ public class Choice_MultipleChoice_Response extends BaseEntity {
     @OneToOne
     @JoinColumn(name = "choiceId")
     private Choice choice;
+
 }

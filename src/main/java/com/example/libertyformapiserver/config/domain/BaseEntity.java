@@ -37,4 +37,8 @@ public abstract class BaseEntity {
     public void onPreUpdate(){
         this.updatedAt = LocalDateTime.now();
     }
+
+    public void changeStatusActive(){
+        setStatus(BaseStatus.ACTIVE);
+    }
 }
