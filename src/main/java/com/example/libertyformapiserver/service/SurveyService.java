@@ -91,7 +91,7 @@ public class SurveyService {
         if(postChoiceQuestionReqList == null)
             return surveyResDto;
 
-        List<PostQuestionRes> questionResList = new ArrayList<>();
+        List<PostQuestionRes> questionResList = surveyResDto.getQuestions();
         List<PostChoiceRes> choiceResList = new ArrayList<>();
 
         // 객관식 문항 저장
@@ -133,7 +133,7 @@ public class SurveyService {
                 choiceRepository.save(choice);
             }
         }
-        surveyResDto.addListQuestion(questionResList);
+        surveyResDto.setQuestions(questionResList);
         surveyResDto.setChoices(choiceResList);
 
         return surveyResDto;

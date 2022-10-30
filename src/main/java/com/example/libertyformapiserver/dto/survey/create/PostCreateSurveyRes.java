@@ -22,20 +22,4 @@ public class PostCreateSurveyRes {
     public PostCreateSurveyRes(Survey survey){
         this.survey = PostSurveyRes.toDto(survey);
     }
-
-    public void addListQuestion(List<PostQuestionRes> questionList){
-        if(questions == null)
-            questions = new ArrayList<>();
-
-        questionList.stream()
-                .forEach(q -> questions.add(q));
-    }
-
-    public void addListChoice(List<PostChoiceRes> choiceList){
-        if(choices == null)
-            choices = new ArrayList<>();
-
-        choiceList.stream()
-                .forEach(q -> choices.add(q));
-    }
 }
