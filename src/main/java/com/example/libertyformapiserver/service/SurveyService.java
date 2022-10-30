@@ -18,8 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.example.libertyformapiserver.config.response.BaseResponseStatus.INVALID_MEMBER;
-import static com.example.libertyformapiserver.config.response.BaseResponseStatus.NOT_VALID_QUESTION_TYPE;
+import static com.example.libertyformapiserver.config.response.BaseResponseStatus.*;
 
 @Transactional(readOnly = true)
 @Service
@@ -66,8 +65,14 @@ public class SurveyService {
             PostQuestionReq postQuestionReq = postQuestionReqList.get(i);
 
             long questionTypeId = postQuestionReq.getQuestionTypeId();
+
+            // 객관식 유형으로 들어왔을 때 예외 처리
+            if(questionTypeId == 3 || questionTypeId == 4)
+                throw new BaseException(NOT_MATCH_QUESTION_TYPE);
+
             QuestionType questionType = questionTypeRepository.findById(questionTypeId).orElseThrow(
                     () -> new BaseException(NOT_VALID_QUESTION_TYPE));
+
 
             Question question = postQuestionReq.toEntity(survey, questionType);
             questionRepository.save(question);
@@ -92,8 +97,14 @@ public class SurveyService {
             PostQuestionReq questionReq = choiceQuestionReq.getQuestion();
 
             long questionTypeId = questionReq.getQuestionTypeId();
+
+            // 주관식 유형으로 들어왔을 때 예외 처리
+            if(questionTypeId != 3 && questionTypeId != 4)
+                throw new BaseException(NOT_MATCH_QUESTION_TYPE);
+
             QuestionType questionType = questionTypeRepository.findById(questionTypeId).orElseThrow(
                     () -> new BaseException(NOT_VALID_QUESTION_TYPE));
+
 
             Question question = questionReq.toEntity(survey, questionType);
             questionRepository.save(question);

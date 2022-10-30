@@ -27,6 +27,7 @@ public enum BaseResponseStatus {
     KAKAO_TOKEN_ERROR(false, 2009, "카카오 토큰을 받아오는 수행 작업 중에 오류가 발생했습니다."),
     KAKAO_LOGIN_ERROR(false, 2009, "카카오 로그인을 시도하는 중에 오류가 발생했습니다."),
     INVALID_MEMBER(false, 2010, "존재하지 않는 유저입니다."),
+    NOT_MATCH_QUESTION_TYPE(false, 2011, "질문 유형 번호를 다시한번 확인해주시길 바랍니다."),
     /**
      * 3000 : Response 오류
      */

@@ -28,7 +28,8 @@ public class SurveyController {
     @ApiResponses({
             @ApiResponse(code = 1000, message = "요청에 성공하였습니다."),
             @ApiResponse(code = 2010, message = "존재하지 않는 유저입니다."),
-            @ApiResponse(code = 4001, message = "일치하지 않는 설문 문항입니다.")}
+            @ApiResponse(code = 2011, message = "질문 유형 번호를 다시한번 확인해주시길 바랍니다."),
+            @ApiResponse(code = 4001, message = "존재하지 않는 질문 유형입니다.")}
     )
     @PostMapping("/create")
     @NoIntercept // TODO 추후에 제거해주기
