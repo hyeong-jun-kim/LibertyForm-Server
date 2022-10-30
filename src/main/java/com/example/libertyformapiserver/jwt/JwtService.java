@@ -30,7 +30,7 @@ public class JwtService {
 
     /*
         JWT생성
-        @param userIdx
+        @param memberIdx
         @return String
      */
     public String createJwt(JwtInfo jwtInfo){
@@ -61,7 +61,7 @@ public class JwtService {
     }
 
     /*
-        JWT에서 userIdx 추출
+        JWT에서 memberIdx 추출
         @return int
         @throws BaseException
      */

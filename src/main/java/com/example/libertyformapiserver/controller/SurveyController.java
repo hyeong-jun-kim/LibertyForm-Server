@@ -2,18 +2,15 @@ package com.example.libertyformapiserver.controller;
 
 import com.example.libertyformapiserver.config.response.BaseResponse;
 import com.example.libertyformapiserver.dto.jwt.JwtInfo;
-import com.example.libertyformapiserver.dto.survey.create.PostCreateSurveyReq;
-import com.example.libertyformapiserver.dto.survey.create.PostCreateSurveyRes;
-import com.example.libertyformapiserver.jwt.NoIntercept;
+import com.example.libertyformapiserver.dto.survey.create.post.PostCreateSurveyReq;
+import com.example.libertyformapiserver.dto.survey.create.post.PostCreateSurveyRes;
+import com.example.libertyformapiserver.dto.survey.get.GetListSurveyRes;
 import com.example.libertyformapiserver.service.SurveyService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -38,6 +35,19 @@ public class SurveyController {
     @PostMapping("/create")
     public BaseResponse<PostCreateSurveyRes> createSurvey(@RequestBody PostCreateSurveyReq surveyReqDto, HttpServletRequest request){
         JwtInfo jwtInfo = (JwtInfo) request.getAttribute("jwtInfo");
-        return new BaseResponse<>(surveyService.createSurvey(surveyReqDto, jwtInfo.getUserId()));
+        return new BaseResponse<>(surveyService.createSurvey(surveyReqDto, jwtInfo.getMemberId()));
+    }
+
+    @ApiOperation(
+            value = "설문지 모두 불러오기",
+            notes = "해당 유저에 대한 설문을 모두 불러옵니다. (대시보드 용)"
+    )
+    @ApiResponses({
+            @ApiResponse(code = 1000, message = "요청에 성공하였습니다.")
+    })
+    @GetMapping
+    public BaseResponse<GetListSurveyRes> getAllUserSurvey(HttpServletRequest request){
+        JwtInfo jwtInfo = (JwtInfo) request.getAttribute("jwtInfo");
+        return new BaseResponse<>(surveyService.getAllUserSurvey(jwtInfo.getMemberId()));
     }
 }

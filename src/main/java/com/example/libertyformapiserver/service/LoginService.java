@@ -46,7 +46,7 @@ public class LoginService {
         checkUserActive(member);
 
         JwtInfo jwtInfo = JwtInfo.builder()
-                .userId(member.getId())
+                .memberId(member.getId())
                 .build();
 
         String jwt = jwtService.createJwt(jwtInfo);
@@ -100,7 +100,7 @@ public class LoginService {
             checkUserActive(member);
 
             JwtInfo jwtInfo = JwtInfo.builder()
-                    .userId(member.getId())
+                    .memberId(member.getId())
                     .build();
 
             String jwt = jwtService.createJwt(jwtInfo);

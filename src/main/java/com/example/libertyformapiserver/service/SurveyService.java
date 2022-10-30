@@ -1,15 +1,15 @@
 package com.example.libertyformapiserver.service;
 
 import com.example.libertyformapiserver.config.exception.BaseException;
-import com.example.libertyformapiserver.config.response.BaseResponseStatus;
 import com.example.libertyformapiserver.domain.*;
 import com.example.libertyformapiserver.dto.choice.post.PostChoiceRes;
 import com.example.libertyformapiserver.dto.question.post.PostChoiceQuestionReq;
 import com.example.libertyformapiserver.dto.choice.post.PostChoiceReq;
 import com.example.libertyformapiserver.dto.question.post.PostQuestionReq;
 import com.example.libertyformapiserver.dto.question.post.PostQuestionRes;
-import com.example.libertyformapiserver.dto.survey.create.PostCreateSurveyReq;
-import com.example.libertyformapiserver.dto.survey.create.PostCreateSurveyRes;
+import com.example.libertyformapiserver.dto.survey.create.post.PostCreateSurveyReq;
+import com.example.libertyformapiserver.dto.survey.create.post.PostCreateSurveyRes;
+import com.example.libertyformapiserver.dto.survey.get.GetListSurveyRes;
 import com.example.libertyformapiserver.dto.survey.post.PostSurveyReq;
 import com.example.libertyformapiserver.repository.*;
 import lombok.RequiredArgsConstructor;
@@ -19,8 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import static com.example.libertyformapiserver.config.response.BaseResponseStatus.*;
 
@@ -36,10 +34,10 @@ public class SurveyService {
 
     // 설문지 생성
     @Transactional(readOnly = false, rollbackFor = {Exception.class, BaseException.class})
-    public PostCreateSurveyRes createSurvey(PostCreateSurveyReq surveyReqDto, long userId){
+    public PostCreateSurveyRes createSurvey(PostCreateSurveyReq surveyReqDto, long memberId){
         PostSurveyReq postSurveyReq = surveyReqDto.getSurvey();
 
-        Member member = memberRepository.findById(userId) // TODO 추후에 JWT로 받아오기
+        Member member = memberRepository.findById(memberId) // TODO 추후에 JWT로 받아오기
                 .orElseThrow(() -> new BaseException(INVALID_MEMBER));
         Survey survey = postSurveyReq.toEntity(member);
         surveyRepository.save(survey);
@@ -55,6 +53,13 @@ public class SurveyService {
         createSurveyResDto = getChoiceQuestionListEntity(postChoiceQuestionReqList, createSurveyResDto, survey);
         checkQuestionNumber(createSurveyResDto.getQuestions());
         return createSurveyResDto;
+    }
+
+    // 설문지 모두 조회
+    public GetListSurveyRes getAllUserSurvey(long memberId){
+        List<Survey> surveys = surveyRepository.findSurveysByMemberId(memberId);
+
+        return GetListSurveyRes.listEntitytoDto(surveys);
     }
 
     /*

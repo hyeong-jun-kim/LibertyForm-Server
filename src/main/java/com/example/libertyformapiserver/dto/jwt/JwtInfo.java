@@ -7,5 +7,5 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class JwtInfo {
-    private long userId;
+    private long memberId;
 }

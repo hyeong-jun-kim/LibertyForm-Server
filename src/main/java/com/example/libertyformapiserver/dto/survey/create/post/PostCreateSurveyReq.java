@@ -1,4 +1,4 @@
-package com.example.libertyformapiserver.dto.survey.create;
+package com.example.libertyformapiserver.dto.survey.create.post;
 
 import com.example.libertyformapiserver.dto.question.post.PostChoiceQuestionReq;
 import com.example.libertyformapiserver.dto.question.post.PostQuestionReq;
