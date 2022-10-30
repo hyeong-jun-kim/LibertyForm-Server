@@ -36,10 +36,10 @@ public class SurveyService {
 
     // 설문지 생성
     @Transactional(readOnly = false, rollbackFor = {Exception.class, BaseException.class})
-    public PostCreateSurveyRes createSurvey(PostCreateSurveyReq surveyReqDto){
+    public PostCreateSurveyRes createSurvey(PostCreateSurveyReq surveyReqDto, long userId){
         PostSurveyReq postSurveyReq = surveyReqDto.getSurvey();
 
-        Member member = memberRepository.findById(1L) // TODO 추후에 JWT로 받아오기
+        Member member = memberRepository.findById(userId) // TODO 추후에 JWT로 받아오기
                 .orElseThrow(() -> new BaseException(INVALID_MEMBER));
         Survey survey = postSurveyReq.toEntity(member);
         surveyRepository.save(survey);

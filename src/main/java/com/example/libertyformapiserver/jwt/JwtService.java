@@ -26,7 +26,7 @@ public class JwtService {
     @Value("${secret.jwt_secret_key}")
     private String secretKey;
 
-    public static final String AUTHORIZATION = "Authoirzation";
+    public static final String AUTHORIZATION = "Authorization";
 
     /*
         JWT생성
@@ -65,11 +65,11 @@ public class JwtService {
         @return int
         @throws BaseException
      */
-    public LinkedHashMap getJwtInfo() throws BaseException{
+    public LinkedHashMap getJwtInfo(){
         // 1. JWT 추출
         String accessToken = getJwt();
         if(accessToken == null || accessToken.length() == 0)
-            throw new BaseException(EMPTY_JWT);
+             throw new BaseException(EMPTY_JWT);
 
         // 2. JWT parsing
         Claims body;

@@ -19,6 +19,7 @@ public class AppConfig implements WebMvcConfigurer {
     // 인터셉터 등록
     @Override
     public void addInterceptors(InterceptorRegistry registry){
+        objectMapper = new ObjectMapper();
         registry.addInterceptor(new AuthenticationInterceptor(jwtService, objectMapper))
                 .order(0) // order는 인터셉터의 우선 순위를 정의한다.
                 .addPathPatterns("/**")

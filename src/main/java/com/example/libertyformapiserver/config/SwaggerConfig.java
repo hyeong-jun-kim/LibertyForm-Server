@@ -21,7 +21,7 @@ import java.util.List;
 
 @Configuration
 @EnableWebMvc
-public class SwaggerConfig {
+public class    SwaggerConfig {
 
     @Bean
     public Docket api(){
@@ -56,10 +56,10 @@ public class SwaggerConfig {
         AuthorizationScope authorizationScope = new AuthorizationScope("global", "accessEverything");
         AuthorizationScope[] authorizationScopes = new AuthorizationScope[1];
         authorizationScopes[0] = authorizationScope;
-        return Arrays.asList(new SecurityReference("JWT", authorizationScopes));
+        return Arrays.asList(new SecurityReference("Authorization", authorizationScopes));
     }
 
     private ApiKey apiKey() {
-        return new ApiKey("JWT", "Authorization", "header"); //이건 Bearer 방식은 아닌 듯. 임의로 지정
+        return new ApiKey("Authorization", "Bearer", "header"); //이건 Bearer 방식은 아닌 듯. 임의로 지정
     }
 }

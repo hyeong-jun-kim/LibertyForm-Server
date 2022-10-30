@@ -5,6 +5,7 @@ import com.example.libertyformapiserver.jwt.JwtService;
 import com.example.libertyformapiserver.jwt.NoIntercept;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 
@@ -34,6 +35,6 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
         if(handlerMethod.getMethodAnnotation(c) != null){
             return true;
         }
-        return false;
+            return false;
     }
 }

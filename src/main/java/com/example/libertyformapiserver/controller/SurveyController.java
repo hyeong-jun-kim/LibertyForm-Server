@@ -1,6 +1,7 @@
 package com.example.libertyformapiserver.controller;
 
 import com.example.libertyformapiserver.config.response.BaseResponse;
+import com.example.libertyformapiserver.dto.jwt.JwtInfo;
 import com.example.libertyformapiserver.dto.survey.create.PostCreateSurveyReq;
 import com.example.libertyformapiserver.dto.survey.create.PostCreateSurveyRes;
 import com.example.libertyformapiserver.jwt.NoIntercept;
@@ -13,6 +14,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("/survey")
@@ -32,8 +35,8 @@ public class SurveyController {
             @ApiResponse(code = 4001, message = "존재하지 않는 질문 유형입니다.")}
     )
     @PostMapping("/create")
-    @NoIntercept // TODO 추후에 제거해주기
-    public BaseResponse<PostCreateSurveyRes> createSurvey(@RequestBody PostCreateSurveyReq surveyReqDto){
-        return new BaseResponse<>(surveyService.createSurvey(surveyReqDto));
+    public BaseResponse<PostCreateSurveyRes> createSurvey(@RequestBody PostCreateSurveyReq surveyReqDto, HttpServletRequest request){
+        JwtInfo jwtInfo = (JwtInfo) request.getAttribute("jwtInfo");
+        return new BaseResponse<>(surveyService.createSurvey(surveyReqDto, jwtInfo.getUserId()));
     }
 }
