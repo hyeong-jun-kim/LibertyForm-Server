@@ -8,6 +8,7 @@ import lombok.Builder;
 import lombok.Getter;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 @Builder
@@ -34,12 +35,18 @@ public class GetSurveyRes {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
     private LocalDate expirationDate;
 
+    @ApiModelProperty(
+            example = "2022-10-28 10:00:00"
+    )
+    private LocalDateTime createdAt;
+
     static public GetSurveyRes toDto(Survey survey){
         return GetSurveyRes.builder()
                 .surveyId(survey.getId())
                 .name(survey.getName())
                 .description(survey.getDescription())
                 .expirationDate(survey.getExpirationDate())
+                .createdAt(survey.getCreatedAt())
                 .build();
     }
 }

@@ -39,7 +39,9 @@ public class SurveyService {
 
         Member member = memberRepository.findById(memberId) // TODO 추후에 JWT로 받아오기
                 .orElseThrow(() -> new BaseException(INVALID_MEMBER));
+
         Survey survey = postSurveyReq.toEntity(member);
+        survey.changeStatusActive();
         surveyRepository.save(survey);
 
         PostCreateSurveyRes createSurveyResDto = new PostCreateSurveyRes(survey);
