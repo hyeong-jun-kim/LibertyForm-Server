@@ -5,10 +5,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
+// 설문지 모두 불러오는 DTO
 @Getter
 @Builder
 @AllArgsConstructor

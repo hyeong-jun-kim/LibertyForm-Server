@@ -31,7 +31,7 @@ public class PostChoiceReq {
                 .build();
     }
 
-    public PostChoiceReq toVO(Choice choice){
+    static public PostChoiceReq toDto(Choice choice){
         return PostChoiceReq.builder()
                 .name(choice.getName())
                 .number(choice.getNumber())

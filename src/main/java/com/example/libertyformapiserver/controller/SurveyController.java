@@ -2,9 +2,10 @@ package com.example.libertyformapiserver.controller;
 
 import com.example.libertyformapiserver.config.response.BaseResponse;
 import com.example.libertyformapiserver.dto.jwt.JwtInfo;
-import com.example.libertyformapiserver.dto.survey.create.post.PostCreateSurveyReq;
-import com.example.libertyformapiserver.dto.survey.create.post.PostCreateSurveyRes;
+import com.example.libertyformapiserver.dto.survey.create.PostCreateSurveyReq;
+import com.example.libertyformapiserver.dto.survey.create.PostCreateSurveyRes;
 import com.example.libertyformapiserver.dto.survey.get.GetListSurveyRes;
+import com.example.libertyformapiserver.dto.survey.get.GetSurveyInfoRes;
 import com.example.libertyformapiserver.service.SurveyService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -34,8 +35,7 @@ public class SurveyController {
     )
     @PostMapping("/create")
     public BaseResponse<PostCreateSurveyRes> createSurvey(@RequestBody PostCreateSurveyReq surveyReqDto, HttpServletRequest request){
-        JwtInfo jwtInfo = (JwtInfo) request.getAttribute("jwtInfo");
-        return new BaseResponse<>(surveyService.createSurvey(surveyReqDto, jwtInfo.getMemberId()));
+        return new BaseResponse<>(surveyService.createSurvey(surveyReqDto, JwtInfo.getMemberId(request)));
     }
 
     @ApiOperation(
@@ -47,7 +47,20 @@ public class SurveyController {
     })
     @GetMapping
     public BaseResponse<GetListSurveyRes> getAllUserSurvey(HttpServletRequest request){
-        JwtInfo jwtInfo = (JwtInfo) request.getAttribute("jwtInfo");
-        return new BaseResponse<>(surveyService.getAllUserSurvey(jwtInfo.getMemberId()));
+        return new BaseResponse<>(surveyService.getAllUserSurvey(JwtInfo.getMemberId(request)));
+    }
+
+    @ApiOperation(
+            value = "설문지 정보 가져오기",
+            notes = "해당 설문에 대한 정보들을 가져옵니다"
+    )
+    @ApiResponses({
+            @ApiResponse(code = 1000, message = "요청에 성공하였습니다."),
+            @ApiResponse(code = 2013, message = "존재하지 않는 설문입니다."),
+            @ApiResponse(code = 2014, message = "해당 사용자의 설문이 아닙니다.")
+    })
+    @GetMapping("{surveyId}")
+    public BaseResponse<GetSurveyInfoRes> getSurveyInfo(HttpServletRequest request, @PathVariable("surveyId") long surveyId){
+        return new BaseResponse<>(surveyService.getSurveyInfo(surveyId, JwtInfo.getMemberId(request)));
     }
 }

@@ -35,9 +35,11 @@ public class GetSurveyRes {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
     private LocalDate expirationDate;
 
+
     @ApiModelProperty(
             example = "2022-10-28 10:00:00"
     )
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
     private LocalDateTime createdAt;
 
     static public GetSurveyRes toDto(Survey survey){

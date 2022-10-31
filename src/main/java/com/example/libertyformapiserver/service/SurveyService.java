@@ -3,13 +3,14 @@ package com.example.libertyformapiserver.service;
 import com.example.libertyformapiserver.config.exception.BaseException;
 import com.example.libertyformapiserver.domain.*;
 import com.example.libertyformapiserver.dto.choice.post.PostChoiceRes;
-import com.example.libertyformapiserver.dto.question.post.PostChoiceQuestionReq;
+import com.example.libertyformapiserver.dto.question.vo.ChoiceQuestionVO;
 import com.example.libertyformapiserver.dto.choice.post.PostChoiceReq;
 import com.example.libertyformapiserver.dto.question.post.PostQuestionReq;
 import com.example.libertyformapiserver.dto.question.post.PostQuestionRes;
-import com.example.libertyformapiserver.dto.survey.create.post.PostCreateSurveyReq;
-import com.example.libertyformapiserver.dto.survey.create.post.PostCreateSurveyRes;
+import com.example.libertyformapiserver.dto.survey.create.PostCreateSurveyReq;
+import com.example.libertyformapiserver.dto.survey.create.PostCreateSurveyRes;
 import com.example.libertyformapiserver.dto.survey.get.GetListSurveyRes;
+import com.example.libertyformapiserver.dto.survey.get.GetSurveyInfoRes;
 import com.example.libertyformapiserver.dto.survey.post.PostSurveyReq;
 import com.example.libertyformapiserver.repository.*;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 import static com.example.libertyformapiserver.config.response.BaseResponseStatus.*;
@@ -37,7 +39,7 @@ public class SurveyService {
     public PostCreateSurveyRes createSurvey(PostCreateSurveyReq surveyReqDto, long memberId){
         PostSurveyReq postSurveyReq = surveyReqDto.getSurvey();
 
-        Member member = memberRepository.findById(memberId) // TODO 추후에 JWT로 받아오기
+        Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new BaseException(INVALID_MEMBER));
 
         Survey survey = postSurveyReq.toEntity(member);
@@ -47,12 +49,12 @@ public class SurveyService {
         PostCreateSurveyRes createSurveyResDto = new PostCreateSurveyRes(survey);
 
         List<PostQuestionReq> postQuestionReqList = surveyReqDto.getQuestions();
-        List<PostChoiceQuestionReq> postChoiceQuestionReqList = surveyReqDto.getChoiceQuestions();
+        List<ChoiceQuestionVO> choiceQuestionVOList = surveyReqDto.getChoiceQuestions();
 
         List<PostQuestionRes> questionResList = getQuestionListEntity(postQuestionReqList, survey);
         createSurveyResDto.setQuestions(questionResList);
 
-        createSurveyResDto = getChoiceQuestionListEntity(postChoiceQuestionReqList, createSurveyResDto, survey);
+        createSurveyResDto = getChoiceQuestionListEntity(choiceQuestionVOList, createSurveyResDto, survey);
         checkQuestionNumber(createSurveyResDto.getQuestions());
         return createSurveyResDto;
     }
@@ -62,6 +64,35 @@ public class SurveyService {
         List<Survey> surveys = surveyRepository.findSurveysByMemberId(memberId);
 
         return GetListSurveyRes.listEntitytoDto(surveys);
+    }
+
+    // 단일 설문지 조회
+    public GetSurveyInfoRes getSurveyInfo(long surveyId, long memberId){
+        Survey survey = surveyRepository.findById(surveyId)
+                .orElseThrow(() -> new BaseException(NOT_EXIST_SURVEY));
+
+        if(survey.getMember().getId() != memberId) // 설문지 작성자가 해당 유저가 아닌 경우
+            throw new BaseException(NOT_MATCH_SURVEY);
+
+        List<Question> questions = questionRepository.findQuestionsBySurveyId(surveyId);
+        List<ChoiceQuestionVO> choiceQuestionVOList = new ArrayList<>();
+
+        Iterator<Question> iter = questions.iterator(); // ConcurrentModificationException 방지를 위해 iterator 사용
+        while(iter.hasNext()){
+            Question question = iter.next();
+            long questionTypeId = question.getQuestionType().getId();
+
+            if(questionTypeId == 3 || questionTypeId == 4){
+                long questionId = question.getId();
+                List<Choice> choiceList = choiceRepository.findChoicesByQuestionId(questionId);
+                choiceQuestionVOList.add(ChoiceQuestionVO.toVO(question, choiceList));
+                iter.remove();
+            }
+        }
+
+        GetSurveyInfoRes getSurveyInfoRes = GetSurveyInfoRes.toDto(survey, questions);
+        getSurveyInfoRes.setChoiceQuestions(choiceQuestionVOList);
+        return getSurveyInfoRes;
     }
 
     /*
@@ -95,16 +126,16 @@ public class SurveyService {
     }
 
     // 객관식 질문 저장
-    private PostCreateSurveyRes getChoiceQuestionListEntity(List<PostChoiceQuestionReq> postChoiceQuestionReqList, PostCreateSurveyRes surveyResDto, Survey survey){
-        if(postChoiceQuestionReqList == null)
+    private PostCreateSurveyRes getChoiceQuestionListEntity(List<ChoiceQuestionVO> choiceQuestionVOList, PostCreateSurveyRes surveyResDto, Survey survey){
+        if(choiceQuestionVOList == null)
             return surveyResDto;
 
         List<PostQuestionRes> questionResList = surveyResDto.getQuestions();
         List<PostChoiceRes> choiceResList = new ArrayList<>();
 
         // 객관식 문항 저장
-        for(int i = 0; i < postChoiceQuestionReqList.size(); i++){
-            PostChoiceQuestionReq choiceQuestionReq = postChoiceQuestionReqList.get(i);
+        for(int i = 0; i < choiceQuestionVOList.size(); i++){
+            ChoiceQuestionVO choiceQuestionReq = choiceQuestionVOList.get(i);
             PostQuestionReq questionReq = choiceQuestionReq.getQuestion();
 
             long questionTypeId = questionReq.getQuestionTypeId();
@@ -115,7 +146,6 @@ public class SurveyService {
 
             QuestionType questionType = questionTypeRepository.findById(questionTypeId).orElseThrow(
                     () -> new BaseException(NOT_VALID_QUESTION_TYPE));
-
 
             Question question = questionReq.toEntity(survey, questionType);
             question.changeStatusActive();
@@ -134,7 +164,6 @@ public class SurveyService {
                 choice.changeStatusActive();
 
                 choiceResList.add(PostChoiceRes.toDto(choice));
-
                 choiceRepository.save(choice);
             }
         }

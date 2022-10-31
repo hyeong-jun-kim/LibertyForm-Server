@@ -60,7 +60,7 @@ public class PostQuestionReq {
                 .build();
     }
 
-    public PostQuestionReq toVO(Question question){
+    public static PostQuestionReq toDto(Question question){
         return PostQuestionReq.builder()
                 .questionTypeId(question.getQuestionType().getId())
                 .name(question.getName())
