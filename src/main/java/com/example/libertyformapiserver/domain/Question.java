@@ -34,8 +34,6 @@ public class Question extends BaseEntity {
 
     private String description;
 
-    private String backgroundImgUrl;
-
     private String questionImgUrl;
 
     private boolean answerRequired;

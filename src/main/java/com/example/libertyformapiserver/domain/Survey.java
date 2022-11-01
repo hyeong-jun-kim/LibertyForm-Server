@@ -37,6 +37,8 @@ public class Survey extends BaseEntity {
 
     private String description;
 
+    private String thumbnailImg;
+
     private LocalDate expirationDate;
 
 }

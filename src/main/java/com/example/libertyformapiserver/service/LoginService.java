@@ -11,8 +11,8 @@ import com.example.libertyformapiserver.dto.member.kakao.post.PostKakaoRegisterR
 import com.example.libertyformapiserver.repository.MemberRepository;
 import com.example.libertyformapiserver.utils.encrypt.SHA256;
 import com.example.libertyformapiserver.jwt.JwtService;
-import com.example.libertyformapiserver.utils.kakao.KakaoTokenDTO;
-import com.example.libertyformapiserver.utils.kakao.KakaoUserDTO;
+import com.example.libertyformapiserver.utils.kakao.dto.KakaoTokenDTO;
+import com.example.libertyformapiserver.utils.kakao.dto.KakaoUserDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
