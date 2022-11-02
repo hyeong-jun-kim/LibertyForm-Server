@@ -12,13 +12,14 @@ import java.nio.charset.Charset;
 import java.time.Duration;
 
 @Configuration
-public class ResTemplateConfig {
+public class RestTemplateConfig {
     @Bean
     public RestTemplate restTemplate(RestTemplateBuilder restTemplateBuilder){
         return restTemplateBuilder
                 .requestFactory(() -> new BufferingClientHttpRequestFactory(new SimpleClientHttpRequestFactory()))
                 .setConnectTimeout(Duration.ofMillis(5000))
                 .setReadTimeout(Duration.ofMillis(5000))
+                .setBufferRequestBody(false)
                 .additionalMessageConverters(new StringHttpMessageConverter(Charset.forName("UTF-8")))
                 .build();
     }

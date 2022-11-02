@@ -6,12 +6,15 @@ import com.example.libertyformapiserver.dto.survey.create.PostCreateSurveyReq;
 import com.example.libertyformapiserver.dto.survey.create.PostCreateSurveyRes;
 import com.example.libertyformapiserver.dto.survey.get.GetListSurveyRes;
 import com.example.libertyformapiserver.dto.survey.get.GetSurveyInfoRes;
+import com.example.libertyformapiserver.jwt.NoIntercept;
+import com.example.libertyformapiserver.service.ObjectStorageService;
 import com.example.libertyformapiserver.service.SurveyService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -20,6 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 @RequiredArgsConstructor
 public class SurveyController {
     private final SurveyService surveyService;
+    private final ObjectStorageService objectStorageService;
 
     @ApiOperation(
             value = "설문지 생성",
@@ -62,5 +66,13 @@ public class SurveyController {
     @GetMapping("{surveyId}")
     public BaseResponse<GetSurveyInfoRes> getSurveyInfo(HttpServletRequest request, @PathVariable("surveyId") long surveyId){
         return new BaseResponse<>(surveyService.getSurveyInfo(surveyId, JwtInfo.getMemberId(request)));
+    }
+
+    // 이미지 업로드 테스트
+    @NoIntercept
+    @PostMapping("/upload")
+    public BaseResponse<String> uploadImgFile(@RequestParam("image")MultipartFile multipartFile){
+        String response = objectStorageService.uploadThumbnailImg(multipartFile);
+        return new BaseResponse<>(response);
     }
 }
