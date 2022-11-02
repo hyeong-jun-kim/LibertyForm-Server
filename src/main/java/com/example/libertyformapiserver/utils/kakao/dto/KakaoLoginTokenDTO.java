@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class KakaoTokenDTO {
+public class KakaoLoginTokenDTO {
     String access_token;
 
     String refresh_token;

@@ -1,7 +1,6 @@
 package com.example.libertyformapiserver.utils.kakao.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -9,7 +8,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class KakaoUserDTO {
+public class KakaoLoginUserDTO {
     KakaoAcount kakao_account;
 
     @Getter

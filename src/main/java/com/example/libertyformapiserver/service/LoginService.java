@@ -11,8 +11,8 @@ import com.example.libertyformapiserver.dto.member.kakao.post.PostKakaoRegisterR
 import com.example.libertyformapiserver.repository.MemberRepository;
 import com.example.libertyformapiserver.utils.encrypt.SHA256;
 import com.example.libertyformapiserver.jwt.JwtService;
-import com.example.libertyformapiserver.utils.kakao.dto.KakaoTokenDTO;
-import com.example.libertyformapiserver.utils.kakao.dto.KakaoUserDTO;
+import com.example.libertyformapiserver.utils.kakao.dto.KakaoLoginTokenDTO;
+import com.example.libertyformapiserver.utils.kakao.dto.KakaoLoginUserDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -86,15 +86,15 @@ public class LoginService {
             }
             System.out.println("response body : " + result);
             ObjectMapper objectMapper = new ObjectMapper();
-            KakaoUserDTO kakaoUserDTO = objectMapper.readValue(result, KakaoUserDTO.class);
+            KakaoLoginUserDTO kakaoLoginUserDTO = objectMapper.readValue(result, KakaoLoginUserDTO.class);
             br.close();
 
-            String email = kakaoUserDTO.getKakao_account().getEmail();
-            String name = kakaoUserDTO.getKakao_account().getProfile().getNickname();
+            String email = kakaoLoginUserDTO.getKakao_account().getEmail();
+            String name = kakaoLoginUserDTO.getKakao_account().getProfile().getNickname();
             PostKakaoRegisterReq kakaoRegisterReqDTO = new PostKakaoRegisterReq(email, name);
             // login
             // 사용자가 존재하지 않으면 회원가입 후 멤버 반환
-            Member member = memberRepository.findMemberByEmail(kakaoUserDTO.getKakao_account().getEmail())
+            Member member = memberRepository.findMemberByEmail(kakaoLoginUserDTO.getKakao_account().getEmail())
                     .orElseGet(() -> memberService.registerKakaoMember(kakaoRegisterReqDTO));
 
             checkUserActive(member);
@@ -152,10 +152,10 @@ public class LoginService {
 
             // JSON 파싱 객체 생성
             ObjectMapper objectMapper = new ObjectMapper();
-            KakaoTokenDTO kakaoTokenDTO = objectMapper.readValue(result, KakaoTokenDTO.class);
+            KakaoLoginTokenDTO kakaoLoginTokenDTO = objectMapper.readValue(result, KakaoLoginTokenDTO.class);
 
-            System.out.println("access_token : " + kakaoTokenDTO.getAccess_token());
-            System.out.println("refresh_token : " + kakaoTokenDTO.getRefresh_token());
+            System.out.println("access_token : " + kakaoLoginTokenDTO.getAccess_token());
+            System.out.println("refresh_token : " + kakaoLoginTokenDTO.getRefresh_token());
 
             br.close();
             bw.close();

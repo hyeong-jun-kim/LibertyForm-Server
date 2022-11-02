@@ -49,7 +49,6 @@ public class RestTemplateService<T> {
         String fileName = UUID.randomUUID() + "-" + multipartFile.getOriginalFilename();
         sb.append("/" + fileName).toString();
 
-//        MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
         Resource body = multipartFile.getResource();
 
         return callApiEndpoint(sb.toString(), HttpMethod.PUT, headers, body, clazz);
