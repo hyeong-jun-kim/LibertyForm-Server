@@ -16,6 +16,7 @@ import com.example.libertyformapiserver.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -33,10 +34,12 @@ public class SurveyService {
     private final QuestionRepository questionRepository;
     private final ChoiceRepository choiceRepository;
     private final QuestionTypeRepository questionTypeRepository;
+    private final ObjectStorageService objectStorageService;
 
     // 설문지 생성
     @Transactional(readOnly = false, rollbackFor = {Exception.class, BaseException.class})
-    public PostCreateSurveyRes createSurvey(PostCreateSurveyReq surveyReqDto, long memberId){
+    public PostCreateSurveyRes createSurvey(PostCreateSurveyReq surveyReqDto, long memberId
+            , MultipartFile thumbnailImgFile, List<MultipartFile> questionImgFiles){
         PostSurveyReq postSurveyReq = surveyReqDto.getSurvey();
 
         Member member = memberRepository.findById(memberId)
@@ -48,11 +51,17 @@ public class SurveyService {
 
         PostCreateSurveyRes createSurveyResDto = new PostCreateSurveyRes(survey);
 
+        // 주관식, 객관식 문항 가져오기
         List<PostQuestionReq> postQuestionReqList = surveyReqDto.getQuestions();
         List<ChoiceQuestionVO> choiceQuestionVOList = surveyReqDto.getChoiceQuestions();
 
+        // 주관식 문항 DTO -> Entity 변환
         List<PostQuestionRes> questionResList = getQuestionListEntity(postQuestionReqList, survey);
         createSurveyResDto.setQuestions(questionResList);
+
+        // 섬네일, 설문 이미지 Object Storage에 업로드
+        objectStorageService.uploadThumbnailImg(thumbnailImgFile);
+        objectStorageService.uploadQuestionImgs(questionImgFiles);
 
         createSurveyResDto = getChoiceQuestionListEntity(choiceQuestionVOList, createSurveyResDto, survey);
         checkQuestionNumber(createSurveyResDto.getQuestions());

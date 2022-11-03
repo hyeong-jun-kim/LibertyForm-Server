@@ -37,6 +37,11 @@ public enum BaseResponseStatus {
     VALIDATED_ERROR(false, 3000, "VALIDATED_ERROR"), // @Valid 예외 처리
 
     /**
+     * 3500 : Response 성공
+     */
+    IMG_UPLOAD_SUCCESS(true, 3500, "이미지 업로드에 성공하였습니다."),
+
+    /**
      * 4000 : Database, Server 오류
      */
     INTERNAL_SERVER_ERROR(false, 4000, "서버 오류입니다"),

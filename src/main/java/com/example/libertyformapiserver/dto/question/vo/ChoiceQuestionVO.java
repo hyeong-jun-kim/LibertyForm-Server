@@ -4,12 +4,14 @@ import com.example.libertyformapiserver.domain.Choice;
 import com.example.libertyformapiserver.domain.Question;
 import com.example.libertyformapiserver.dto.choice.post.PostChoiceReq;
 import com.example.libertyformapiserver.dto.question.post.PostQuestionReq;
+import com.example.libertyformapiserver.jwt.NoIntercept;
 import lombok.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
 @Setter
 @Getter
