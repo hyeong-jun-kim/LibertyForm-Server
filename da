@@ -1,0 +1,95 @@
+[33mcommit 1f93bcb5b8b3f41416da88d93c607de69248893a[m[33m ([m[1;36mHEAD -> [m[1;32mneo[m[33m)[m
+Author: hyeong-jun-kim <gamebox27@naver.com>
+Date:   Sat Oct 15 15:14:57 2022 +0900
+
+    TN7-144
+
+[33mcommit 83c8e06671bf7e531d034c9a2a40075623569384[m[33m ([m[1;31morigin/neo[m[33m)[m
+Author: hyeong-jun-kim <gamebox27@naver.com>
+Date:   Tue Oct 11 13:13:29 2022 +0900
+
+    TN7-144 [FEAT] 카카오 로그인 및 회원가입 기능 구현
+
+[33mcommit b601b574b9c9815956c337d0b94699dd15016dfc[m
+Author: hyeong-jun-kim <gamebox27@naver.com>
+Date:   Mon Oct 10 17:13:04 2022 +0900
+
+    TN7-141 [FIX] 로그인 status NP 오류 해결
+
+[33mcommit e7542f076cc7459c9daa5ef97596753e41a2712f[m
+Author: hyeong-jun-kim <gamebox27@naver.com>
+Date:   Mon Oct 10 16:59:54 2022 +0900
+
+    TN7-144 [FEAT] 카카오 로그인 code, accessToken 값 받는거 구현
+
+[33mcommit 5b2ffb43c5fa18b246d11dd08f0dff4439fac73d[m
+Author: hyeong-jun-kim <gamebox27@naver.com>
+Date:   Sun Oct 9 18:48:04 2022 +0900
+
+    TN7-187 [FEAT] 로그인, 회원가입 Swagger 설명 추가
+
+[33mcommit 8e1d2ff085baeb799ca4c82d740762ec61c396a7[m
+Author: hyeong-jun-kim <gamebox27@naver.com>
+Date:   Sun Oct 9 17:22:23 2022 +0900
+
+    TN7-187 [FEAT] Swagger 2 -> 3 버전 변경, local & remote 서버 옵션 추가
+
+[33mcommit d114a8bc8de64d957f34348ad7ffa9abd61a3bfa[m
+Author: hyeong-jun-kim <gamebox27@naver.com>
+Date:   Sun Oct 9 15:53:15 2022 +0900
+
+    TN7-187 [FEAT] Swagger 호스트 값 변경
+
+[33mcommit c5592fa2c1c63038b6d1255c75f56acc47d6dc18[m
+Author: hyeong-jun-kim <gamebox27@naver.com>
+Date:   Sun Oct 9 12:12:29 2022 +0900
+
+    TN7-137 [FEAT] 회원가입, 로그인 기능 구현
+
+[33mcommit 61b3386f1df2a219edd5c9d63c0a2ad43ffac420[m
+Author: hyeong-jun-kim <gamebox27@naver.com>
+Date:   Tue Oct 4 23:36:28 2022 +0900
+
+    TN7-186 [FIX] Email 엔티티 삭제
+
+[33mcommit 3da5a08c76cab1f016edabf00b29fed5258ed03c[m
+Author: hyeong-jun-kim <gamebox27@naver.com>
+Date:   Tue Oct 4 23:18:06 2022 +0900
+
+    TN7-186 [FIX] Member, Email 엔티티 수정
+
+[33mcommit aa6448e7233abc38e1013d613aaaffc4609aa553[m
+Author: hyeong-jun-kim <gamebox27@naver.com>
+Date:   Tue Oct 4 23:01:57 2022 +0900
+
+    TN7-186 [FIX] Member, Email 엔티티 수정
+
+[33mcommit a59e03bfb99ea8b14a68d4f65ec0bc96a08e2ad7[m
+Author: hyeong-jun-kim <gamebox27@naver.com>
+Date:   Tue Oct 4 22:37:42 2022 +0900
+
+    TN7-186 [FEAT] Member, Email 엔티티 구현
+
+[33mcommit 37afbbe17c43b441d63c7dba06d5eae3bbf5d0e0[m
+Author: hyeong-jun-kim <gamebox27@naver.com>
+Date:   Tue Oct 4 14:32:47 2022 +0900
+
+    [FIX] Changing permission of gradlew
+
+[33mcommit d37793865867c46fee8531226a03f1395e2975f4[m
+Author: hyeong-jun-kim <gamebox27@naver.com>
+Date:   Tue Oct 4 14:20:54 2022 +0900
+
+    TN7-134 [FIX] 프로젝트 템플릿 오류 수정
+
+[33mcommit 36cf8509f2351a017e6c4f6538295922a48a0ede[m
+Author: hyeong-jun-kim <gamebox27@naver.com>
+Date:   Mon Oct 3 17:27:42 2022 +0900
+
+    TN7-134 [FEAT] 스프링 프로젝트 템플릿 구현
+
+[33mcommit 8339a892fcf89932217c35a675a92334cf43c91a[m[33m ([m[1;31morigin/master[m[33m, [m[1;31morigin/develop[m[33m, [m[1;32mmaster[m[33m)[m
+Author: hyeong-jun-kim <gamebox27@naver.com>
+Date:   Thu Sep 29 23:37:45 2022 +0900
+
+    [INIT] 스프링 프로젝트 생성
