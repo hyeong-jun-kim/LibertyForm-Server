@@ -50,7 +50,6 @@ public class ObjectStorageService {
     }
 
     // 설문 문항 이미지 업로드
-    @Async
     public void uploadQuestionImgs(List<Question> questionList, List<MultipartFile> questionFileImgs){
         if(questionFileImgs == null)
             return;
@@ -88,8 +87,8 @@ public class ObjectStorageService {
 
         return fileURL;
     }
-
-    private List<String> uploadMultipartFile(String storageURL, List<MultipartFile> multipartFilesList){
+    @Async
+    public List<String> uploadMultipartFile(String storageURL, List<MultipartFile> multipartFilesList){
         List<String> fileNameList = new ArrayList<>();
 
         HttpHeaders headers = getApiTokenHeader();
@@ -99,7 +98,7 @@ public class ObjectStorageService {
             fileNameList.add(fileURL);
 
             HttpEntity<String> response;
-            response = restTemplateService.uploadFile(storageURL, headers, multipartFile, String.class);
+            response = restTemplateService.uploadFile(fileURL, headers, multipartFile, String.class);
 
             if(response == null)
                 throw new BaseException(BaseResponseStatus.FILE_UPLOAD_ERROR);
