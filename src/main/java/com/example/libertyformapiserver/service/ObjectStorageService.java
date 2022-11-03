@@ -2,6 +2,9 @@ package com.example.libertyformapiserver.service;
 
 import com.example.libertyformapiserver.config.exception.BaseException;
 import com.example.libertyformapiserver.config.response.BaseResponseStatus;
+import com.example.libertyformapiserver.domain.Question;
+import com.example.libertyformapiserver.domain.Survey;
+import com.example.libertyformapiserver.repository.QuestionRepository;
 import lombok.RequiredArgsConstructor;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
@@ -9,10 +12,12 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @RequiredArgsConstructor
 @Service
@@ -29,48 +34,86 @@ public class ObjectStorageService {
 
     private final RestTemplateService restTemplateService;
 
+    private final QuestionRepository questionRepository;
+
     // 섬네일 이미지 업로드
-    public void uploadThumbnailImg(MultipartFile thumbnailFile){
+    public void uploadThumbnailImg(Survey survey, MultipartFile thumbnailFile){
         if(thumbnailFile == null)
             return;
 
         StringBuilder sb = new StringBuilder(STORAGE_URL).append(THUMBNAIL_PATH);
-        String url = sb.toString();
+        String storageURL = sb.toString();
 
-        uploadFile(url, thumbnailFile);
+        String fileURL = uploadFile(storageURL, thumbnailFile);
+
+        survey.changeThumbnailImg(fileURL);
     }
 
     // 설문 문항 이미지 업로드
     @Async
-    public void uploadQuestionImgs(List<MultipartFile> questionFileImgs){
+    public void uploadQuestionImgs(List<Question> questionList, List<MultipartFile> questionFileImgs){
         if(questionFileImgs == null)
             return;
 
         StringBuilder sb = new StringBuilder(STORAGE_URL).append(QUESTION_PATH);
-        String url = sb.toString();
+        String storageURL = sb.toString();
 
-        uploadMultipartFile(url, questionFileImgs);
+        List<String> fileNameList = uploadMultipartFile(storageURL, questionFileImgs);
+
+        for(int i = 0; i < questionFileImgs.size(); i++){
+            MultipartFile multipartFile = questionFileImgs.get(i);
+
+            String[] fileNames = multipartFile.getOriginalFilename().split("[.]");
+
+            // 질문 유형 이미지 링크 넣기, 사진 이름은 1.jpg, 2.jpg 처럼 question의 질문 번호로 구분이 됨
+            int idx = Integer.parseInt(fileNames[0]) - 1;
+            Question question = questionList.get(idx);
+
+            question.changeQuestionImgUrl(fileNameList.get(i));
+        }
+        questionRepository.saveAll(questionList);
     }
-    private void uploadFile(String url, MultipartFile multipartFile){
+
+    private String uploadFile(String storageURL, MultipartFile multipartFile){
+        String fileURL = getFileURL(multipartFile, storageURL);
+
         HttpHeaders headers = getApiTokenHeader();
 
         HttpEntity<String> response;
-        response = restTemplateService.uploadFile(url, headers, multipartFile, String.class);
+
+        response = restTemplateService.uploadFile(fileURL, headers, multipartFile, String.class);
 
         if(response == null)
             throw new BaseException(BaseResponseStatus.FILE_UPLOAD_ERROR);
+
+        return fileURL;
     }
 
-    private void uploadMultipartFile(String url, List<MultipartFile> multipartFilesList){
+    private List<String> uploadMultipartFile(String storageURL, List<MultipartFile> multipartFilesList){
+        List<String> fileNameList = new ArrayList<>();
+
         HttpHeaders headers = getApiTokenHeader();
 
         for(MultipartFile multipartFile: multipartFilesList){
+            String fileURL = getFileURL(multipartFile, storageURL);
+            fileNameList.add(fileURL);
+
             HttpEntity<String> response;
-            response = restTemplateService.uploadFile(url, headers, multipartFile, String.class);
+            response = restTemplateService.uploadFile(storageURL, headers, multipartFile, String.class);
 
             if(response == null)
                 throw new BaseException(BaseResponseStatus.FILE_UPLOAD_ERROR);
         }
+
+        return fileNameList;
+    }
+
+    //
+    public String getFileURL(MultipartFile multipartFile, String storageURL){
+        StringBuilder sb = new StringBuilder(storageURL);
+        String fileName = UUID.randomUUID() + "-" + multipartFile.getOriginalFilename();
+        String fileURL = sb.append("/" + fileName).toString();
+        return fileURL;
     }
 
     // API 인증 토큰 발급받기
@@ -87,6 +130,7 @@ public class ObjectStorageService {
         return apiTokenHeader;
     }
 
+    // API 토큰 Body 값
     private JSONObject getApiTokenBodyObject(){
         JSONObject bodyObject = new JSONObject();
         JSONObject authObject = new JSONObject();
@@ -107,5 +151,17 @@ public class ObjectStorageService {
 
         bodyObject.put("auth", authObject);
         return bodyObject;
+    }
+
+
+    // 업로드 테스트
+    public void uploadTest(MultipartFile thumbnailFile){
+        if(thumbnailFile == null)
+            return;
+
+        StringBuilder sb = new StringBuilder(STORAGE_URL).append(THUMBNAIL_PATH);
+        String url = sb.toString();
+
+        uploadFile(url, thumbnailFile);
     }
 }

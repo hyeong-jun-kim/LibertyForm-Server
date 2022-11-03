@@ -37,4 +37,9 @@ public class Question extends BaseEntity {
     private String questionImgUrl;
 
     private boolean answerRequired;
+
+    // 편의 메서드
+    public void changeQuestionImgUrl(String questionImgUrl){
+        this.questionImgUrl = questionImgUrl;
+    }
 }

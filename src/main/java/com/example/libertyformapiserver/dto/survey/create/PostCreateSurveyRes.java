@@ -1,9 +1,11 @@
 package com.example.libertyformapiserver.dto.survey.create;
 
+import com.example.libertyformapiserver.domain.Question;
 import com.example.libertyformapiserver.domain.Survey;
 import com.example.libertyformapiserver.dto.choice.post.PostChoiceRes;
 import com.example.libertyformapiserver.dto.question.post.PostQuestionRes;
 import com.example.libertyformapiserver.dto.survey.post.PostSurveyRes;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 

@@ -80,7 +80,7 @@ public class SurveyController {
     @NoIntercept
     @PostMapping("/upload")
     public BaseResponse<String> uploadImgFile(@RequestParam("image")MultipartFile multipartFile){
-        objectStorageService.uploadThumbnailImg(multipartFile);
+        objectStorageService.uploadTest(multipartFile);
         return new BaseResponse<>(BaseResponseStatus.IMG_UPLOAD_SUCCESS);
     }
 }

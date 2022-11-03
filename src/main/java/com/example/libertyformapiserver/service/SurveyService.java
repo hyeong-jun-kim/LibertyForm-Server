@@ -59,11 +59,15 @@ public class SurveyService {
         List<PostQuestionRes> questionResList = getQuestionListEntity(postQuestionReqList, survey);
         createSurveyResDto.setQuestions(questionResList);
 
-        // 섬네일, 설문 이미지 Object Storage에 업로드
-        objectStorageService.uploadThumbnailImg(thumbnailImgFile);
-        objectStorageService.uploadQuestionImgs(questionImgFiles);
-
+        // 객관식 문항 DTO -> Entity 변환
         createSurveyResDto = getChoiceQuestionListEntity(choiceQuestionVOList, createSurveyResDto, survey);
+
+        // 섬네일, 설문 이미지 Object Storage에 업로드
+        objectStorageService.uploadThumbnailImg(survey, thumbnailImgFile);
+
+        List<Question> questionList = questionRepository.findQuestionsBySurveyId(survey.getId());
+        objectStorageService.uploadQuestionImgs(questionList, questionImgFiles);
+
         checkQuestionNumber(createSurveyResDto.getQuestions());
         return createSurveyResDto;
     }

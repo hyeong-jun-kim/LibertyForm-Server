@@ -41,4 +41,8 @@ public class Survey extends BaseEntity {
 
     private LocalDate expirationDate;
 
+    // 편의 메서드
+    public void changeThumbnailImg(String imgURL){
+        this.thumbnailImg = imgURL;
+    }
 }
