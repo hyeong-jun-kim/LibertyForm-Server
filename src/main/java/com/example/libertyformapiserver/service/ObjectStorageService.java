@@ -7,6 +7,7 @@ import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -40,6 +41,7 @@ public class ObjectStorageService {
     }
 
     // 설문 문항 이미지 업로드
+    @Async
     public void uploadQuestionImgs(List<MultipartFile> questionFileImgs){
         if(questionFileImgs == null)
             return;
@@ -49,7 +51,6 @@ public class ObjectStorageService {
 
         uploadMultipartFile(url, questionFileImgs);
     }
-
     private void uploadFile(String url, MultipartFile multipartFile){
         HttpHeaders headers = getApiTokenHeader();
 
