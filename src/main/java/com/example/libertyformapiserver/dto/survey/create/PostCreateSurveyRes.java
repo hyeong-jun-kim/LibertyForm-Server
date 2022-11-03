@@ -24,4 +24,8 @@ public class PostCreateSurveyRes {
     public PostCreateSurveyRes(Survey survey){
         this.survey = PostSurveyRes.toDto(survey);
     }
+
+    public void setThumbnailImgUrl(String thumbnailImgUrl){
+        survey.setThumbnailImgUrl(thumbnailImgUrl);
+    }
 }

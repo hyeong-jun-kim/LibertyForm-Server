@@ -64,6 +64,7 @@ public class SurveyService {
 
         // 섬네일, 설문 이미지 Object Storage에 업로드
         objectStorageService.uploadThumbnailImg(survey, thumbnailImgFile);
+        createSurveyResDto.setThumbnailImgUrl(survey.getThumbnailImg());
 
         List<Question> questionList = questionRepository.findQuestionsBySurveyId(survey.getId());
         objectStorageService.uploadQuestionImgs(questionList, questionImgFiles);
