@@ -109,12 +109,17 @@ public class SurveyService {
         return getSurveyInfoRes;
     }
 
+
+
     /*
      * 편의 메서드
      */
     // 주관식, 감정 바, 선형 대수 질문 저장
     private List<PostQuestionRes> getQuestionListEntity(List<PostQuestionReq> postQuestionReqList, Survey survey){
         List<PostQuestionRes> questionResList = new ArrayList<>();
+
+        if(postQuestionReqList == null)
+            return questionResList;
 
         // Question 에 Survey, QuestionType 넣기
         for(int i = 0; i < postQuestionReqList.size(); i++){

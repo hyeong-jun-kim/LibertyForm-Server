@@ -116,6 +116,7 @@ public class ObjectStorageService {
     }
 
     // API 인증 토큰 발급받기
+    // TODO 나중에 1시간에 한번씩 인증 토큰 받아오는 스케쥴러 구현하기 
     private HttpHeaders getApiTokenHeader(){
         JSONObject bodyObject = getApiTokenBodyObject();
 
