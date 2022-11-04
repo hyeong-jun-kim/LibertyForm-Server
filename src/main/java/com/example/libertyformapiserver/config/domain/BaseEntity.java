@@ -41,4 +41,8 @@ public abstract class BaseEntity {
     public void changeStatusActive(){
         setStatus(BaseStatus.ACTIVE);
     }
+
+    public void changeStatusInActive(){
+        setStatus(BaseStatus.INACTIVE);
+    }
 }

@@ -25,11 +25,6 @@ public class Survey extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @GeneratedValue(generator = "uuid2")
-    @GenericGenerator(name="uuid2", strategy = "uuid2")
-    @Column(columnDefinition = "BINARY(16)")
-    private UUID uuid;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
@@ -39,6 +34,8 @@ public class Survey extends BaseEntity {
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "survey")
     private List<Response> responses = new ArrayList<>();
+
+    private String uuid;
 
     private String name;
 
@@ -51,5 +48,9 @@ public class Survey extends BaseEntity {
     // 편의 메서드
     public void changeThumbnailImg(String thumbnailImg){
         this.thumbnailImg = thumbnailImg;
+    }
+
+    public void generateUUID(){
+        this.uuid = UUID.randomUUID().toString();
     }
 }

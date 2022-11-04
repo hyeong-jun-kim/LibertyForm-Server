@@ -1,6 +1,7 @@
 package com.example.libertyformapiserver.service;
 
 import com.example.libertyformapiserver.config.exception.BaseException;
+import com.example.libertyformapiserver.config.status.BaseStatus;
 import com.example.libertyformapiserver.domain.*;
 import com.example.libertyformapiserver.dto.choice.post.PostChoiceRes;
 import com.example.libertyformapiserver.dto.question.vo.ChoiceQuestionVO;
@@ -11,6 +12,8 @@ import com.example.libertyformapiserver.dto.survey.create.PostCreateSurveyReq;
 import com.example.libertyformapiserver.dto.survey.create.PostCreateSurveyRes;
 import com.example.libertyformapiserver.dto.survey.get.GetListSurveyRes;
 import com.example.libertyformapiserver.dto.survey.get.GetSurveyInfoRes;
+import com.example.libertyformapiserver.dto.survey.patch.PatchSurveyDeleteReq;
+import com.example.libertyformapiserver.dto.survey.patch.PatchSurveyDeleteRes;
 import com.example.libertyformapiserver.dto.survey.post.PostSurveyReq;
 import com.example.libertyformapiserver.repository.*;
 import lombok.RequiredArgsConstructor;
@@ -46,6 +49,7 @@ public class SurveyService {
                 .orElseThrow(() -> new BaseException(INVALID_MEMBER));
 
         Survey survey = postSurveyReq.toEntity(member);
+        survey.generateUUID();
         survey.changeStatusActive();
         surveyRepository.save(survey);
 
@@ -75,14 +79,14 @@ public class SurveyService {
 
     // 설문지 모두 조회
     public GetListSurveyRes getAllUserSurvey(long memberId){
-        List<Survey> surveys = surveyRepository.findSurveysByMemberId(memberId);
+        List<Survey> surveys = surveyRepository.findSurveysByMemberIdAndStatus(memberId, BaseStatus.ACTIVE);
 
         return GetListSurveyRes.listEntitytoDto(surveys);
     }
 
     // 단일 설문지 조회
     public GetSurveyInfoRes getSurveyInfo(long surveyId, long memberId){
-        Survey survey = surveyRepository.findById(surveyId)
+        Survey survey = surveyRepository.findByIdAndStatus(surveyId, BaseStatus.ACTIVE)
                 .orElseThrow(() -> new BaseException(NOT_EXIST_SURVEY));
 
         if(survey.getMember().getId() != memberId) // 설문지 작성자가 해당 유저가 아닌 경우
@@ -109,7 +113,21 @@ public class SurveyService {
         return getSurveyInfoRes;
     }
 
+    // 설문지 삭제
+    @Transactional(readOnly = false)
+    public PatchSurveyDeleteRes deleteSurvey(long surveyId, long memberId){
+        Survey survey = surveyRepository.findById(surveyId).orElseThrow
+                (() -> new BaseException(NOT_EXIST_SURVEY));
 
+        if(survey.getMember().getId() != memberId){
+            throw new BaseException(NOT_MATCH_SURVEY);
+        }
+
+        survey.changeStatusInActive();
+        PatchSurveyDeleteRes patchSurveyDeleteRes = PatchSurveyDeleteRes.toDto(survey);
+
+        return patchSurveyDeleteRes;
+    }
 
     /*
      * 편의 메서드

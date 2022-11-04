@@ -19,6 +19,11 @@ public class PostSurveyRes {
     private long memberId;
 
     @ApiModelProperty(
+            example = "2f48f241-9d64-4d16-bf56-70b9d4e0e79a"
+    )
+    private String uuid;
+
+    @ApiModelProperty(
             example = "설문지 제목"
     )
     private String name;
@@ -42,6 +47,7 @@ public class PostSurveyRes {
     static public PostSurveyRes toDto(Survey survey){
         return PostSurveyRes.builder()
                 .memberId(survey.getMember().getId())
+                .uuid(survey.getUuid())
                 .name(survey.getName())
                 .description(survey.getDescription())
                 .thumbnailImgUrl(survey.getThumbnailImg())

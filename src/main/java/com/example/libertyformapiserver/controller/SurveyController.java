@@ -7,6 +7,7 @@ import com.example.libertyformapiserver.dto.survey.create.PostCreateSurveyReq;
 import com.example.libertyformapiserver.dto.survey.create.PostCreateSurveyRes;
 import com.example.libertyformapiserver.dto.survey.get.GetListSurveyRes;
 import com.example.libertyformapiserver.dto.survey.get.GetSurveyInfoRes;
+import com.example.libertyformapiserver.dto.survey.patch.PatchSurveyDeleteRes;
 import com.example.libertyformapiserver.jwt.NoIntercept;
 import com.example.libertyformapiserver.service.ObjectStorageService;
 import com.example.libertyformapiserver.service.SurveyService;
@@ -74,6 +75,20 @@ public class SurveyController {
     @GetMapping("{surveyId}")
     public BaseResponse<GetSurveyInfoRes> getSurveyInfo(HttpServletRequest request, @PathVariable("surveyId") long surveyId){
         return new BaseResponse<>(surveyService.getSurveyInfo(surveyId, JwtInfo.getMemberId(request)));
+    }
+
+    @ApiOperation(
+            value = "설문지 삭제하기",
+            notes = "surveyId를 통해 설문지를 삭제합니다."
+    )
+    @ApiResponses({
+            @ApiResponse(code = 1000, message = "요청에 성공하였습니다."),
+            @ApiResponse(code = 2013, message = "존재하지 않는 설문입니다."),
+            @ApiResponse(code = 2014, message = "해당 사용자의 설문이 아닙니다.")
+    })
+    @PatchMapping("/delete/{surveyId}")
+    public BaseResponse<PatchSurveyDeleteRes> deleteSurvey(HttpServletRequest request, @PathVariable("surveyId") long surveyId){
+        return new BaseResponse<>(surveyService.deleteSurvey(surveyId, JwtInfo.getMemberId(request)));
     }
 
     // 이미지 업로드 테스트
