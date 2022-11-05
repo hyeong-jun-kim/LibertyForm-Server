@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -35,7 +36,7 @@ public class Survey extends BaseEntity {
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "survey")
     private List<Response> responses = new ArrayList<>();
 
-    private String uuid;
+    private String code;
 
     private String name;
 
@@ -50,7 +51,7 @@ public class Survey extends BaseEntity {
         this.thumbnailImg = thumbnailImg;
     }
 
-    public void generateUUID(){
-        this.uuid = UUID.randomUUID().toString();
+    public void generateCode(){
+        this.code = RandomStringUtils.randomAlphanumeric(12);
     }
 }

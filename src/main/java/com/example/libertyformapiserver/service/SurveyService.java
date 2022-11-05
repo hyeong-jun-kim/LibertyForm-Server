@@ -12,7 +12,6 @@ import com.example.libertyformapiserver.dto.survey.create.PostCreateSurveyReq;
 import com.example.libertyformapiserver.dto.survey.create.PostCreateSurveyRes;
 import com.example.libertyformapiserver.dto.survey.get.GetListSurveyRes;
 import com.example.libertyformapiserver.dto.survey.get.GetSurveyInfoRes;
-import com.example.libertyformapiserver.dto.survey.patch.PatchSurveyDeleteReq;
 import com.example.libertyformapiserver.dto.survey.patch.PatchSurveyDeleteRes;
 import com.example.libertyformapiserver.dto.survey.post.PostSurveyReq;
 import com.example.libertyformapiserver.repository.*;
@@ -49,7 +48,7 @@ public class SurveyService {
                 .orElseThrow(() -> new BaseException(INVALID_MEMBER));
 
         Survey survey = postSurveyReq.toEntity(member);
-        survey.generateUUID();
+        survey.generateCode();
         survey.changeStatusActive();
         surveyRepository.save(survey);
 
@@ -84,33 +83,25 @@ public class SurveyService {
         return GetListSurveyRes.listEntitytoDto(surveys);
     }
 
-    // 단일 설문지 조회
-    public GetSurveyInfoRes getSurveyInfo(long surveyId, long memberId){
+    // 자신의 설문지 단일 조회
+    public GetSurveyInfoRes getMySurveyInfo(long surveyId, long memberId){
         Survey survey = surveyRepository.findByIdAndStatus(surveyId, BaseStatus.ACTIVE)
                 .orElseThrow(() -> new BaseException(NOT_EXIST_SURVEY));
 
         if(survey.getMember().getId() != memberId) // 설문지 작성자가 해당 유저가 아닌 경우
             throw new BaseException(NOT_MATCH_SURVEY);
 
-        List<Question> questions = questionRepository.findQuestionsBySurveyId(surveyId);
-        List<ChoiceQuestionVO> choiceQuestionVOList = new ArrayList<>();
+        return getSurveyInfo(survey);
+    }
 
-        Iterator<Question> iter = questions.iterator(); // ConcurrentModificationException 방지를 위해 iterator 사용
-        while(iter.hasNext()){
-            Question question = iter.next();
-            long questionTypeId = question.getQuestionType().getId();
+    // 피설문자 설문지 단일 조회
+    public GetSurveyInfoRes getSurveyInfo(String code){
+        Survey survey = surveyRepository.findByCodeAndStatus(code, BaseStatus.ACTIVE)
+                .orElseThrow(() -> new BaseException(NOT_EXIST_SURVEY));
 
-            if(questionTypeId == 3 || questionTypeId == 4){
-                long questionId = question.getId();
-                List<Choice> choiceList = choiceRepository.findChoicesByQuestionId(questionId);
-                choiceQuestionVOList.add(ChoiceQuestionVO.toVO(question, choiceList));
-                iter.remove();
-            }
-        }
+        long surveyId = survey.getId();
 
-        GetSurveyInfoRes getSurveyInfoRes = GetSurveyInfoRes.toDto(survey, questions);
-        getSurveyInfoRes.setChoiceQuestions(choiceQuestionVOList);
-        return getSurveyInfoRes;
+        return getSurveyInfo(survey);
     }
 
     // 설문지 삭제
@@ -234,5 +225,30 @@ public class SurveyService {
             if(numberList.get(i+1) - numberList.get(i) != 1)
                 throw new BaseException(NOT_SEQUENCE_QUESTION_NUMBER);
         }
+    }
+
+    // 설문지 정보 가져오기
+    private GetSurveyInfoRes getSurveyInfo(Survey survey){
+        long surveyId = survey.getId();
+
+        List<Question> questions = questionRepository.findQuestionsBySurveyId(surveyId);
+        List<ChoiceQuestionVO> choiceQuestionVOList = new ArrayList<>();
+
+        Iterator<Question> iter = questions.iterator(); // ConcurrentModificationException 방지를 위해 iterator 사용
+        while(iter.hasNext()){
+            Question question = iter.next();
+            long questionTypeId = question.getQuestionType().getId();
+
+            if(questionTypeId == 3 || questionTypeId == 4){
+                long questionId = question.getId();
+                List<Choice> choiceList = choiceRepository.findChoicesByQuestionId(questionId);
+                choiceQuestionVOList.add(ChoiceQuestionVO.toVO(question, choiceList));
+                iter.remove();
+            }
+        }
+
+        GetSurveyInfoRes getSurveyInfoRes = GetSurveyInfoRes.toDto(survey, questions);
+        getSurveyInfoRes.setChoiceQuestions(choiceQuestionVOList);
+        return getSurveyInfoRes;
     }
 }

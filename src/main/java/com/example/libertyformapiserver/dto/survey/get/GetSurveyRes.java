@@ -20,9 +20,9 @@ public class GetSurveyRes {
     private long surveyId;
 
     @ApiModelProperty(
-            example = "2f48f241-9d64-4d16-bf56-70b9d4e0e79a"
+            example = "vf8dA1f23gH2"
     )
-    private String uuid;
+    private String code;
 
     @ApiModelProperty(
             example = "화장품 설문"
@@ -50,7 +50,7 @@ public class GetSurveyRes {
     static public GetSurveyRes toDto(Survey survey){
         return GetSurveyRes.builder()
                 .surveyId(survey.getId())
-                .uuid(survey.getUuid())
+                .code(survey.getCode())
                 .name(survey.getName())
                 .description(survey.getDescription())
                 .expirationDate(survey.getExpirationDate())

@@ -6,9 +6,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 public interface SurveyRepository extends JpaRepository<Survey, Long> {
     Optional<Survey> findByIdAndStatus(long surveyId, BaseStatus status);
+    Optional<Survey> findByCodeAndStatus(String code, BaseStatus status);
     List<Survey> findSurveysByMemberIdAndStatus(long memberId, BaseStatus status);
 }

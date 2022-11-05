@@ -14,10 +14,7 @@ import com.example.libertyformapiserver.service.SurveyService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.media.Content;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -64,17 +61,32 @@ public class SurveyController {
     }
 
     @ApiOperation(
-            value = "설문지 정보 가져오기",
-            notes = "해당 설문에 대한 정보들을 가져옵니다"
+            value = "나의 설문지 정보 가져오기",
+            notes = "해당 설문에 대한 정보들을 가져옵니다 (내가 쓴 설문만 가능)"
     )
     @ApiResponses({
             @ApiResponse(code = 1000, message = "요청에 성공하였습니다."),
             @ApiResponse(code = 2013, message = "존재하지 않는 설문입니다."),
             @ApiResponse(code = 2014, message = "해당 사용자의 설문이 아닙니다.")
     })
-    @GetMapping("{surveyId}")
-    public BaseResponse<GetSurveyInfoRes> getSurveyInfo(HttpServletRequest request, @PathVariable("surveyId") long surveyId){
-        return new BaseResponse<>(surveyService.getSurveyInfo(surveyId, JwtInfo.getMemberId(request)));
+    @GetMapping("/my/{surveyId}")
+    public BaseResponse<GetSurveyInfoRes> getMySurveyInfo(HttpServletRequest request, @PathVariable("surveyId") long surveyId){
+        return new BaseResponse<>(surveyService.getMySurveyInfo(surveyId, JwtInfo.getMemberId(request)));
+    }
+
+    @ApiOperation(
+            value = "피설문자 설문지 정보 가져오기",
+            notes = "피설문자가 해당 설문에 대한 정보들을 가져옵니다"
+    )
+    @ApiResponses({
+            @ApiResponse(code = 1000, message = "요청에 성공하였습니다."),
+            @ApiResponse(code = 2013, message = "존재하지 않는 설문입니다."),
+            @ApiResponse(code = 2014, message = "해당 사용자의 설문이 아닙니다.")
+    })
+    @NoIntercept
+    @GetMapping("{code}")
+    public BaseResponse<GetSurveyInfoRes> getSurveyInfo(@PathVariable("code") String code){
+        return new BaseResponse<>(surveyService.getSurveyInfo(code));
     }
 
     @ApiOperation(

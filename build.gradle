@@ -47,6 +47,8 @@ dependencies {
     // json
     implementation 'com.googlecode.json-simple:json-simple:1.1.1'
 
+    // random_string_util
+    implementation 'org.apache.commons:commons-lang3:3.12.0'
 }
 
 tasks.named('test') {
