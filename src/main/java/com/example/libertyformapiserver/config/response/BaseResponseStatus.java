@@ -30,6 +30,8 @@ public enum BaseResponseStatus {
     NOT_SEQUENCE_QUESTION_NUMBER(false, 2012, "질문 번호 순서가 올바르지 않습니다. 질문 번호를 다시한번 확인해주시기 바랍니다."),
     NOT_EXIST_SURVEY(false, 2013, "존재하지 않는 설문입니다."),
     NOT_MATCH_SURVEY(false, 2014, "해당 사용자의 설문이 아닙니다."),
+    NOT_EXIST_QUESTION(false, 2015, "존재하지 않는 질문입니다."),
+    NOT_EXIST_CHOICE(false, 2016, "존재하지 않는 선택지 입니다"),
 
     /**
      * 3000 : Response 오류

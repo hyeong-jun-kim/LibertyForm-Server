@@ -9,8 +9,10 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Builder
 public class PostNumericResponseReq {
@@ -25,7 +27,7 @@ public class PostNumericResponseReq {
     private int value;
 
     @ApiModelProperty(
-            example = "EmotionBar"
+            example = "EMOTION_BAR"
     )
     private NumericType type;
 

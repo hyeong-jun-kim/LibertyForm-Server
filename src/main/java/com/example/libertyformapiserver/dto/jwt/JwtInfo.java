@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 @AllArgsConstructor
 @NoArgsConstructor
 public class JwtInfo {
-    private long memberId;
+    private Long memberId;
 
     static public long getMemberId(HttpServletRequest request){
         JwtInfo jwtInfo = (JwtInfo) request.getAttribute("jwtInfo");

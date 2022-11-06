@@ -26,4 +26,9 @@ public class Choice_MultipleChoice_Response extends BaseEntity {
     @JoinColumn(name = "choiceId")
     private Choice choice;
 
+    /* 편의 메서드 */
+    public Choice_MultipleChoice_Response(MultipleChoiceResponse multipleChoiceResponse, Choice choice){
+        this.multipleChoiceResponse = multipleChoiceResponse;
+        this.choice = choice;
+    }
 }

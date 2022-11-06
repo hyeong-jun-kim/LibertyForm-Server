@@ -1,16 +1,17 @@
 package com.example.libertyformapiserver.dto.response.post;
 
-import com.example.libertyformapiserver.config.type.NumericType;
 import com.example.libertyformapiserver.domain.*;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Builder
-public class PostSingleChoiceReq {
+public class PostSingleChoiceResponseReq {
     @ApiModelProperty(
             example = "3"
     )
@@ -19,7 +20,7 @@ public class PostSingleChoiceReq {
     @ApiModelProperty(
             example = "1"
     )
-    private int choiceId;
+    private long choiceId;
 
     public SingleChoiceResponse toEntity(Response response, Question question, Choice choice){
         return SingleChoiceResponse.builder()

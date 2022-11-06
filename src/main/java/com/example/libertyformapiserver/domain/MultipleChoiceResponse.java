@@ -24,4 +24,10 @@ public class MultipleChoiceResponse {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "question_id")
     private Question question;
+
+    /* 편의 메서드 */
+    public MultipleChoiceResponse(Response response, Question question){
+        this.response = response;
+        this.question = question;
+    }
 }

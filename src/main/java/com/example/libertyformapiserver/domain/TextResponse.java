@@ -32,4 +32,12 @@ public class TextResponse extends BaseEntity {
     private TextType textType;
 
     private String value;
+
+    /* 편의 메서드 */
+    public TextResponse(Response response, Question question, TextType textType, String value){
+        this.response = response;
+        this.question = question;
+        this.textType = textType;
+        this.value = value;
+    }
 }

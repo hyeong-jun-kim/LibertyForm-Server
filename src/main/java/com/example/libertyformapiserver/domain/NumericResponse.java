@@ -32,4 +32,12 @@ public class NumericResponse extends BaseEntity {
     private NumericType numericType;
 
     private int value;
+
+    /* 편의 메서드 */
+    public NumericResponse(Response response, Question question, NumericType numericType, int value) {
+        this.response = response;
+        this.question = question;
+        this.numericType = numericType;
+        this.value = value;
+    }
 }
