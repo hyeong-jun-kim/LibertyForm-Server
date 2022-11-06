@@ -1,6 +1,7 @@
 package com.example.libertyformapiserver.domain;
 
 import com.example.libertyformapiserver.config.domain.BaseEntity;
+import com.example.libertyformapiserver.config.type.NumericType;
 import com.fasterxml.jackson.databind.ser.Serializers;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,6 +27,9 @@ public class NumericResponse extends BaseEntity {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn
     private Question question;
+
+    @Enumerated(EnumType.STRING)
+    private NumericType numericType;
 
     private int value;
 }

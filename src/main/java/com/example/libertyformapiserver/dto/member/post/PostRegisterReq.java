@@ -1,14 +1,13 @@
 package com.example.libertyformapiserver.dto.member.post;
 
 import com.example.libertyformapiserver.config.status.EmailValidStatus;
-import com.example.libertyformapiserver.config.status.MemberType;
+import com.example.libertyformapiserver.config.type.MemberType;
 import com.example.libertyformapiserver.domain.Member;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;

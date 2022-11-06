@@ -1,9 +1,8 @@
 package com.example.libertyformapiserver.domain;
 
 import com.example.libertyformapiserver.config.domain.BaseEntity;
-import com.example.libertyformapiserver.config.status.BaseStatus;
 import com.example.libertyformapiserver.config.status.EmailValidStatus;
-import com.example.libertyformapiserver.config.status.MemberType;
+import com.example.libertyformapiserver.config.type.MemberType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

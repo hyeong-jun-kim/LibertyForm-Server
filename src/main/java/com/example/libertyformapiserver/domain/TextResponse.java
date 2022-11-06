@@ -1,6 +1,8 @@
 package com.example.libertyformapiserver.domain;
 
 import com.example.libertyformapiserver.config.domain.BaseEntity;
+import com.example.libertyformapiserver.config.type.NumericType;
+import com.example.libertyformapiserver.config.type.TextType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -25,6 +27,9 @@ public class TextResponse extends BaseEntity {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "questionId")
     private Question question;
+
+    @Enumerated(EnumType.STRING)
+    private TextType textType;
 
     private String value;
 }

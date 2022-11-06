@@ -1,7 +1,6 @@
 package com.example.libertyformapiserver.dto.login.post;
 
-import com.example.libertyformapiserver.config.status.MemberType;
-import io.swagger.annotations.Api;
+import com.example.libertyformapiserver.config.type.MemberType;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Builder;
 import lombok.Getter;
