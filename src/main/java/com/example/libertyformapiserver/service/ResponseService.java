@@ -36,7 +36,7 @@ public class ResponseService {
 
     // 피 설문자 응답 저장
     @Transactional(readOnly = false, rollbackFor = {Exception.class, BaseException.class})
-    public PostResponseRes createResponse(PostResponseReq postResponseDto, Long memberId){
+    public PostResponseRes createResponse(PostResponseReq postResponseDto, Long memberId){ // TODO 질문 유형별 정확한 Validation 필요
         long surveyId = postResponseDto.getSurveyId();
         Survey survey = surveyRepository.findById(surveyId)
                 .orElseThrow(() -> new BaseException(BaseResponseStatus.NOT_EXIST_SURVEY));
@@ -44,7 +44,6 @@ public class ResponseService {
         Member member = null;
         if(memberId != null)
             member = memberRepository.findById(memberId).orElseThrow(() -> new BaseException(INVALID_MEMBER));
-
 
         Response response = new Response(survey, member);
         responseRepository.save(response);
@@ -77,6 +76,8 @@ public class ResponseService {
             int questionNumber = textResponseDto.getQuestionNumber();
             Question question = getExistQuestion(response.getSurvey(), questionNumber);
 
+            checkMatchQuestionType(question, 1, 2);
+
             String value = textResponseDto.getValue();
             TextType textType = textResponseDto.getType();
 
@@ -95,6 +96,8 @@ public class ResponseService {
             int questionNumber = numericResponseDto.getQuestionNumber();
             Question question = getExistQuestion(response.getSurvey(), questionNumber);
 
+            checkMatchQuestionType(question, 5, 6);
+
             int value = numericResponseDto.getValue();
             NumericType numericType = numericResponseDto.getType();
 
@@ -112,6 +115,8 @@ public class ResponseService {
         for(PostSingleChoiceResponseReq singleChoiceResponseDto: singleChoiceResponseDtoList){
             int questionNumber = singleChoiceResponseDto.getQuestionNumber();
             Question question = getExistQuestion(response.getSurvey(), questionNumber);
+
+            checkMatchQuestionType(question, 3);
 
             int choiceNumber = singleChoiceResponseDto.getChoiceNumber();
             Choice choice = getExistChoice(question, choiceNumber);
@@ -132,6 +137,8 @@ public class ResponseService {
         for(PostMultipleChoiceResponseReq multipleChoiceResponseDto: multipleChoiceResponseDtoList){
             int questionNumber = multipleChoiceResponseDto.getQuestionNumber();
             Question question = getExistQuestion(response.getSurvey(), questionNumber);
+
+            checkMatchQuestionType(question, 4);
             
             List<ChoiceVO> choiceList = multipleChoiceResponseDto.getChoices();
             List<Choice> choices = getExistChoiceList(question, choiceList);
@@ -165,5 +172,17 @@ public class ResponseService {
     private List<Choice> getExistChoiceList(Question question, List<ChoiceVO> choices){
         return choices.stream().map(c -> choiceRepository.findChoiceByQuestionAndNumber(question, c.getChoiceNumber())
                         .orElseThrow(() -> new BaseException(NOT_EXIST_CHOICE))).collect(Collectors.toList());
+    }
+
+    private void checkMatchQuestionType(Question question, int ...typeNum){
+        long questionTypeId = question.getQuestionType().getId();
+
+        for(int i = 0; i < typeNum.length; i++){
+            if(questionTypeId == typeNum[i])
+                return;
+        }
+
+        // 일치하는 질문 유형이 없으면 예외처리
+        throw new BaseException(NOT_MATCH_QUESTION_TYPE);
     }
 }
