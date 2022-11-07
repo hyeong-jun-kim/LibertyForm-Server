@@ -23,7 +23,6 @@ public class PostChoiceReq {
     )
     private String name;
 
-    @NotBlank(message = "객관식 번호를 입력해주세요.")
     @ApiModelProperty(
             example = "1"
     )

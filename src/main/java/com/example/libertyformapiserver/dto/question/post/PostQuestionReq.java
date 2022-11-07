@@ -15,7 +15,6 @@ import javax.validation.constraints.Size;
 @Getter
 @Setter
 public class PostQuestionReq {
-    @NotBlank(message = "questionType을 입력해주세요")
     @ApiModelProperty(
             example = "3"
     )
@@ -37,7 +36,6 @@ public class PostQuestionReq {
     @ApiModelProperty(
             example = "2"
     )
-    @NotBlank(message = "질문 번호를 입력해주세요.")
     private int number;
 
     @ApiModelProperty(
@@ -48,7 +46,6 @@ public class PostQuestionReq {
     @ApiModelProperty(
             example = "false"
     )
-    @NotBlank(message = "필수 사항인지 입력해주세요.")
     private boolean answerRequired;
 
     public Question toEntity(Survey survey, QuestionType questionType){
