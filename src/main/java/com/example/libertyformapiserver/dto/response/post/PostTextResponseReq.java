@@ -18,9 +18,9 @@ import lombok.NoArgsConstructor;
 @Builder
 public class PostTextResponseReq {
     @ApiModelProperty(
-            example = "2"
+            example = "1"
     )
-    private long questionId;
+    private int questionNumber;
 
     @ApiModelProperty(
             example = "저는 사과가 좋아요 왜냐하면 맛있기 때문이죠."

@@ -18,7 +18,7 @@ public class PostMultipleChoiceResponseReq {
     @ApiModelProperty(
             example = "4"
     )
-    private long questionId;
+    private int questionNumber;
 
     private List<ChoiceVO> choices;
 

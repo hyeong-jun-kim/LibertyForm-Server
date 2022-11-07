@@ -15,12 +15,12 @@ public class PostSingleChoiceResponseReq {
     @ApiModelProperty(
             example = "3"
     )
-    private long questionId;
+    private int questionNumber;
 
     @ApiModelProperty(
             example = "1"
     )
-    private long choiceId;
+    private int choiceNumber;
 
     public SingleChoiceResponse toEntity(Response response, Question question, Choice choice){
         return SingleChoiceResponse.builder()

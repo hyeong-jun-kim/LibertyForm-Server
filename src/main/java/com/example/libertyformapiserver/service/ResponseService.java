@@ -45,6 +45,7 @@ public class ResponseService {
         Member member = memberRepository.findById(memberId).orElseGet(null);
 
         Response response = new Response(survey, member);
+        responseRepository.save(response);
 
         List<PostTextResponseReq> textResponseDtoList = postResponseDto.getTextResponse();
         List<TextResponse> textResponseList = saveTextResponse(textResponseDtoList, response);
@@ -70,8 +71,9 @@ public class ResponseService {
         ArrayList<TextResponse> textResponseList = new ArrayList<>();
 
         for(PostTextResponseReq textResponseDto: textResponseDtoList){
-            long questionId = textResponseDto.getQuestionId();
-            Question question = getExistQuestion(questionId);
+
+            int questionNumber = textResponseDto.getQuestionNumber();
+            Question question = getExistQuestion(response.getSurvey(), questionNumber);
 
             String value = textResponseDto.getValue();
             TextType textType = textResponseDto.getType();
@@ -88,8 +90,8 @@ public class ResponseService {
         ArrayList<NumericResponse> numericResponseList = new ArrayList<>();
 
         for(PostNumericResponseReq numericResponseDto: textNumericResponseDtoList){
-            long questionId = numericResponseDto.getQuestionId();
-            Question question = getExistQuestion(questionId);
+            int questionNumber = numericResponseDto.getQuestionNumber();
+            Question question = getExistQuestion(response.getSurvey(), questionNumber);
 
             int value = numericResponseDto.getValue();
             NumericType numericType = numericResponseDto.getType();
@@ -106,11 +108,11 @@ public class ResponseService {
         ArrayList<SingleChoiceResponse> singleChoiceResponseList = new ArrayList<>();
 
         for(PostSingleChoiceResponseReq singleChoiceResponseDto: singleChoiceResponseDtoList){
-            long questionId = singleChoiceResponseDto.getQuestionId();
-            Question question = getExistQuestion(questionId);
+            int questionNumber = singleChoiceResponseDto.getQuestionNumber();
+            Question question = getExistQuestion(response.getSurvey(), questionNumber);
 
-            long choiceId = singleChoiceResponseDto.getChoiceId();
-            Choice choice = getExistChoice(choiceId);
+            int choiceNumber = singleChoiceResponseDto.getChoiceNumber();
+            Choice choice = getExistChoice(question, choiceNumber);
 
             SingleChoiceResponse singleChoiceResponse = new SingleChoiceResponse(response, question, choice);
 
@@ -126,11 +128,11 @@ public class ResponseService {
         ArrayList<Choice_MultipleChoice_Response> choiceMultipleChoiceResponseList = new ArrayList<>();
 
         for(PostMultipleChoiceResponseReq multipleChoiceResponseDto: multipleChoiceResponseDtoList){
-            long questionId = multipleChoiceResponseDto.getQuestionId();
-            Question question = getExistQuestion(questionId);
-
+            int questionNumber = multipleChoiceResponseDto.getQuestionNumber();
+            Question question = getExistQuestion(response.getSurvey(), questionNumber);
+            
             List<ChoiceVO> choiceList = multipleChoiceResponseDto.getChoices();
-            List<Choice> choices = getExistChoiceList(choiceList);
+            List<Choice> choices = getExistChoiceList(question, choiceList);
 
             MultipleChoiceResponse multipleChoiceResponse = new MultipleChoiceResponse(response, question);
             multipleChoiceResponseList.add(multipleChoiceResponse);
@@ -148,21 +150,18 @@ public class ResponseService {
         return choiceMultipleChoiceResponseList;
     }
 
-    private Question getExistQuestion(long questionId){
-        return questionRepository.findById(questionId)
+    private Question getExistQuestion(Survey survey, int questionNumber){
+        return questionRepository.findQuestionBySurveyAndNumber(survey, questionNumber)
                 .orElseThrow(() -> new BaseException(NOT_EXIST_QUESTION));
     }
 
-    private Choice getExistChoice(long choiceId){
-        return choiceRepository.findById(choiceId)
+    private Choice getExistChoice(Question question, int choiceNumber){
+        return choiceRepository.findChoiceByQuestionAndNumber(question, choiceNumber)
                 .orElseThrow(() -> new BaseException(NOT_EXIST_CHOICE));
     }
 
-    private List<Choice> getExistChoiceList(List<ChoiceVO> choices){
-        List<Choice> choiceList =
-                choices.stream().map(c -> choiceRepository.findById(c.getChoiceId())
+    private List<Choice> getExistChoiceList(Question question, List<ChoiceVO> choices){
+        return choices.stream().map(c -> choiceRepository.findChoiceByQuestionAndNumber(question, c.getChoiceNumber())
                         .orElseThrow(() -> new BaseException(NOT_EXIST_CHOICE))).collect(Collectors.toList());
-
-        return choiceList;
     }
 }

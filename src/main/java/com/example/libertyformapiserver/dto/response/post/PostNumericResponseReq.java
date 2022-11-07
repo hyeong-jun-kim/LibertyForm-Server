@@ -17,9 +17,9 @@ import lombok.NoArgsConstructor;
 @Builder
 public class PostNumericResponseReq {
     @ApiModelProperty(
-            example = "1"
+            example = "2"
     )
-    private long questionId;
+    private int questionNumber;
 
     @ApiModelProperty(
             example = "4"

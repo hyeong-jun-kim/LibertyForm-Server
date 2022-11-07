@@ -12,5 +12,5 @@ public class ChoiceVO {
     @ApiModelProperty(
             example = "3"
     )
-    private long choiceId;
+    private int choiceNumber;
 }
