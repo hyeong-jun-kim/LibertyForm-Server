@@ -9,6 +9,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 
@@ -29,7 +30,7 @@ public class ResponseController {
             @ApiResponse(code = 2016, message = "존재하지 않는 선택지입니다.")
     })
     @PostMapping(value = "/create") // questionImgFiles은 설문 문항 번호로 구분이 됨 ex) 0.jpg, 1.png
-    public BaseResponse<PostResponseRes> createSurvey(@RequestBody PostResponseReq postResponseReq, HttpServletRequest request){
+    public BaseResponse<PostResponseRes> createSurvey(@RequestBody @Validated PostResponseReq postResponseReq, HttpServletRequest request){
         return new BaseResponse<>(responseService.createResponse(postResponseReq, JwtInfo.getMemberId(request)));
     }
 }

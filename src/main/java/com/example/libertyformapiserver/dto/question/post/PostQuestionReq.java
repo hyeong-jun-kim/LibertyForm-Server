@@ -6,12 +6,16 @@ import com.example.libertyformapiserver.domain.Survey;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Getter
 @Setter
 public class PostQuestionReq {
+    @NotBlank(message = "questionType을 입력해주세요")
     @ApiModelProperty(
             example = "3"
     )
@@ -20,17 +24,21 @@ public class PostQuestionReq {
     @ApiModelProperty(
             example = "당신이 좋아하는 과일은 어떤걸까요?"
     )
+    @NotBlank(message = "질문 제목을 입력해주세요.")
+    @Size(min = 1, max = 30, message = "질문 제목은 1 ~ 30자 이내만 가능합니다.")
     private String name;
 
     @ApiModelProperty(
             example = "예를들어서 사과, 오렌지, 포도가 있습니다."
     )
+    @Size(max = 100, message = "질문 설명은 100자 이내만 가능합니다.")
     private String description;
 
     @ApiModelProperty(
             example = "2"
     )
-    private Integer number;
+    @NotBlank(message = "질문 번호를 입력해주세요.")
+    private int number;
 
     @ApiModelProperty(
             example = "https://libertyform.shop/s3/neo.jpg"
@@ -40,6 +48,7 @@ public class PostQuestionReq {
     @ApiModelProperty(
             example = "false"
     )
+    @NotBlank(message = "필수 사항인지 입력해주세요.")
     private boolean answerRequired;
 
     public Question toEntity(Survey survey, QuestionType questionType){

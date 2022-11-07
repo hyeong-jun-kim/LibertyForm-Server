@@ -8,16 +8,22 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Builder
 public class PostChoiceReq {
+    @NotBlank(message = "객관식 문항 내용을 입력해주세요.")
+    @Size(min = 1, max = 20, message = "1 ~ 20자 이내로 입력해주세요.")
     @ApiModelProperty(
             example = "내용을 입력해주세요."
     )
     private String name;
 
+    @NotBlank(message = "객관식 번호를 입력해주세요.")
     @ApiModelProperty(
             example = "1"
     )

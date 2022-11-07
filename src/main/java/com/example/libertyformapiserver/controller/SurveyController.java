@@ -15,6 +15,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -43,7 +44,7 @@ public class SurveyController {
             @ApiResponse(code = 4002, message = "파일을 업로드 하는 도중 오류가 발생했습니다.")}
     )
     @PostMapping(value = "/create") // questionImgFiles은 설문 문항 번호로 구분이 됨 ex) 0.jpg, 1.png
-    public BaseResponse<PostCreateSurveyRes> createSurvey(@RequestPart PostCreateSurveyReq surveyReqDto, HttpServletRequest request
+    public BaseResponse<PostCreateSurveyRes> createSurvey(@RequestPart @Validated PostCreateSurveyReq surveyReqDto, HttpServletRequest request
             , @RequestParam(value = "thumbnailImg", required = false)MultipartFile thumbnailImgFile, @RequestParam(value = "questionImgs", required = false)List<MultipartFile> questionImgFiles){
         return new BaseResponse<>(surveyService.createSurvey(surveyReqDto, JwtInfo.getMemberId(request), thumbnailImgFile, questionImgFiles));
     }
