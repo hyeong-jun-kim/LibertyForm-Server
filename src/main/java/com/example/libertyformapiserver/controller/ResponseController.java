@@ -4,6 +4,8 @@ import com.example.libertyformapiserver.config.response.BaseResponse;
 import com.example.libertyformapiserver.dto.jwt.JwtInfo;
 import com.example.libertyformapiserver.dto.response.post.PostResponseReq;
 import com.example.libertyformapiserver.dto.response.post.PostResponseRes;
+import com.example.libertyformapiserver.jwt.NoIntercept;
+import com.example.libertyformapiserver.jwt.ResponseIntercept;
 import com.example.libertyformapiserver.service.ResponseService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -30,6 +32,7 @@ public class ResponseController {
             @ApiResponse(code = 2016, message = "존재하지 않는 선택지입니다.")
     })
     @PostMapping(value = "/create") // questionImgFiles은 설문 문항 번호로 구분이 됨 ex) 0.jpg, 1.png
+    @ResponseIntercept
     public BaseResponse<PostResponseRes> createSurvey(@RequestBody @Validated PostResponseReq postResponseReq, HttpServletRequest request){
         return new BaseResponse<>(responseService.createResponse(postResponseReq, JwtInfo.getMemberId(request)));
     }

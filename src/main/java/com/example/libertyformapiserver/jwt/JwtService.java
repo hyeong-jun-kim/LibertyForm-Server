@@ -90,6 +90,32 @@ public class JwtService {
         return body.get("jwtInfo", LinkedHashMap.class);
     }
 
+    // 피 설문자 응답 전용 Jwt 추출 메서드
+    public LinkedHashMap getResponseJwtInfo(){
+        // 1. JWT 추출
+        String accessToken = getJwt();
+        if(accessToken == null || accessToken.length() == 0)
+            return null;
+
+        // 2. JWT parsing
+        Claims body;
+        try{
+            body = Jwts.parser()
+                    .setSigningKey(secretKey)
+                    .parseClaimsJws(accessToken)
+                    .getBody();
+        } catch(Exception ignored){
+            throw new BaseException(INVALID_JWT);
+        }
+
+        // 3. JWT 유효기간 확인
+        if(!validateToken(accessToken))
+            throw new BaseException(EXPIRED_JWT);
+
+        System.out.println("body = " + body.get("jwtInfo"));
+        return body.get("jwtInfo", LinkedHashMap.class);
+    }
+
     // 토큰 유효기간 확인
     public boolean validateToken(String token){
         boolean expiration = Jwts.parser()

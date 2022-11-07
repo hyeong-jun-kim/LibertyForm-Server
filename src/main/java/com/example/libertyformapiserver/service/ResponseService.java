@@ -16,8 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.example.libertyformapiserver.config.response.BaseResponseStatus.NOT_EXIST_CHOICE;
-import static com.example.libertyformapiserver.config.response.BaseResponseStatus.NOT_EXIST_QUESTION;
+import static com.example.libertyformapiserver.config.response.BaseResponseStatus.*;
 
 @Service
 @RequiredArgsConstructor
@@ -42,7 +41,10 @@ public class ResponseService {
         Survey survey = surveyRepository.findById(surveyId)
                 .orElseThrow(() -> new BaseException(BaseResponseStatus.NOT_EXIST_SURVEY));
 
-        Member member = memberRepository.findById(memberId).orElseGet(null);
+        Member member = null;
+        if(memberId != null)
+            member = memberRepository.findById(memberId).orElseThrow(() -> new BaseException(INVALID_MEMBER));
+
 
         Response response = new Response(survey, member);
         responseRepository.save(response);

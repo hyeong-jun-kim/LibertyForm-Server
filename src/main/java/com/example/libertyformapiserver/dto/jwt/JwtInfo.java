@@ -11,8 +11,12 @@ import javax.servlet.http.HttpServletRequest;
 public class JwtInfo {
     private Long memberId;
 
-    static public long getMemberId(HttpServletRequest request){
+    static public Long getMemberId(HttpServletRequest request){
         JwtInfo jwtInfo = (JwtInfo) request.getAttribute("jwtInfo");
+
+        if(jwtInfo == null)
+            return null;
+
         return jwtInfo.getMemberId();
     }
 }
