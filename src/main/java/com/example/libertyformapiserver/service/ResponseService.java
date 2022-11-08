@@ -61,7 +61,7 @@ public class ResponseService {
         List<PostSingleChoiceResponseRes> singleChoiceResponseRes = PostSingleChoiceResponseRes.toListDto(singleChoiceResponseList);
 
         List<PostMultipleChoiceResponseReq> multipleChoiceResponseDtoList = postResponseDto.getMultipleChoiceResponse();
-        List<Choice_MultipleChoice_Response> multipleChoiceResponseList = saveMultipleChoiceResponse(multipleChoiceResponseDtoList, response);
+        List<MultipleChoice> multipleChoiceResponseList = saveMultipleChoiceResponse(multipleChoiceResponseDtoList, response);
         List<PostMultipleChoiceResponseRes> multipleChoiceResponseResList = PostMultipleChoiceResponseRes.toListDto(multipleChoiceResponseList);
 
         return new PostResponseRes(textResponseResList, numericResponseRes, singleChoiceResponseRes, multipleChoiceResponseResList);
@@ -130,9 +130,9 @@ public class ResponseService {
         return singleChoiceResponseList;
     }
 
-    private List<Choice_MultipleChoice_Response> saveMultipleChoiceResponse(List<PostMultipleChoiceResponseReq> multipleChoiceResponseDtoList, Response response){
+    private List<MultipleChoice> saveMultipleChoiceResponse(List<PostMultipleChoiceResponseReq> multipleChoiceResponseDtoList, Response response){
         ArrayList<MultipleChoiceResponse> multipleChoiceResponseList = new ArrayList<>();
-        ArrayList<Choice_MultipleChoice_Response> choiceMultipleChoiceResponseList = new ArrayList<>();
+        ArrayList<MultipleChoice> choiceMultipleChoiceResponseList = new ArrayList<>();
 
         for(PostMultipleChoiceResponseReq multipleChoiceResponseDto: multipleChoiceResponseDtoList){
             int questionNumber = multipleChoiceResponseDto.getQuestionNumber();
@@ -147,7 +147,7 @@ public class ResponseService {
             multipleChoiceResponseList.add(multipleChoiceResponse);
 
             for(Choice choice: choices){
-                Choice_MultipleChoice_Response choiceMultipleChoiceResponse = new Choice_MultipleChoice_Response(multipleChoiceResponse, choice);
+                MultipleChoice choiceMultipleChoiceResponse = new MultipleChoice(multipleChoiceResponse, choice);
 
                 choiceMultipleChoiceResponseList.add(choiceMultipleChoiceResponse);
             }

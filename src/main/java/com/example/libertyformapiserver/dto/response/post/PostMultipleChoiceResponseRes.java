@@ -1,7 +1,6 @@
 package com.example.libertyformapiserver.dto.response.post;
 
-import com.example.libertyformapiserver.domain.Choice_MultipleChoice_Response;
-import com.example.libertyformapiserver.domain.MultipleChoiceResponse;
+import com.example.libertyformapiserver.domain.MultipleChoice;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -17,14 +16,14 @@ public class PostMultipleChoiceResponseRes {
 
     private long multipleChoiceResponseId;
 
-    static public PostMultipleChoiceResponseRes toDto (Choice_MultipleChoice_Response multipleChoiceResponse){
+    static public PostMultipleChoiceResponseRes toDto (MultipleChoice multipleChoiceResponse){
         return PostMultipleChoiceResponseRes.builder()
                 .choiceId(multipleChoiceResponse.getChoice().getId())
                 .multipleChoiceResponseId(multipleChoiceResponse.getMultipleChoiceResponse().getId())
                 .build();
     }
 
-    static public List<PostMultipleChoiceResponseRes> toListDto(List<Choice_MultipleChoice_Response> multipleChoiceResponseList){
+    static public List<PostMultipleChoiceResponseRes> toListDto(List<MultipleChoice> multipleChoiceResponseList){
         return multipleChoiceResponseList.stream().map(m -> toDto(m)).collect(Collectors.toList());
     }
 }
