@@ -4,7 +4,6 @@ import com.example.libertyformapiserver.config.type.NumericType;
 import com.example.libertyformapiserver.domain.NumericResponse;
 import com.example.libertyformapiserver.domain.Question;
 import com.example.libertyformapiserver.domain.Response;
-import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

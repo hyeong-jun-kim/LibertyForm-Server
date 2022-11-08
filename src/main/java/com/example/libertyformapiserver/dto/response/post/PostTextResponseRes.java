@@ -1,6 +1,5 @@
 package com.example.libertyformapiserver.dto.response.post;
 
-import com.example.libertyformapiserver.config.type.TextType;
 import com.example.libertyformapiserver.domain.TextResponse;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

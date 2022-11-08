@@ -1,6 +1,5 @@
 package com.example.libertyformapiserver.dto.response.post;
 
-import com.example.libertyformapiserver.config.type.NumericType;
 import com.example.libertyformapiserver.domain.NumericResponse;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

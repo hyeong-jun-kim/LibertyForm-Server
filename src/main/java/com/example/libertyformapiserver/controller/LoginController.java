@@ -10,9 +10,11 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+@Log4j2
 @RestController
 @RequestMapping("/login")
 @RequiredArgsConstructor
@@ -33,6 +35,8 @@ public class LoginController {
     @NoIntercept
     public BaseResponse<PostLoginRes> login(@Validated @RequestBody PostLoginReq dto){
         PostLoginRes postLoginRes = loginService.login(dto);
+        log.info("Login : {}", postLoginRes.getEmail());
+
         return new BaseResponse<>(postLoginRes);
     }
 
@@ -50,7 +54,10 @@ public class LoginController {
     @PostMapping("/kakao")
     @NoIntercept
     public BaseResponse<PostLoginRes> kakaoLogin(@RequestBody PostKakaoLoginReq dto){
-        return new BaseResponse<>(loginService.kakaoLogin(dto));
+        PostLoginRes postLoginRes = loginService.kakaoLogin(dto);
+        log.info("Kakao Login : {}", postLoginRes.getEmail());
+
+        return new BaseResponse<>(postLoginRes);
     }
 
     // 카카오 로그인 후 accessToken 받기 (테스트 용)

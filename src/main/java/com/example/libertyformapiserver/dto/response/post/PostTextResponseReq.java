@@ -1,8 +1,6 @@
 package com.example.libertyformapiserver.dto.response.post;
 
-import com.example.libertyformapiserver.config.type.NumericType;
 import com.example.libertyformapiserver.config.type.TextType;
-import com.example.libertyformapiserver.domain.NumericResponse;
 import com.example.libertyformapiserver.domain.Question;
 import com.example.libertyformapiserver.domain.Response;
 import com.example.libertyformapiserver.domain.TextResponse;

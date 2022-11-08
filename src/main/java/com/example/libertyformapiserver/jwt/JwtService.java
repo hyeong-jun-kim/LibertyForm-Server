@@ -1,7 +1,6 @@
 package com.example.libertyformapiserver.jwt;
 
 import com.example.libertyformapiserver.config.exception.BaseException;
-import com.example.libertyformapiserver.config.response.BaseResponseStatus;
 import com.example.libertyformapiserver.dto.jwt.JwtInfo;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

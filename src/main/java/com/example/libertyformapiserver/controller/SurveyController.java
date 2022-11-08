@@ -15,6 +15,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -22,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
+@Log4j2
 @RestController
 @RequestMapping("/survey")
 @RequiredArgsConstructor
@@ -46,6 +48,9 @@ public class SurveyController {
     @PostMapping(value = "/create") // questionImgFiles은 설문 문항 번호로 구분이 됨 ex) 0.jpg, 1.png
     public BaseResponse<PostCreateSurveyRes> createSurvey(@RequestPart @Validated PostCreateSurveyReq surveyReqDto, HttpServletRequest request
             , @RequestParam(value = "thumbnailImg", required = false)MultipartFile thumbnailImgFile, @RequestParam(value = "questionImgs", required = false)List<MultipartFile> questionImgFiles){
+        PostCreateSurveyRes postCreateSurveyRes = surveyService.createSurvey(surveyReqDto, JwtInfo.getMemberId(request), thumbnailImgFile, questionImgFiles);
+        log.info("Create Survey : {}", postCreateSurveyRes.getSurvey().getCode());
+
         return new BaseResponse<>(surveyService.createSurvey(surveyReqDto, JwtInfo.getMemberId(request), thumbnailImgFile, questionImgFiles));
     }
 
@@ -58,21 +63,10 @@ public class SurveyController {
     })
     @GetMapping
     public BaseResponse<GetListSurveyRes> getAllUserSurvey(HttpServletRequest request){
-        return new BaseResponse<>(surveyService.getAllUserSurvey(JwtInfo.getMemberId(request)));
-    }
+        GetListSurveyRes getListSurveyRes = surveyService.getAllUserSurvey(JwtInfo.getMemberId(request));
+        log.info("getAllUserSurvey : {}", JwtInfo.getMemberId((request)));
 
-    @ApiOperation(
-            value = "나의 설문지 정보 가져오기",
-            notes = "해당 설문에 대한 정보들을 가져옵니다 (내가 쓴 설문만 가능)"
-    )
-    @ApiResponses({
-            @ApiResponse(code = 1000, message = "요청에 성공하였습니다."),
-            @ApiResponse(code = 2013, message = "존재하지 않는 설문입니다."),
-            @ApiResponse(code = 2014, message = "해당 사용자의 설문이 아닙니다.")
-    })
-    @GetMapping("/my/{surveyId}")
-    public BaseResponse<GetSurveyInfoRes> getMySurveyInfo(HttpServletRequest request, @PathVariable("surveyId") long surveyId){
-        return new BaseResponse<>(surveyService.getMySurveyInfo(surveyId, JwtInfo.getMemberId(request)));
+        return new BaseResponse<>(surveyService.getAllUserSurvey(JwtInfo.getMemberId(request)));
     }
 
     @ApiOperation(
@@ -87,7 +81,10 @@ public class SurveyController {
     @NoIntercept
     @GetMapping("{code}")
     public BaseResponse<GetSurveyInfoRes> getSurveyInfo(@PathVariable("code") String code){
-        return new BaseResponse<>(surveyService.getSurveyInfo(code));
+        GetSurveyInfoRes getSurveyInfoRes = surveyService.getSurveyInfo(code);
+        log.info("Survey Info : {}", getSurveyInfoRes.getSurvey().getCode());
+
+        return new BaseResponse<>(getSurveyInfoRes);
     }
 
     @ApiOperation(
@@ -101,7 +98,10 @@ public class SurveyController {
     })
     @PatchMapping("/delete/{surveyId}")
     public BaseResponse<PatchSurveyDeleteRes> deleteSurvey(HttpServletRequest request, @PathVariable("surveyId") long surveyId){
-        return new BaseResponse<>(surveyService.deleteSurvey(surveyId, JwtInfo.getMemberId(request)));
+        PatchSurveyDeleteRes patchSurveyDeleteRes = surveyService.deleteSurvey(surveyId, JwtInfo.getMemberId(request));
+        log.info("Delete Survey : {}", patchSurveyDeleteRes.getSurveyId());
+
+        return new BaseResponse<>(patchSurveyDeleteRes);
     }
 
     // 이미지 업로드 테스트
@@ -109,6 +109,7 @@ public class SurveyController {
     @PostMapping("/upload")
     public BaseResponse<String> uploadImgFile(@RequestParam("image")MultipartFile multipartFile){
         objectStorageService.uploadTest(multipartFile);
+
         return new BaseResponse<>(BaseResponseStatus.IMG_UPLOAD_SUCCESS);
     }
 }

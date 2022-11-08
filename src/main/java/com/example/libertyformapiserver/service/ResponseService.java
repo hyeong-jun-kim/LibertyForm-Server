@@ -48,23 +48,27 @@ public class ResponseService {
         Response response = new Response(survey, member);
         responseRepository.save(response);
 
+        // LONG TEXT(단답형), SHORT TEXT(장문형)
         List<PostTextResponseReq> textResponseDtoList = postResponseDto.getTextResponse();
         List<TextResponse> textResponseList = saveTextResponse(textResponseDtoList, response);
         List<PostTextResponseRes> textResponseResList = PostTextResponseRes.toListDto(textResponseList);
 
+        // EMOTION_BAR(감정 바), LINEAR_ALGEBRA(선형 대수)
         List<PostNumericResponseReq> numericResponseDtoList = postResponseDto.getNumericResponse();
         List<NumericResponse> numericResponseList = saveNumericResponse(numericResponseDtoList, response);
         List<PostNumericResponseRes> numericResponseRes = PostNumericResponseRes.toListDto(numericResponseList);
 
+        // SingleChoice(단일 선택)
         List<PostSingleChoiceResponseReq> singleChoiceResponseDtoList = postResponseDto.getSingleChoiceResponse();
         List<SingleChoiceResponse> singleChoiceResponseList = saveSingleChoiceResponse(singleChoiceResponseDtoList, response);
         List<PostSingleChoiceResponseRes> singleChoiceResponseRes = PostSingleChoiceResponseRes.toListDto(singleChoiceResponseList);
 
+        // MultipleChoice(복수 선택)
         List<PostMultipleChoiceResponseReq> multipleChoiceResponseDtoList = postResponseDto.getMultipleChoiceResponse();
         List<MultipleChoice> multipleChoiceResponseList = saveMultipleChoiceResponse(multipleChoiceResponseDtoList, response);
         List<PostMultipleChoiceResponseRes> multipleChoiceResponseResList = PostMultipleChoiceResponseRes.toListDto(multipleChoiceResponseList);
 
-        return new PostResponseRes(textResponseResList, numericResponseRes, singleChoiceResponseRes, multipleChoiceResponseResList);
+        return new PostResponseRes(response.getId(), textResponseResList, numericResponseRes, singleChoiceResponseRes, multipleChoiceResponseResList);
 
     }
 
