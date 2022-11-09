@@ -1,6 +1,7 @@
 package com.example.libertyformapiserver.service;
 
 import com.example.libertyformapiserver.config.exception.BaseException;
+import com.example.libertyformapiserver.config.status.BaseStatus;
 import com.example.libertyformapiserver.domain.*;
 import com.example.libertyformapiserver.dto.choice.post.PostChoiceRes;
 import com.example.libertyformapiserver.dto.question.vo.ChoiceQuestionVO;
@@ -11,6 +12,7 @@ import com.example.libertyformapiserver.dto.survey.create.PostCreateSurveyReq;
 import com.example.libertyformapiserver.dto.survey.create.PostCreateSurveyRes;
 import com.example.libertyformapiserver.dto.survey.get.GetListSurveyRes;
 import com.example.libertyformapiserver.dto.survey.get.GetSurveyInfoRes;
+import com.example.libertyformapiserver.dto.survey.patch.PatchSurveyDeleteRes;
 import com.example.libertyformapiserver.dto.survey.post.PostSurveyReq;
 import com.example.libertyformapiserver.repository.*;
 import lombok.RequiredArgsConstructor;
@@ -46,6 +48,7 @@ public class SurveyService {
                 .orElseThrow(() -> new BaseException(INVALID_MEMBER));
 
         Survey survey = postSurveyReq.toEntity(member);
+        survey.generateCode();
         survey.changeStatusActive();
         surveyRepository.save(survey);
 
@@ -75,38 +78,46 @@ public class SurveyService {
 
     // 설문지 모두 조회
     public GetListSurveyRes getAllUserSurvey(long memberId){
-        List<Survey> surveys = surveyRepository.findSurveysByMemberId(memberId);
+        List<Survey> surveys = surveyRepository.findSurveysByMemberIdAndStatus(memberId, BaseStatus.ACTIVE);
 
         return GetListSurveyRes.listEntitytoDto(surveys);
     }
 
-    // 단일 설문지 조회
-    public GetSurveyInfoRes getSurveyInfo(long surveyId, long memberId){
-        Survey survey = surveyRepository.findById(surveyId)
+    // 자신의 설문지 단일 조회
+    public GetSurveyInfoRes getMySurveyInfo(long surveyId, long memberId){
+        Survey survey = surveyRepository.findByIdAndStatus(surveyId, BaseStatus.ACTIVE)
                 .orElseThrow(() -> new BaseException(NOT_EXIST_SURVEY));
 
         if(survey.getMember().getId() != memberId) // 설문지 작성자가 해당 유저가 아닌 경우
             throw new BaseException(NOT_MATCH_SURVEY);
 
-        List<Question> questions = questionRepository.findQuestionsBySurveyId(surveyId);
-        List<ChoiceQuestionVO> choiceQuestionVOList = new ArrayList<>();
+        return getSurveyInfo(survey);
+    }
 
-        Iterator<Question> iter = questions.iterator(); // ConcurrentModificationException 방지를 위해 iterator 사용
-        while(iter.hasNext()){
-            Question question = iter.next();
-            long questionTypeId = question.getQuestionType().getId();
+    // 피설문자 설문지 단일 조회
+    public GetSurveyInfoRes getSurveyInfo(String code){
+        Survey survey = surveyRepository.findByCodeAndStatus(code, BaseStatus.ACTIVE)
+                .orElseThrow(() -> new BaseException(NOT_EXIST_SURVEY));
 
-            if(questionTypeId == 3 || questionTypeId == 4){
-                long questionId = question.getId();
-                List<Choice> choiceList = choiceRepository.findChoicesByQuestionId(questionId);
-                choiceQuestionVOList.add(ChoiceQuestionVO.toVO(question, choiceList));
-                iter.remove();
-            }
+        long surveyId = survey.getId();
+
+        return getSurveyInfo(survey);
+    }
+
+    // 설문지 삭제
+    @Transactional(readOnly = false)
+    public PatchSurveyDeleteRes deleteSurvey(long surveyId, long memberId){
+        Survey survey = surveyRepository.findById(surveyId).orElseThrow
+                (() -> new BaseException(NOT_EXIST_SURVEY));
+
+        if(survey.getMember().getId() != memberId){
+            throw new BaseException(NOT_MATCH_SURVEY);
         }
 
-        GetSurveyInfoRes getSurveyInfoRes = GetSurveyInfoRes.toDto(survey, questions);
-        getSurveyInfoRes.setChoiceQuestions(choiceQuestionVOList);
-        return getSurveyInfoRes;
+        survey.changeStatusInActive();
+        PatchSurveyDeleteRes patchSurveyDeleteRes = PatchSurveyDeleteRes.toDto(survey);
+
+        return patchSurveyDeleteRes;
     }
 
     /*
@@ -115,6 +126,9 @@ public class SurveyService {
     // 주관식, 감정 바, 선형 대수 질문 저장
     private List<PostQuestionRes> getQuestionListEntity(List<PostQuestionReq> postQuestionReqList, Survey survey){
         List<PostQuestionRes> questionResList = new ArrayList<>();
+
+        if(postQuestionReqList == null)
+            return questionResList;
 
         // Question 에 Survey, QuestionType 넣기
         for(int i = 0; i < postQuestionReqList.size(); i++){
@@ -211,5 +225,30 @@ public class SurveyService {
             if(numberList.get(i+1) - numberList.get(i) != 1)
                 throw new BaseException(NOT_SEQUENCE_QUESTION_NUMBER);
         }
+    }
+
+    // 설문지 정보 가져오기
+    private GetSurveyInfoRes getSurveyInfo(Survey survey){
+        long surveyId = survey.getId();
+
+        List<Question> questions = questionRepository.findQuestionsBySurveyId(surveyId);
+        List<ChoiceQuestionVO> choiceQuestionVOList = new ArrayList<>();
+
+        Iterator<Question> iter = questions.iterator(); // ConcurrentModificationException 방지를 위해 iterator 사용
+        while(iter.hasNext()){
+            Question question = iter.next();
+            long questionTypeId = question.getQuestionType().getId();
+
+            if(questionTypeId == 3 || questionTypeId == 4){
+                long questionId = question.getId();
+                List<Choice> choiceList = choiceRepository.findChoicesByQuestionId(questionId);
+                choiceQuestionVOList.add(ChoiceQuestionVO.toVO(question, choiceList));
+                iter.remove();
+            }
+        }
+
+        GetSurveyInfoRes getSurveyInfoRes = GetSurveyInfoRes.toDto(survey, questions);
+        getSurveyInfoRes.setChoiceQuestions(choiceQuestionVOList);
+        return getSurveyInfoRes;
     }
 }

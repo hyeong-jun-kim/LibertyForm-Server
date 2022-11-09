@@ -20,6 +20,11 @@ public class GetSurveyRes {
     private long surveyId;
 
     @ApiModelProperty(
+            example = "vf8dA1f23gH2"
+    )
+    private String code;
+
+    @ApiModelProperty(
             example = "화장품 설문"
     )
     private String name;
@@ -45,6 +50,7 @@ public class GetSurveyRes {
     static public GetSurveyRes toDto(Survey survey){
         return GetSurveyRes.builder()
                 .surveyId(survey.getId())
+                .code(survey.getCode())
                 .name(survey.getName())
                 .description(survey.getDescription())
                 .expirationDate(survey.getExpirationDate())

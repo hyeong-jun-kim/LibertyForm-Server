@@ -12,7 +12,6 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
@@ -50,7 +49,6 @@ public class ObjectStorageService {
     }
 
     // 설문 문항 이미지 업로드
-    @Async
     public void uploadQuestionImgs(List<Question> questionList, List<MultipartFile> questionFileImgs){
         if(questionFileImgs == null)
             return;
@@ -88,8 +86,8 @@ public class ObjectStorageService {
 
         return fileURL;
     }
-
-    private List<String> uploadMultipartFile(String storageURL, List<MultipartFile> multipartFilesList){
+    @Async
+    public List<String> uploadMultipartFile(String storageURL, List<MultipartFile> multipartFilesList){
         List<String> fileNameList = new ArrayList<>();
 
         HttpHeaders headers = getApiTokenHeader();
@@ -99,7 +97,7 @@ public class ObjectStorageService {
             fileNameList.add(fileURL);
 
             HttpEntity<String> response;
-            response = restTemplateService.uploadFile(storageURL, headers, multipartFile, String.class);
+            response = restTemplateService.uploadFile(fileURL, headers, multipartFile, String.class);
 
             if(response == null)
                 throw new BaseException(BaseResponseStatus.FILE_UPLOAD_ERROR);
@@ -117,6 +115,7 @@ public class ObjectStorageService {
     }
 
     // API 인증 토큰 발급받기
+    // TODO 나중에 1시간에 한번씩 인증 토큰 받아오는 스케쥴러 구현하기 
     private HttpHeaders getApiTokenHeader(){
         JSONObject bodyObject = getApiTokenBodyObject();
 

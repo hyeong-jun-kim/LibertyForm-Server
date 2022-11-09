@@ -25,4 +25,10 @@ public class Response extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
+
+    /* 편의 메서드 */
+    public Response(Survey survey, Member member){
+        this.survey = survey;
+        this.member = member;
+    }
 }

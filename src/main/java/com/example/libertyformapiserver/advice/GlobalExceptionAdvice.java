@@ -5,7 +5,7 @@ import com.example.libertyformapiserver.config.response.BaseResponse;
 import com.example.libertyformapiserver.config.response.BaseResponseStatus;
 import com.example.libertyformapiserver.config.response.ErrorResponse;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-@Slf4j
+@Log4j2
 @RequiredArgsConstructor
 @RestControllerAdvice
 public class GlobalExceptionAdvice {
@@ -34,14 +34,14 @@ public class GlobalExceptionAdvice {
 
     @ExceptionHandler(BaseException.class)
     public BaseResponse<BaseResponseStatus> baseException(BaseException e) {
-        log.error("Handle CommonException: {}", e.getMessage());
+        log.warn("Handle CommonException: {}", e.getStatus());
         return new BaseResponse<>(e.getStatus());
     }
 
-//    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-//    @ExceptionHandler(Exception.class)
-//    public BaseResponse<BaseResponseStatus> allHandleException(Exception e) {
-//        log.error("Handle All Exception: {}", e.getMessage());
-//        return new BaseResponse<>(BaseResponseStatus.INTERNAL_SERVER_ERROR);
-//    }
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler(Exception.class)
+    public BaseResponse<BaseResponseStatus> allHandleException(Exception e) {
+        log.error("Handle All Exception: {}", e.getMessage());
+        return new BaseResponse<>(BaseResponseStatus.INTERNAL_SERVER_ERROR);
+    }
 }

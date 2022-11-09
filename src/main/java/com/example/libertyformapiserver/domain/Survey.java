@@ -5,11 +5,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.apache.commons.lang3.RandomStringUtils;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,6 +32,8 @@ public class Survey extends BaseEntity {
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "survey")
     private List<Response> responses = new ArrayList<>();
 
+    private String code;
+
     private String name;
 
     private String description;
@@ -42,7 +43,11 @@ public class Survey extends BaseEntity {
     private LocalDate expirationDate;
 
     // 편의 메서드
-    public void changeThumbnailImg(String imgURL){
-        this.thumbnailImg = imgURL;
+    public void changeThumbnailImg(String thumbnailImg){
+        this.thumbnailImg = thumbnailImg;
+    }
+
+    public void generateCode(){
+        this.code = RandomStringUtils.randomAlphanumeric(12);
     }
 }

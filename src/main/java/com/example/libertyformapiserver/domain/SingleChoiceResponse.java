@@ -29,4 +29,11 @@ public class SingleChoiceResponse extends BaseEntity {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "choice_id")
     private Choice choice;
+
+    /* 편의 메서드 */
+    public SingleChoiceResponse(Response response, Question question, Choice choice){
+        this.response = response;
+        this.question = question;
+        this.choice = choice;
+    }
 }

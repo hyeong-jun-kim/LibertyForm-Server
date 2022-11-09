@@ -13,11 +13,6 @@ import lombok.Setter;
 @Builder
 public class PostQuestionRes {
     @ApiModelProperty(
-            example = "2"
-    )
-    private long surveyId;
-
-    @ApiModelProperty(
             example = "1"
     )
     private long questionTypeId;
@@ -44,7 +39,6 @@ public class PostQuestionRes {
 
     static public PostQuestionRes toDto(Question question){
         return PostQuestionRes.builder()
-                .surveyId(question.getSurvey().getId())
                 .questionTypeId(question.getQuestionType().getId())
                 .name(question.getName())
                 .description(question.getDescription())

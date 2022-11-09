@@ -9,6 +9,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -20,8 +22,11 @@ public class PostSurveyReq {
     @ApiModelProperty(
             example = "설문지 제목"
     )
+    @NotBlank(message = "설문지 제목을 입력해주세요.")
+    @Size(min = 1, max = 30, message = "설문지 제목은 1 ~ 30자 이내만 입력 가능합니다.")
     private String name;
 
+    @Size(max = 50, message = "설문지 설명은 30자 이내만 입력 가능합니다.")
     @ApiModelProperty(
             example = "설문지 설명"
     )
@@ -30,6 +35,7 @@ public class PostSurveyReq {
     @ApiModelProperty(
             example = "2022-10-30"
     )
+    @NotBlank(message = "만료 일자를 입력해주세요.")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
     private LocalDate expirationDate;
 

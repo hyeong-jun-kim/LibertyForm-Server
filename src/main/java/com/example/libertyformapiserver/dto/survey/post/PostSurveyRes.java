@@ -19,6 +19,11 @@ public class PostSurveyRes {
     private long memberId;
 
     @ApiModelProperty(
+            example = "vf8dA1f23gH2"
+    )
+    private String code;
+
+    @ApiModelProperty(
             example = "설문지 제목"
     )
     private String name;
@@ -42,6 +47,7 @@ public class PostSurveyRes {
     static public PostSurveyRes toDto(Survey survey){
         return PostSurveyRes.builder()
                 .memberId(survey.getMember().getId())
+                .code(survey.getCode())
                 .name(survey.getName())
                 .description(survey.getDescription())
                 .thumbnailImgUrl(survey.getThumbnailImg())

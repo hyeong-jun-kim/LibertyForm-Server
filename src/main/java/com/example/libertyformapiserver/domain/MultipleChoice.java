@@ -13,17 +13,22 @@ import javax.persistence.*;
 @Builder
 @Getter
 @Entity
-public class Choice_MultipleChoice_Response extends BaseEntity {
+public class MultipleChoice extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @OneToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "multipleChoiceResponseId")
     private MultipleChoiceResponse multipleChoiceResponse;
 
-    @OneToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "choiceId")
     private Choice choice;
 
+    /* 편의 메서드 */
+    public MultipleChoice(MultipleChoiceResponse multipleChoiceResponse, Choice choice){
+        this.multipleChoiceResponse = multipleChoiceResponse;
+        this.choice = choice;
+    }
 }

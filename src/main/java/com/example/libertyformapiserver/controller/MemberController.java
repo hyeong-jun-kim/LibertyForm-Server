@@ -9,12 +9,14 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@Log4j2
 @RestController
 @RequestMapping("/members")
 @RequiredArgsConstructor
@@ -36,6 +38,8 @@ public class MemberController {
     @NoIntercept
     public BaseResponse<PostRegisterRes> registerMember(@Validated @RequestBody PostRegisterReq dto){
         PostRegisterRes postCreateMemberRes = memberService.registerMember(dto);
+        log.info("New Member : {}", postCreateMemberRes.getEmail());
+
         return new BaseResponse<>(postCreateMemberRes);
     }
 }
