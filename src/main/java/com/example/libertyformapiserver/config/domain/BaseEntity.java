@@ -2,6 +2,7 @@ package com.example.libertyformapiserver.config.domain;
 
 import com.example.libertyformapiserver.config.status.BaseStatus;
 import lombok.Getter;
+import org.hibernate.annotations.ColumnDefault;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -20,6 +21,7 @@ public abstract class BaseEntity {
     private LocalDateTime updatedAt;
 
     @Enumerated(EnumType.STRING)
+    @ColumnDefault(value = "ACTIVE")
     private BaseStatus status;
 
     protected void setStatus(BaseStatus status) {

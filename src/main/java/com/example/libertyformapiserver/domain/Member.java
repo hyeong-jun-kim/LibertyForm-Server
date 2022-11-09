@@ -9,6 +9,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -31,6 +33,9 @@ public class Member extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private EmailValidStatus email_valid_status;
 
+    @OneToMany(mappedBy = "member")
+    private List<MemberContact> memberContacts = new ArrayList<>();
+
     // 연관 관계 편의 메서드
     public Member(String email, String password, String name){
         this.email = email;
@@ -38,4 +43,9 @@ public class Member extends BaseEntity {
         this.name = name;
     }
 
+    // 설문 발송 대상자 추가
+    public void addContact(MemberContact memberContact){
+        memberContact.changeMember(this);
+        memberContacts.add(memberContact);
+    }
 }
