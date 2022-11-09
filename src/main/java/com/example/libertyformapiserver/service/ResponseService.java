@@ -33,6 +33,7 @@ public class ResponseService {
     private final SingleChoiceRepository singleChoiceRepository;
     private final MultipleChoiceRepository multipleChoiceRepository;
     private final ChoiceMultipleChoiceRepository choiceMultipleChoiceRepository;
+    private final SurveyParticipantRepository surveyParticipantRepository;
 
     // 피 설문자 응답 저장
     @Transactional(readOnly = false, rollbackFor = {Exception.class, BaseException.class})
@@ -44,6 +45,7 @@ public class ResponseService {
         Member member = null;
         if(memberId != null)
             member = memberRepository.findById(memberId).orElseThrow(() -> new BaseException(INVALID_MEMBER));
+
 
         Response response = new Response(survey, member);
         responseRepository.save(response);
@@ -67,6 +69,12 @@ public class ResponseService {
         List<PostMultipleChoiceResponseReq> multipleChoiceResponseDtoList = postResponseDto.getMultipleChoiceResponse();
         List<MultipleChoice> multipleChoiceResponseList = saveMultipleChoiceResponse(multipleChoiceResponseDtoList, response);
         List<PostMultipleChoiceResponseRes> multipleChoiceResponseResList = PostMultipleChoiceResponseRes.toListDto(multipleChoiceResponseList);
+
+        // 설문 참여자에 저장
+        if(memberId != null){
+            SurveyParticipant surveyParticipant = new SurveyParticipant(survey, member);
+            surveyParticipantRepository.save(surveyParticipant);
+        }
 
         return new PostResponseRes(response.getId(), textResponseResList, numericResponseRes, singleChoiceResponseRes, multipleChoiceResponseResList);
 

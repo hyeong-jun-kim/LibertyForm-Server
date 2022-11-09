@@ -42,13 +42,15 @@ public enum BaseResponseStatus {
      * 3500 : Response 성공
      */
     IMG_UPLOAD_SUCCESS(true, 3500, "이미지 업로드에 성공하였습니다."),
+    SEND_SURVEY_SUCCESS(true, 3501, "설문지 발송에 성공하였습니다."),
 
     /**
      * 4000 : Database, Server 오류
      */
     INTERNAL_SERVER_ERROR(false, 4000, "서버 오류입니다"),
     NOT_VALID_QUESTION_TYPE(false, 4001, "존재하지 않는 질문 유형입니다."),
-    FILE_UPLOAD_ERROR(false, 4002, "파일 업로드를 하는 도중에 오류가 발생했습니다.");
+    FILE_UPLOAD_ERROR(false, 4002, "파일 업로드를 하는 도중에 오류가 발생했습니다."),
+    THREAD_OVER_REQUEST(false, 4003, "잠시 후에 다시 시도해주세요");
 
     private final boolean isSuccess;
     private final int code;

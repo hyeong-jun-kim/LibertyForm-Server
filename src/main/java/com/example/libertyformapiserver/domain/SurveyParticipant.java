@@ -20,9 +20,15 @@ public class SurveyParticipant extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "survey_id")
-    private Survey surveyId;
+    private Survey survey;
 
     @ManyToOne
     @JoinColumn(name = "member_id")
-    private Member memberId;
+    private Member member;
+
+    // 편의 메서드
+    public SurveyParticipant(Survey survey, Member member){
+        this.survey = survey;
+        this.member = member;
+    }
 }
