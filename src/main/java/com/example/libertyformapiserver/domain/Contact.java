@@ -24,6 +24,4 @@ public class Contact extends BaseEntity {
     private String relationship;
 
     private String email;
-
-    private String phoneNumber;
 }

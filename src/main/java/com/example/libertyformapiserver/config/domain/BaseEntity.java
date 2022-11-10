@@ -21,8 +21,7 @@ public abstract class BaseEntity {
     private LocalDateTime updatedAt;
 
     @Enumerated(EnumType.STRING)
-    @ColumnDefault(value = "ACTIVE")
-    private BaseStatus status;
+    private BaseStatus status = BaseStatus.ACTIVE;
 
     protected void setStatus(BaseStatus status) {
         this.status = status;

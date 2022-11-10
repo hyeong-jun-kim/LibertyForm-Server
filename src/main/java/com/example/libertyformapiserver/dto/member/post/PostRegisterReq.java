@@ -1,6 +1,5 @@
 package com.example.libertyformapiserver.dto.member.post;
 
-import com.example.libertyformapiserver.config.status.EmailValidStatus;
 import com.example.libertyformapiserver.config.type.MemberType;
 import com.example.libertyformapiserver.domain.Member;
 import io.swagger.annotations.ApiModelProperty;
@@ -50,7 +49,6 @@ public class PostRegisterReq {
                 .password(getPassword())
                 .name(getName())
                 .member_type(MemberType.GENERAL)
-                .email_valid_status(EmailValidStatus.NOT_VALID)
                 .build();
     }
 }

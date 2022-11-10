@@ -51,7 +51,7 @@ public class SurveyController {
         PostCreateSurveyRes postCreateSurveyRes = surveyService.createSurvey(surveyReqDto, JwtInfo.getMemberId(request), thumbnailImgFile, questionImgFiles);
         log.info("Create Survey : {}", postCreateSurveyRes.getSurvey().getCode());
 
-        return new BaseResponse<>(surveyService.createSurvey(surveyReqDto, JwtInfo.getMemberId(request), thumbnailImgFile, questionImgFiles));
+        return new BaseResponse<>(postCreateSurveyRes);
     }
 
     @ApiOperation(

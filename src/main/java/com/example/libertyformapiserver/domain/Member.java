@@ -1,7 +1,6 @@
 package com.example.libertyformapiserver.domain;
 
 import com.example.libertyformapiserver.config.domain.BaseEntity;
-import com.example.libertyformapiserver.config.status.EmailValidStatus;
 import com.example.libertyformapiserver.config.type.MemberType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -29,9 +28,6 @@ public class Member extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     private MemberType member_type;
-
-    @Enumerated(EnumType.STRING)
-    private EmailValidStatus email_valid_status;
 
     @OneToMany(mappedBy = "member")
     private List<MemberContact> memberContacts = new ArrayList<>();

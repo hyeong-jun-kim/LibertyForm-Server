@@ -1,6 +1,5 @@
 package com.example.libertyformapiserver.dto.member.kakao.post;
 
-import com.example.libertyformapiserver.config.status.EmailValidStatus;
 import com.example.libertyformapiserver.config.type.MemberType;
 import com.example.libertyformapiserver.domain.Member;
 import io.swagger.annotations.ApiModelProperty;
@@ -35,7 +34,6 @@ public class PostKakaoRegisterReq {
                 .email(getEmail())
                 .name(getName())
                 .member_type(MemberType.KAKAO)
-                .email_valid_status(EmailValidStatus.NOT_VALID)
                 .build();
     }
 }

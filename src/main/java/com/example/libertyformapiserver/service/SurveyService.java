@@ -49,7 +49,6 @@ public class SurveyService {
 
         Survey survey = postSurveyReq.toEntity(member);
         survey.generateCode();
-        survey.changeStatusActive();
         surveyRepository.save(survey);
 
         PostCreateSurveyRes createSurveyResDto = new PostCreateSurveyRes(survey);
@@ -145,7 +144,6 @@ public class SurveyService {
 
 
             Question question = postQuestionReq.toEntity(survey, questionType);
-            question.changeStatusActive();
 
             questionResList.add(PostQuestionRes.toDto(question));
             questionRepository.save(question);
@@ -176,7 +174,6 @@ public class SurveyService {
                     () -> new BaseException(NOT_VALID_QUESTION_TYPE));
 
             Question question = questionReq.toEntity(survey, questionType);
-            question.changeStatusActive();
 
             questionResList.add(PostQuestionRes.toDto(question));
             questionRepository.save(question);
@@ -189,7 +186,6 @@ public class SurveyService {
                 PostChoiceReq postChoiceReq = postChoiceReqList.get(j);
 
                 Choice choice = postChoiceReq.toEntity(question);
-                choice.changeStatusActive();
 
                 choiceResList.add(PostChoiceRes.toDto(choice));
                 choiceRepository.save(choice);

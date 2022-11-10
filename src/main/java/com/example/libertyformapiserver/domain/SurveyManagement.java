@@ -28,13 +28,12 @@ public class SurveyManagement extends BaseEntity {
     @JoinColumn(name = "survey_id")
     private Survey survey;
 
-    private String code = generateCode();
+    private String code;
 
     private LocalDateTime expiredTime;
 
     @Enumerated(EnumType.STRING)
-    @ColumnDefault(value = "PENDING")
-    private ResponseStatus responseStatus;
+    private ResponseStatus responseStatus = ResponseStatus.PENDING;
 
     // 편의 메서드
     public String generateCode(){
