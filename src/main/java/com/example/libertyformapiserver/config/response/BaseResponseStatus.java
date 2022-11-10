@@ -32,6 +32,8 @@ public enum BaseResponseStatus {
     NOT_MATCH_SURVEY(false, 2014, "해당 사용자의 설문이 아닙니다."),
     NOT_EXIST_QUESTION(false, 2015, "존재하지 않는 질문입니다."),
     NOT_EXIST_CHOICE(false, 2016, "존재하지 않는 선택지 입니다"),
+    NOT_ALLOW_EMAIL(false, 2017, "자기 자신의 이메일은 추가하실 수 없습니다."),
+    ALREADY_REGISTER_EMAIL(false, 2018, "이미 연락처에 등록된 이메일입니다."),
 
     /**
      * 3000 : Response 오류

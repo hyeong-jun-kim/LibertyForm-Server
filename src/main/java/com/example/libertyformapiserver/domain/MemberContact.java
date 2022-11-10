@@ -25,6 +25,11 @@ public class MemberContact extends BaseEntity {
     private Contact contact;
 
     // 편의 메서드
+    public MemberContact(Member member, Contact contact){
+        this.member = member;
+        this.contact = contact;
+    }
+
     public void changeMember(Member member){
         this.member = member;
     }

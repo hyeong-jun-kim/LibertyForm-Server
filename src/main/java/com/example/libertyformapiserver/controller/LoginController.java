@@ -29,7 +29,8 @@ public class LoginController {
     @ApiResponses({
             @ApiResponse(code = 1000, message = "요청에 성공하였습니다."),
             @ApiResponse(code = 2004, message = "비밀번호 확인란이 일치하지 않습니다."),
-            @ApiResponse(code = 2005, message = "중복된 이메일 주소입니다.")
+            @ApiResponse(code = 2005, message = "중복된 이메일 주소입니다."),
+            @ApiResponse(code = 2006, message = "존재하지 않는 이메일 주소입니다.")
     })
     @PostMapping
     @NoIntercept
@@ -49,7 +50,8 @@ public class LoginController {
     @ApiResponses({
             @ApiResponse(code = 1000, message = "요청에 성공하였습니다."),
             @ApiResponse(code = 2004, message = "비밀번호 확인란이 일치하지 않습니다."),
-            @ApiResponse(code = 2005, message = "중복된 이메일 주소입니다.")
+            @ApiResponse(code = 2005, message = "중복된 이메일 주소입니다."),
+            @ApiResponse(code = 2006, message = "존재하지 않는 이메일 주소입니다.")
     })
     @PostMapping("/kakao")
     @NoIntercept

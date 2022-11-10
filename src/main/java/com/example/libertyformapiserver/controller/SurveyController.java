@@ -1,5 +1,6 @@
 package com.example.libertyformapiserver.controller;
 
+import com.example.libertyformapiserver.config.exception.BaseException;
 import com.example.libertyformapiserver.config.response.BaseResponse;
 import com.example.libertyformapiserver.config.response.BaseResponseStatus;
 import com.example.libertyformapiserver.dto.jwt.JwtInfo;
@@ -8,6 +9,7 @@ import com.example.libertyformapiserver.dto.survey.create.PostCreateSurveyRes;
 import com.example.libertyformapiserver.dto.survey.get.GetListSurveyRes;
 import com.example.libertyformapiserver.dto.survey.get.GetSurveyInfoRes;
 import com.example.libertyformapiserver.dto.survey.patch.PatchSurveyDeleteRes;
+import com.example.libertyformapiserver.dto.survey.post.PostSurveyReq;
 import com.example.libertyformapiserver.jwt.NoIntercept;
 import com.example.libertyformapiserver.service.ObjectStorageService;
 import com.example.libertyformapiserver.service.SurveyService;
@@ -16,6 +18,9 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.apache.commons.lang3.Validate;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.Validator;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -28,6 +33,8 @@ import java.util.List;
 @RequestMapping("/survey")
 @RequiredArgsConstructor
 public class SurveyController {
+    private Validator validator;
+
     private final SurveyService surveyService;
     private final ObjectStorageService objectStorageService;
 
@@ -46,8 +53,9 @@ public class SurveyController {
             @ApiResponse(code = 4002, message = "파일을 업로드 하는 도중 오류가 발생했습니다.")}
     )
     @PostMapping(value = "/create") // questionImgFiles은 설문 문항 번호로 구분이 됨 ex) 0.jpg, 1.png
-    public BaseResponse<PostCreateSurveyRes> createSurvey(@RequestPart @Validated PostCreateSurveyReq surveyReqDto, HttpServletRequest request
+    public BaseResponse<PostCreateSurveyRes> createSurvey(@Validated @RequestPart PostCreateSurveyReq surveyReqDto, HttpServletRequest request
             , @RequestParam(value = "thumbnailImg", required = false)MultipartFile thumbnailImgFile, @RequestParam(value = "questionImgs", required = false)List<MultipartFile> questionImgFiles){
+
         PostCreateSurveyRes postCreateSurveyRes = surveyService.createSurvey(surveyReqDto, JwtInfo.getMemberId(request), thumbnailImgFile, questionImgFiles);
         log.info("Create Survey : {}", postCreateSurveyRes.getSurvey().getCode());
 
