@@ -94,15 +94,15 @@ public class SurveyService {
         return getSurveyInfo(survey);
     }
 
-//    // 피설문자 설문지 단일 조회
-//    public GetSurveyInfoRes getSurveyInfo(String code){
-//        Survey survey = surveyRepository.findByCodeAndStatus(code, BaseStatus.ACTIVE)
-//                .orElseThrow(() -> new BaseException(NOT_EXIST_SURVEY));
-//
-//        long surveyId = survey.getId();
-//
-//        return getSurveyInfo(survey);
-//    }
+    // 피설문자 설문지 단일 조회
+    public GetSurveyInfoRes getSurveyInfo(String code){
+        Survey survey = surveyRepository.findByCodeAndStatus(code, BaseStatus.ACTIVE)
+                .orElseThrow(() -> new BaseException(NOT_EXIST_SURVEY));
+
+        long surveyId = survey.getId();
+
+        return getSurveyInfo(survey);
+    }
 
     // 설문지 수정
     public void modifySurvey(PatchSurveyModifyReq surveyModifyReq){
