@@ -13,6 +13,7 @@ import com.example.libertyformapiserver.dto.survey.create.PostCreateSurveyRes;
 import com.example.libertyformapiserver.dto.survey.get.GetListSurveyRes;
 import com.example.libertyformapiserver.dto.survey.get.GetSurveyInfoRes;
 import com.example.libertyformapiserver.dto.survey.patch.PatchSurveyDeleteRes;
+import com.example.libertyformapiserver.dto.survey.patch.PatchSurveyModifyReq;
 import com.example.libertyformapiserver.dto.survey.post.PostSurveyReq;
 import com.example.libertyformapiserver.repository.*;
 import lombok.RequiredArgsConstructor;
@@ -93,14 +94,23 @@ public class SurveyService {
         return getSurveyInfo(survey);
     }
 
-    // 피설문자 설문지 단일 조회
-    public GetSurveyInfoRes getSurveyInfo(String code){
-        Survey survey = surveyRepository.findByCodeAndStatus(code, BaseStatus.ACTIVE)
-                .orElseThrow(() -> new BaseException(NOT_EXIST_SURVEY));
+//    // 피설문자 설문지 단일 조회
+//    public GetSurveyInfoRes getSurveyInfo(String code){
+//        Survey survey = surveyRepository.findByCodeAndStatus(code, BaseStatus.ACTIVE)
+//                .orElseThrow(() -> new BaseException(NOT_EXIST_SURVEY));
+//
+//        long surveyId = survey.getId();
+//
+//        return getSurveyInfo(survey);
+//    }
 
-        long surveyId = survey.getId();
+    // 설문지 수정
+    public void modifySurvey(PatchSurveyModifyReq surveyModifyReq){
+        long surveyId = surveyModifyReq.getSurvey().getSurveyId();
+        Survey survey = surveyRepository.findById(surveyId).orElseThrow(
+                () -> new BaseException(NOT_EXIST_SURVEY));
 
-        return getSurveyInfo(survey);
+
     }
 
     // 설문지 삭제

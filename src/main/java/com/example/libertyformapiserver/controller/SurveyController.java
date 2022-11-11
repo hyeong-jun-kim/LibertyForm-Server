@@ -95,6 +95,8 @@ public class SurveyController {
         return new BaseResponse<>(getSurveyInfoRes);
     }
 
+
+
     @ApiOperation(
             value = "설문지 삭제하기",
             notes = "surveyId를 통해 설문지를 삭제합니다."

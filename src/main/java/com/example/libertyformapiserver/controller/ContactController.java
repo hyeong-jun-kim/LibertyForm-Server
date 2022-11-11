@@ -1,5 +1,7 @@
 package com.example.libertyformapiserver.controller;
 
+import com.example.libertyformapiserver.config.response.BaseResponse;
+import com.example.libertyformapiserver.dto.contact.get.GetContactRes;
 import com.example.libertyformapiserver.dto.contact.post.PostContactReq;
 import com.example.libertyformapiserver.dto.contact.post.PostContactRes;
 import com.example.libertyformapiserver.dto.jwt.JwtInfo;
@@ -10,12 +12,10 @@ import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @Log4j2
 @RestController
@@ -34,13 +34,32 @@ public class ContactController {
             @ApiResponse(code = 2017, message = "자기 자신의 이메일로는 등록하실 수 없습니다."),
             @ApiResponse(code = 2018, message = "이미 연락처에 등록된 이메일입니다.")
     })
-    @PostMapping
-    public PostContactRes createContact(@RequestBody @Validated PostContactReq postContactReq, HttpServletRequest request){
+    @PostMapping("/create")
+    public BaseResponse<PostContactRes> createContact(@RequestBody @Validated PostContactReq postContactReq, HttpServletRequest request){
         long memberId = JwtInfo.getMemberId(request);
         PostContactRes postContactRes = contactService.createContact(postContactReq, JwtInfo.getMemberId(request));
 
         log.info("Create contact", "memberId: " + memberId, "| contact_email: " + postContactReq.getEmail());
 
-        return postContactRes;
+        return new BaseResponse<>(postContactRes);
+    }
+
+    @ApiOperation(
+            value = "설문 발송 대상자 불러오기",
+            notes = "자신의 설문 발송 대상자들을 불러옵니다."
+    )
+    @ApiResponses({
+            @ApiResponse(code = 1000, message = "요청에 성공하였습니다."),
+            @ApiResponse(code = 2010, message = "존재하지 않는 유저입니다."),
+            @ApiResponse(code = 2018, message = "존재하지 않는 연락처입니다.")
+    })
+    @GetMapping
+    public BaseResponse<List<GetContactRes>> loadMyContacts(HttpServletRequest request){
+        long memberId = JwtInfo.getMemberId(request);
+        List<GetContactRes> getContactResList = contactService.getContactList(JwtInfo.getMemberId(request));
+
+        log.info("Load contact", "memberId: " + memberId);
+
+        return new BaseResponse<>(getContactResList);
     }
 }

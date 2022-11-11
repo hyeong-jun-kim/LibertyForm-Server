@@ -4,6 +4,7 @@ import com.example.libertyformapiserver.config.exception.BaseException;
 import com.example.libertyformapiserver.domain.Contact;
 import com.example.libertyformapiserver.domain.Member;
 import com.example.libertyformapiserver.domain.MemberContact;
+import com.example.libertyformapiserver.dto.contact.get.GetContactRes;
 import com.example.libertyformapiserver.dto.contact.post.PostContactReq;
 import com.example.libertyformapiserver.dto.contact.post.PostContactRes;
 import com.example.libertyformapiserver.repository.ContactRepository;
@@ -12,6 +13,9 @@ import com.example.libertyformapiserver.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.example.libertyformapiserver.config.response.BaseResponseStatus.*;
 
@@ -47,5 +51,20 @@ public class ContactService {
         memberContactRepository.save(memberContact);
 
         return PostContactRes.toDto(contact);
+    }
+
+    // 설문 발송 대상자 불러오기
+    public List<GetContactRes> getContactList(long memberId){
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new BaseException(INVALID_MEMBER));
+
+        List<MemberContact> memberContactList = member.getMemberContacts();
+        if(memberContactList == null)
+            throw new BaseException(NOT_EXIST_CONTACT);
+
+        List<Contact> contactList = memberContactList.stream().map(mc -> contactRepository.findById(mc.getContact().getId())
+                .orElseThrow(() -> new BaseException(NOT_EXIST_CONTACT))).collect(Collectors.toList());
+
+        return GetContactRes.toListDto(contactList);
     }
 }

@@ -43,11 +43,13 @@ public class Survey extends BaseEntity {
     private LocalDate expirationDate;
 
     // 편의 메서드
-    public void changeThumbnailImg(String thumbnailImg){
-        this.thumbnailImg = thumbnailImg;
-    }
 
     public void generateCode(){
         this.code = RandomStringUtils.randomAlphanumeric(12);
     }
+
+    public void changeThumbnailImg(String thumbnailImg){
+        this.thumbnailImg = thumbnailImg;
+    }
+
 }
