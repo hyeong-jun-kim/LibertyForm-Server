@@ -37,7 +37,7 @@ public class ContactService {
         if(member.getEmail().equals(email)) // 자기 자신의 이메일 등록 안됨
             throw new BaseException(NOT_ALLOW_EMAIL);
 
-        if(contactRepository.findByEmail(email).isPresent()) // 연락처 중복 방지
+        if(contactRepository.findByMemberAndEmail(member, email).isPresent()) // 연락처 중복 방지
             throw new BaseException(ALREADY_EXIST_EMAIL);
 
         Member targetMember = memberRepository.findMemberByEmail(email).orElseGet(() -> null);
