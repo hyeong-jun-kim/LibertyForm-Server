@@ -35,6 +35,7 @@ public enum BaseResponseStatus {
     NOT_ALLOW_EMAIL(false, 2017, "자기 자신의 이메일은 추가하실 수 없습니다."),
     ALREADY_REGISTER_EMAIL(false, 2018, "이미 연락처에 등록된 이메일입니다."),
     NOT_EXIST_CONTACT(false, 2018, "연락처가 존재하지 않습니다."),
+    NOT_MATCH_QUESTION(false, 2019, "해당 사용자의 질문이 아닙니다."),
 
     /**
      * 2500 : Request 성공

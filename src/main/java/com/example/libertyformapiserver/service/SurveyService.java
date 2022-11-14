@@ -245,6 +245,10 @@ public class SurveyService {
                 continue;
             }
 
+            // 설문지에 있는 질문이 아니면 예외처리
+            if(question.getSurvey().getId() != survey.getId())
+                throw new BaseException(NOT_MATCH_QUESTION);
+
             question.update(questionDto); // 기존에 있던 질문이면 업데이트
             res.addQuestionNumber(question);
         }
@@ -256,6 +260,7 @@ public class SurveyService {
     private PatchSurveyModifyRes modifyChoiceQuestions(PatchSurveyModifyRes res, List<PatchChoiceQuestionReq> questionDtoList) {
         Survey survey = res.getSurvey();
 
+        // 질문
         List<Question> questions = res.getQuestions();
 
         for (PatchChoiceQuestionReq choiceQuestionDto : questionDtoList) {
@@ -270,10 +275,15 @@ public class SurveyService {
                 res.addExtraQuestion(question);
                 continue;
             } else {
+                // 설문지에 있는 질문이 아니면 예외처리
+                if(question.getSurvey().getId() != survey.getId())
+                    throw new BaseException(NOT_MATCH_QUESTION);
+
                 question.update(choiceQuestionDto.getQuestion());
                 res.addQuestionNumber(question);
             }
 
+            // 객관식
             List<Choice> choices = question.getChoices();
 
             if (choices != null) {
@@ -288,6 +298,7 @@ public class SurveyService {
                         res.addExtraChoice(choice);
                         continue;
                     }
+
 
                     choice.update(choiceDto);
                     res.addChoiceNumber(choice);
