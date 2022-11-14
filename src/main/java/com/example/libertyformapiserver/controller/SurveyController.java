@@ -1,6 +1,5 @@
 package com.example.libertyformapiserver.controller;
 
-import com.example.libertyformapiserver.config.exception.BaseException;
 import com.example.libertyformapiserver.config.response.BaseResponse;
 import com.example.libertyformapiserver.config.response.BaseResponseStatus;
 import com.example.libertyformapiserver.dto.jwt.JwtInfo;
@@ -9,7 +8,7 @@ import com.example.libertyformapiserver.dto.survey.create.PostCreateSurveyRes;
 import com.example.libertyformapiserver.dto.survey.get.GetListSurveyRes;
 import com.example.libertyformapiserver.dto.survey.get.GetSurveyInfoRes;
 import com.example.libertyformapiserver.dto.survey.patch.PatchSurveyDeleteRes;
-import com.example.libertyformapiserver.dto.survey.post.PostSurveyReq;
+import com.example.libertyformapiserver.dto.survey.patch.PatchSurveyModifyReq;
 import com.example.libertyformapiserver.jwt.NoIntercept;
 import com.example.libertyformapiserver.service.ObjectStorageService;
 import com.example.libertyformapiserver.service.SurveyService;
@@ -18,8 +17,6 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.apache.commons.lang3.Validate;
-import org.springframework.validation.BindingResult;
 import org.springframework.validation.Validator;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -60,6 +57,27 @@ public class SurveyController {
         log.info("Create Survey : {}", postCreateSurveyRes.getSurvey().getCode());
 
         return new BaseResponse<>(postCreateSurveyRes);
+    }
+
+    @ApiOperation(
+            value = "설문지 수정",
+            notes = "surveyId - 설문지 아이디, questions - 주관식, 감정, 선형대수 문항," +
+                    " choiceQuestions - 객관식 문항"
+    )
+    @ApiResponses({
+            @ApiResponse(code = 1000, message = "요청에 성공하였습니다."),
+            @ApiResponse(code = 2010, message = "존재하지 않는 유저입니다."),
+            @ApiResponse(code = 2011, message = "질문 유형 번호를 다시한번 확인해주시길 바랍니다."),
+            @ApiResponse(code = 2012, message = "질문 번호 순서가 올바르지 않습니다. 질문 번호를 다시한번 확인해주시기 바랍니다."),
+            @ApiResponse(code = 4001, message = "존재하지 않는 질문 유형입니다."),
+            @ApiResponse(code = 4002, message = "파일을 업로드 하는 도중 오류가 발생했습니다.")}
+    )
+    @PatchMapping("/modify")
+    public BaseResponse<String> modifySurvey(@RequestBody PatchSurveyModifyReq surveyModifyReq, HttpServletRequest request){
+        surveyService.modifySurvey(surveyModifyReq, JwtInfo.getMemberId(request));
+        log.info("Modify Survey Id : {}", surveyModifyReq.getSurvey().getSurveyId());
+
+        return new BaseResponse<>(BaseResponseStatus.SURVEY_MODIFY_SUCCESS);
     }
 
     @ApiOperation(

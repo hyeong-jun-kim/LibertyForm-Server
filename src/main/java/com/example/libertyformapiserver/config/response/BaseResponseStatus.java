@@ -37,6 +37,11 @@ public enum BaseResponseStatus {
     NOT_EXIST_CONTACT(false, 2018, "연락처가 존재하지 않습니다."),
 
     /**
+     * 2500 : Request 성공
+     */
+    SURVEY_MODIFY_SUCCESS(true, 2500, "설문지 수정이 성공적으로 진행되었습니다."),
+
+    /**
      * 3000 : Response 오류
      */
     VALIDATED_ERROR(false, 3000, "VALIDATED_ERROR"), // @Valid 예외 처리

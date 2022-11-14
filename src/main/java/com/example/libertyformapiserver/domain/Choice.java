@@ -1,6 +1,7 @@
 package com.example.libertyformapiserver.domain;
 
 import com.example.libertyformapiserver.config.domain.BaseEntity;
+import com.example.libertyformapiserver.dto.choice.patch.PatchChoiceReq;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -26,4 +27,9 @@ public class Choice extends BaseEntity {
 
     private String name;
 
+    // 편의 메서드
+    public void update(PatchChoiceReq choice){
+        this.number = choice.getNumber();
+        this.name = choice.getName();
+    }
 }

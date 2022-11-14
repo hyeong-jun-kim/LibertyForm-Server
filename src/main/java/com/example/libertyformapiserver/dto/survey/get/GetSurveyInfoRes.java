@@ -3,7 +3,7 @@ package com.example.libertyformapiserver.dto.survey.get;
 import com.example.libertyformapiserver.domain.Question;
 import com.example.libertyformapiserver.domain.Survey;
 import com.example.libertyformapiserver.dto.question.post.PostQuestionRes;
-import com.example.libertyformapiserver.dto.question.vo.ChoiceQuestionVO;
+import com.example.libertyformapiserver.dto.question.post.PostChoiceQuestionReq;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -19,7 +19,7 @@ public class GetSurveyInfoRes {
 
     private List<PostQuestionRes> questions;
 
-    private List<ChoiceQuestionVO> choiceQuestions;
+    private List<PostChoiceQuestionReq> choiceQuestions;
 
     public static GetSurveyInfoRes toDto(Survey survey, List<Question> questionList){
         GetSurveyRes surveyDto = GetSurveyRes.toDto(survey);

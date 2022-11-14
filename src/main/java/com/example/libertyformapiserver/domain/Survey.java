@@ -1,6 +1,7 @@
 package com.example.libertyformapiserver.domain;
 
 import com.example.libertyformapiserver.config.domain.BaseEntity;
+import com.example.libertyformapiserver.dto.survey.patch.PatchSurveyReq;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -52,4 +53,9 @@ public class Survey extends BaseEntity {
         this.thumbnailImg = thumbnailImg;
     }
 
+    public void update(PatchSurveyReq survey){
+        this.name = survey.getName();
+        this.description = survey.getDescription();
+        this.expirationDate = survey.getExpirationDate();
+    }
 }

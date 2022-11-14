@@ -1,6 +1,6 @@
 package com.example.libertyformapiserver.dto.survey.create;
 
-import com.example.libertyformapiserver.dto.question.vo.ChoiceQuestionVO;
+import com.example.libertyformapiserver.dto.question.post.PostChoiceQuestionReq;
 import com.example.libertyformapiserver.dto.question.post.PostQuestionReq;
 import com.example.libertyformapiserver.dto.survey.post.PostSurveyReq;
 import lombok.AllArgsConstructor;
@@ -19,5 +19,5 @@ public class PostCreateSurveyReq {
 
     private List<PostQuestionReq> questions;
 
-    private List<ChoiceQuestionVO> choiceQuestions;
+    private List<PostChoiceQuestionReq> choiceQuestions;
 }

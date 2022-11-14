@@ -4,7 +4,9 @@ import com.example.libertyformapiserver.domain.Question;
 import com.example.libertyformapiserver.domain.QuestionType;
 import com.example.libertyformapiserver.domain.Survey;
 import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.Hidden;
 import lombok.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
@@ -15,6 +17,11 @@ import javax.validation.constraints.Size;
 @Getter
 @Setter
 public class PatchQuestionReq {
+    @ApiModelProperty(
+            example = "1"
+    )
+    private long questionId;
+
     @ApiModelProperty(
             example = "3"
     )
@@ -39,11 +46,6 @@ public class PatchQuestionReq {
     private int number;
 
     @ApiModelProperty(
-            example = "https://libertyform.shop/s3/neo.jpg"
-    )
-    private String questionImgUrl;
-
-    @ApiModelProperty(
             example = "false"
     )
     private boolean answerRequired;
@@ -55,7 +57,6 @@ public class PatchQuestionReq {
                 .name(name)
                 .description(description)
                 .number(number)
-                .questionImgUrl(questionImgUrl)
                 .answerRequired(answerRequired)
                 .build();
     }
@@ -66,7 +67,6 @@ public class PatchQuestionReq {
                 .name(question.getName())
                 .description(question.getDescription())
                 .number(question.getNumber())
-                .questionImgUrl(question.getQuestionImgUrl())
                 .answerRequired(question.isAnswerRequired())
                 .build();
     }

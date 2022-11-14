@@ -1,5 +1,6 @@
 package com.example.libertyformapiserver.dto.survey.patch;
 
+import com.example.libertyformapiserver.dto.question.patch.PatchChoiceQuestionReq;
 import com.example.libertyformapiserver.dto.question.patch.PatchQuestionReq;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,5 +18,5 @@ public class PatchSurveyModifyReq {
 
     private List<PatchQuestionReq> questions;
 
-    private List<PatchQuestionReq> choiceQuestions;
+    private List<PatchChoiceQuestionReq> choiceQuestions;
 }
