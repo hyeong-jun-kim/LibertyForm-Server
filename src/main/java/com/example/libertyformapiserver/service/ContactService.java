@@ -8,6 +8,7 @@ import com.example.libertyformapiserver.dto.contact.get.GetContactRes;
 import com.example.libertyformapiserver.dto.contact.post.PostContactReq;
 import com.example.libertyformapiserver.dto.contact.post.PostContactRes;
 import com.example.libertyformapiserver.repository.ContactRepository;
+import com.example.libertyformapiserver.repository.ContactRepositoryCustom;
 import com.example.libertyformapiserver.repository.MemberContactRepository;
 import com.example.libertyformapiserver.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +27,7 @@ public class ContactService {
     private final MemberRepository memberRepository;
 
     private final ContactRepository contactRepository;
+    private final ContactRepositoryCustom contactRepositoryCustom;
     private final MemberContactRepository memberContactRepository;
 
     // 연락처 생성
@@ -37,7 +39,7 @@ public class ContactService {
         if(member.getEmail().equals(email)) // 자기 자신의 이메일 등록 안됨
             throw new BaseException(NOT_ALLOW_EMAIL);
 
-        if(contactRepository.findByMemberAndEmail(member, email).isPresent()) // 연락처 중복 방지
+        if(contactRepositoryCustom.findEmailWithJoinByMemberAndEmail(member, email) != null) // 연락처 중복 방지
             throw new BaseException(ALREADY_EXIST_EMAIL);
 
         Member targetMember = memberRepository.findMemberByEmail(email).orElseGet(() -> null);
