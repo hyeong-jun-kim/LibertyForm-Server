@@ -36,8 +36,7 @@ public class EmailService {
     // 설문 관리를 이용해서 설문 발송 이메일 보내기
     // 연락처에 있는 사람이 설문을 했는지 안했는지 추적할 수 있음
     public void sendSurveyManagementEmail(List<SurveyManagement> surveyManagements, List<String> receivers){
-        String title = surveyManagements.get(0).getSurvey().getName();
-        String subject = "[LibertyForm] " + title + " 설문지 안내입니다.";
+        String subject = "[LibertyForm] " + "설문지 안내입니다.";
 
         for(int i = 0; i < surveyManagements.size(); i++){
             SurveyManagement surveyManagement = surveyManagements.get(i);
@@ -89,7 +88,7 @@ public class EmailService {
                         "	</h1>\n" +
                         "	<p style=\"font-size: 16px; line-height: 26px; margin-top: 50px; padding: 0 5px;\">" +
                         "	    설문 작성을 위한 링크를 알려드립니다.<br/>" +
-                        "		해당 설문의 마감 기한은 " + "<strong style=\"color:#29ABE2\">"+expiredDate+"</strong>입니다.. <br/>" +
+                        "		해당 설문의 마감 기한은 " + "<strong style=\"color:#29ABE2\">"+expiredDate+"</strong>입니다. <br/>" +
                         "   <div style=\"width: 576px;height: 90px; margin-top: 50px; padding: 0 27px;color: #242424;font-size: 16px;font-weight: bold;background-color: #F9F9F9;vertical-align: middle;line-height: 90px;\">설문지 링크 : <strong style=\"font-style: normal;font-weight: bold;color: #29ABE2\">" + surveyLink + "</strong></div>" +
                         "	<p style=\"font-size: 16px; line-height: 26px; margin-top: 50px; padding: 0 5px;\">" +
                         "		감사합니다.<br/>" +

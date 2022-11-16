@@ -7,6 +7,7 @@ import com.example.libertyformapiserver.dto.question.post.PostChoiceQuestionReq;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.lang.Nullable;
 
 import java.util.List;
 import java.util.stream.Collectors;

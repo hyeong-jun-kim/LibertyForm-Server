@@ -2,7 +2,9 @@ package com.example.libertyformapiserver.controller;
 
 import com.example.libertyformapiserver.config.response.BaseResponse;
 import com.example.libertyformapiserver.dto.jwt.JwtInfo;
+import com.example.libertyformapiserver.dto.survey.get.GetSurveyInfoRes;
 import com.example.libertyformapiserver.dto.surveyManagement.post.PostSurveyManagementReq;
+import com.example.libertyformapiserver.jwt.NoIntercept;
 import com.example.libertyformapiserver.service.SurveyManagementService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
+import static com.example.libertyformapiserver.config.response.BaseResponseStatus.CONTACT_DELETE_SUCCESS;
 import static com.example.libertyformapiserver.config.response.BaseResponseStatus.SURVEY_MANAGEMENT_CREATED;
 
 @RestController
@@ -43,5 +46,19 @@ public class SurveyManagementController {
         return new BaseResponse<>(SURVEY_MANAGEMENT_CREATED);
     }
 
+    @ApiOperation(
+            value = "피설문자 설문 읽음 처리",
+            notes = "SurveyManagement에 등록되어있는 code로 설문지 읽음 처리를 진행할 수 있다."
+    )
+    @ApiResponses({
+            @ApiResponse(code = 1000, message = "요청에 성공하였습니다."),
+            @ApiResponse(code = 2020, message = "설문지 코드가 올바르지 않습니다.")
+    })
+    @NoIntercept
+    @GetMapping("/read/{code}")
+    public BaseResponse<GetSurveyInfoRes> readSurvey(@PathVariable String code){
+        GetSurveyInfoRes surveyInfoRes = surveyManagementService.readSurvey(code);
 
+        return new BaseResponse<>(surveyInfoRes);
+    }
 }

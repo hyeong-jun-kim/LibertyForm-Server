@@ -39,8 +39,9 @@ public class ContactService {
         if(member.getEmail().equals(email)) // 자기 자신의 이메일 등록 안됨
             throw new BaseException(NOT_ALLOW_EMAIL);
 
-        contactRepositoryCustom.findEmailWithJoinByMemberAndEmail(member, email)
-                .orElseThrow(() -> new BaseException(ALREADY_REGISTER_EMAIL));
+        if(contactRepositoryCustom.findEmailWithJoinByMemberAndEmail(member, email).isPresent()){
+            throw new BaseException(ALREADY_REGISTER_EMAIL) ;
+        }
 
         Member targetMember = memberRepository.findMemberByEmail(email).orElseGet(() -> null);
 

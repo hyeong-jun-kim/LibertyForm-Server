@@ -74,10 +74,10 @@ public class ContactController {
             @ApiResponse(code = 2010, message = "존재하지 않는 유저입니다."),
             @ApiResponse(code = 2018, message = "존재하지 않는 연락처입니다.")
     })
-    @GetMapping("/delete/{memberId}")
-    public BaseResponse<String> deleteContact(HttpServletRequest request, @PathVariable long memberId, @RequestParam String email){
+    @GetMapping("/delete")
+    public BaseResponse<String> deleteContact(HttpServletRequest request, @RequestParam String email){
         contactService.deleteContact(email, JwtInfo.getMemberId(request));
-        log.info("Delete contact: {}", "memberId - " + memberId + " | email - " + email);
+        log.info("Delete contact: {}", "memberId - " + JwtInfo.getMemberId(request) + " | email - " + email);
 
         return new BaseResponse<>(CONTACT_DELETE_SUCCESS);
     }
