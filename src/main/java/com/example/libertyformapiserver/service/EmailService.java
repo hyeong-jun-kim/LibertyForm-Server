@@ -13,8 +13,6 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -28,8 +26,18 @@ public class EmailService {
     private final AmazonSimpleEmailService amazonSimpleEmailService;
 
     // 설문지 발송 링크 이메일 전송
-    public void sendSurveyEmail(List<SurveyManagement> surveyManagements, List<String> receivers){
+    public void sendSurveyManagementEmail(Survey survey, List<String> receivers){
         String subject = "[LibertyForm] 설문지 발송 링크 안내입니다.";
+        String content = getContent(survey.getCode(), survey.getExpirationDate().toString());
+
+        sendSES(subject, content, receivers);
+    }
+
+    // 설문 관리를 이용해서 설문 발송 이메일 보내기
+    // 연락처에 있는 사람이 설문을 했는지 안했는지 추적할 수 있음
+    public void sendSurveyManagementEmail(List<SurveyManagement> surveyManagements, List<String> receivers){
+        String title = surveyManagements.get(0).getSurvey().getName();
+        String subject = "[LibertyForm] " + title + " 설문지 안내입니다.";
 
         for(int i = 0; i < surveyManagements.size(); i++){
             SurveyManagement surveyManagement = surveyManagements.get(i);

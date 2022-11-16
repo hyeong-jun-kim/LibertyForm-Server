@@ -19,6 +19,7 @@ public class SurveySendService {
 
     private final SurveyRepository surveyRepository;
 
+
     public void sendSurveyEmail(PostSurveyEmailReq surveyEmailDto, long memberId){
         long surveyId = surveyEmailDto.getSurveyId();
 
@@ -30,6 +31,6 @@ public class SurveySendService {
 
         List<String> receivers = PostSurveyEmailReq.toStringEmail(surveyEmailDto.getReceivers());
 
-        emailService.sendSurveyEmail(survey, receivers);
+        emailService.sendSurveyManagementEmail(survey, receivers);
     }
 }

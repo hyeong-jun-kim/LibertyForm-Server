@@ -9,7 +9,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -49,7 +48,7 @@ public class SurveyManagementService {
                 .collect(Collectors.toList());
 
         // 설문 발송 대상자에게 이메일 발송
-        emailService.sendSurveyEmail(surveyManagements, req.getEmails());
+        emailService.sendSurveyManagementEmail(surveyManagements, req.getEmails());
 
         surveyManagementRepository.saveAll(surveyManagements);
     }
