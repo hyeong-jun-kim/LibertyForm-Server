@@ -9,6 +9,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @AllArgsConstructor
@@ -30,13 +31,24 @@ public class SurveyManagement extends BaseEntity {
 
     private String code;
 
-    private LocalDateTime expiredTime;
+    private LocalDate expiredDate;
 
     @Enumerated(EnumType.STRING)
     private ResponseStatus responseStatus = ResponseStatus.PENDING;
 
     // 편의 메서드
+    public SurveyManagement(Contact contact, Survey survey, LocalDate expiredTime){
+        this.contact = contact;
+        this.survey = survey;
+        this.expiredDate = expiredTime;
+        code = generateCode();
+    }
+
     public String generateCode(){
         return RandomStringUtils.randomAlphanumeric(12);
+    }
+
+    public void changeResponseStatusConfirm(){
+        this.responseStatus = ResponseStatus.CONFIRM;
     }
 }

@@ -1,4 +1,4 @@
-package com.example.libertyformapiserver.dto.contact.post;
+package com.example.libertyformapiserver.dto.contact.post.create;
 
 import com.example.libertyformapiserver.domain.Contact;
 import io.swagger.annotations.ApiModelProperty;
@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 @Getter
-public class PostContactRes {
+public class PostCreateContactRes {
     @ApiModelProperty(
             example = "forceTlight@gmail.com"
     )
@@ -32,8 +32,8 @@ public class PostContactRes {
     )
     private boolean isMember;
 
-    static public PostContactRes toDto(Contact contact){
-        return PostContactRes.builder()
+    static public PostCreateContactRes toDto(Contact contact){
+        return PostCreateContactRes.builder()
                 .email(contact.getEmail())
                 .name(contact.getName())
                 .relationship(contact.getRelationship())

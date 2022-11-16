@@ -1,4 +1,4 @@
-package com.example.libertyformapiserver.dto.contact.post;
+package com.example.libertyformapiserver.dto.contact.post.create;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -11,7 +11,7 @@ import javax.validation.constraints.Pattern;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-public class PostContactReq {
+public class PostCreateContactReq {
     @Pattern(regexp = "^[_a-z0-9-]+(.[_a-z0-9-]+)*@(?:\\w+\\.)+\\w+$",
             message = "이메일 양식에 맞게 입력해 주시기 바랍니다.")
     @ApiModelProperty(

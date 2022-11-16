@@ -1,11 +1,13 @@
 package com.example.libertyformapiserver.controller;
 
 import com.example.libertyformapiserver.config.response.BaseResponse;
+import com.example.libertyformapiserver.config.response.BaseResponseStatus;
 import com.example.libertyformapiserver.dto.contact.get.GetContactRes;
-import com.example.libertyformapiserver.dto.contact.post.PostContactReq;
-import com.example.libertyformapiserver.dto.contact.post.PostContactRes;
+import com.example.libertyformapiserver.dto.contact.post.create.PostCreateContactReq;
+import com.example.libertyformapiserver.dto.contact.post.create.PostCreateContactRes;
 import com.example.libertyformapiserver.dto.jwt.JwtInfo;
 import com.example.libertyformapiserver.service.ContactService;
+import io.jsonwebtoken.Jwt;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -16,6 +18,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+
+import static com.example.libertyformapiserver.config.response.BaseResponseStatus.CONTACT_DELETE_SUCCESS;
 
 @Log4j2
 @RestController
@@ -35,13 +39,12 @@ public class ContactController {
             @ApiResponse(code = 2018, message = "이미 연락처에 등록된 이메일입니다.")
     })
     @PostMapping("/create")
-    public BaseResponse<PostContactRes> createContact(@RequestBody @Validated PostContactReq postContactReq, HttpServletRequest request){
+    public BaseResponse<PostCreateContactRes> createContact(@RequestBody @Validated PostCreateContactReq postCreateContactReq, HttpServletRequest request){
         long memberId = JwtInfo.getMemberId(request);
-        PostContactRes postContactRes = contactService.createContact(postContactReq, JwtInfo.getMemberId(request));
+        PostCreateContactRes postCreateContactRes = contactService.createContact(postCreateContactReq, JwtInfo.getMemberId(request));
+        log.info("Create contact : {}", "memberId: - " + memberId, "| contact_email - " + postCreateContactReq.getEmail());
 
-        log.info("Create contact", "memberId: " + memberId, "| contact_email: " + postContactReq.getEmail());
-
-        return new BaseResponse<>(postContactRes);
+        return new BaseResponse<>(postCreateContactRes);
     }
 
     @ApiOperation(
@@ -57,9 +60,25 @@ public class ContactController {
     public BaseResponse<List<GetContactRes>> loadMyContacts(HttpServletRequest request){
         long memberId = JwtInfo.getMemberId(request);
         List<GetContactRes> getContactResList = contactService.getContactList(JwtInfo.getMemberId(request));
-
-        log.info("Load contact", "memberId: " + memberId);
+        log.info("Load contact : {}", "memberId - " + memberId);
 
         return new BaseResponse<>(getContactResList);
+    }
+
+    @ApiOperation(
+            value = "설문 발송 대상자 불러오기",
+            notes = "자신의 설문 발송 대상자들을 불러옵니다."
+    )
+    @ApiResponses({
+            @ApiResponse(code = 1000, message = "요청에 성공하였습니다."),
+            @ApiResponse(code = 2010, message = "존재하지 않는 유저입니다."),
+            @ApiResponse(code = 2018, message = "존재하지 않는 연락처입니다.")
+    })
+    @GetMapping("/delete/{memberId}")
+    public BaseResponse<String> deleteContact(HttpServletRequest request, @PathVariable long memberId, @RequestParam String email){
+        contactService.deleteContact(email, JwtInfo.getMemberId(request));
+        log.info("Delete contact: {}", "memberId - " + memberId + " | email - " + email);
+
+        return new BaseResponse<>(CONTACT_DELETE_SUCCESS);
     }
 }

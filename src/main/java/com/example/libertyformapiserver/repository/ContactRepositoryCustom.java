@@ -9,17 +9,20 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 @RequiredArgsConstructor
 public class ContactRepositoryCustom {
     private final JPAQueryFactory queryFactory;
 
-    public MemberContact findEmailWithJoinByMemberAndEmail(Member member, String email){
-        return queryFactory
-                .selectFrom(memberContact)
+    public Optional<Contact> findEmailWithJoinByMemberAndEmail(Member member, String email){
+        return Optional.ofNullable(queryFactory
+                .select(contact)
+                .from(memberContact)
                 .join(memberContact.contact, contact)
-                .fetchJoin()
+//                .fetchJoin()
                 .where(memberContact.member.eq(member).and(contact.email.eq(email)))
-                .fetchFirst();
+                .fetchFirst());
     }
 }

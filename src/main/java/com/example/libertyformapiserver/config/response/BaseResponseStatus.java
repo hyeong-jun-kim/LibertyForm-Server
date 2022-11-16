@@ -36,11 +36,14 @@ public enum BaseResponseStatus {
     ALREADY_REGISTER_EMAIL(false, 2018, "이미 연락처에 등록된 이메일입니다."),
     NOT_EXIST_CONTACT(false, 2018, "연락처가 존재하지 않습니다."),
     NOT_MATCH_QUESTION(false, 2019, "해당 사용자의 질문이 아닙니다."),
+    NOT_EXIST_CODE(false, 2020, "유효한 코드 번호가 아닙니다."),
 
     /**
      * 2500 : Request 성공
      */
     SURVEY_MODIFY_SUCCESS(true, 2500, "설문지 수정이 성공적으로 진행되었습니다."),
+    SURVEY_MANAGEMENT_CREATED(true, 2500, "해당 사용자들에게 설문이 발송이 정상적으로 수행되었습니다."),
+    CONTACT_DELETE_SUCCESS(true, 2500, "해당 이메일이 연락처에서 제거되었습니다."),
 
     /**
      * 3000 : Response 오류

@@ -4,6 +4,7 @@ import com.amazonaws.services.simpleemail.AmazonSimpleEmailService;
 import com.amazonaws.services.simpleemail.model.SendEmailResult;
 import com.example.libertyformapiserver.config.exception.BaseException;
 import com.example.libertyformapiserver.domain.Survey;
+import com.example.libertyformapiserver.domain.SurveyManagement;
 import com.example.libertyformapiserver.dto.email.EmailSenderDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -12,6 +13,9 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static com.example.libertyformapiserver.config.response.BaseResponseStatus.THREAD_OVER_REQUEST;
@@ -24,12 +28,13 @@ public class EmailService {
     private final AmazonSimpleEmailService amazonSimpleEmailService;
 
     // 설문지 발송 링크 이메일 전송
-    // TODO 설문지 발송 관리 기능 할 때 DB 연결하기
-    public void sendSurveyEmail(Survey survey, List<String> receivers){
+    public void sendSurveyEmail(List<SurveyManagement> surveyManagements, List<String> receivers){
         String subject = "[LibertyForm] 설문지 발송 링크 안내입니다.";
-        String content = getContent(survey.getCode(), survey.getExpirationDate().toString());
 
-        sendSES(subject, content, receivers);
+        for(int i = 0; i < surveyManagements.size(); i++){
+            SurveyManagement surveyManagement = surveyManagements.get(i);
+            sendSES(subject, getContent(surveyManagement.getCode(), surveyManagement.getExpiredDate().toString()), Collections.singletonList(receivers.get(i)));
+        }
     }
 
     // AWS SES로 비동기를 통해 이메일 전송
