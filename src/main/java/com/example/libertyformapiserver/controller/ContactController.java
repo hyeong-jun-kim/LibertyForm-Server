@@ -1,13 +1,11 @@
 package com.example.libertyformapiserver.controller;
 
 import com.example.libertyformapiserver.config.response.BaseResponse;
-import com.example.libertyformapiserver.config.response.BaseResponseStatus;
 import com.example.libertyformapiserver.dto.contact.get.GetContactRes;
 import com.example.libertyformapiserver.dto.contact.post.create.PostCreateContactReq;
 import com.example.libertyformapiserver.dto.contact.post.create.PostCreateContactRes;
 import com.example.libertyformapiserver.dto.jwt.JwtInfo;
 import com.example.libertyformapiserver.service.ContactService;
-import io.jsonwebtoken.Jwt;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -57,16 +55,16 @@ public class ContactController {
             @ApiResponse(code = 2018, message = "존재하지 않는 연락처입니다.")
     })
     @GetMapping
-    public BaseResponse<List<GetContactRes>> loadMyContacts(HttpServletRequest request){
+    public BaseResponse<List<GetContactRes>> loadMyContacts(@RequestParam int cursor, HttpServletRequest request){
         long memberId = JwtInfo.getMemberId(request);
-        List<GetContactRes> getContactResList = contactService.getContactList(JwtInfo.getMemberId(request));
+        List<GetContactRes> getContactResList = contactService.getContactList(cursor, JwtInfo.getMemberId(request));
         log.info("Load contact : {}", "memberId - " + memberId);
 
         return new BaseResponse<>(getContactResList);
     }
 
     @ApiOperation(
-            value = "설문 발송 대상자 불러오기",
+            value = "설문 발송 대상자 ",
             notes = "자신의 설문 발송 대상자들을 불러옵니다."
     )
     @ApiResponses({

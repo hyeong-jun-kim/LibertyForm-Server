@@ -12,6 +12,8 @@ import com.example.libertyformapiserver.repository.ContactRepositoryCustom;
 import com.example.libertyformapiserver.repository.MemberContactRepository;
 import com.example.libertyformapiserver.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,6 +26,8 @@ import static com.example.libertyformapiserver.config.response.BaseResponseStatu
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class ContactService {
+    private final int PAGING_SIZE = 10;
+
     private final MemberRepository memberRepository;
 
     private final ContactRepository contactRepository;
@@ -57,7 +61,7 @@ public class ContactService {
     }
 
     // 설문 발송 대상자 불러오기
-    public List<GetContactRes> getContactList(long memberId){
+    public List<GetContactRes> getContactList(int cursor, long memberId){
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new BaseException(INVALID_MEMBER));
 
@@ -65,13 +69,14 @@ public class ContactService {
         if(memberContactList == null)
             throw new BaseException(NOT_EXIST_CONTACT);
 
-        List<Contact> contactList = memberContactList.stream().map(mc -> contactRepository.findById(mc.getContact().getId())
-                .orElseThrow(() -> new BaseException(NOT_EXIST_CONTACT))).collect(Collectors.toList());
+        // 페이징 처리
+        PageRequest paging = PageRequest.of(cursor, PAGING_SIZE, Sort.by(Sort.Direction.ASC, "createdAt"));
 
-        return GetContactRes.toListDto(contactList);
+        return contactRepositoryCustom.findAllByMember(member, paging);
     }
 
     // 연락처 삭제
+    @Transactional(readOnly = false)
     public void deleteContact(String email, long memberId){
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new BaseException(INVALID_MEMBER));
