@@ -8,6 +8,7 @@ import com.example.libertyformapiserver.dto.survey.create.PostCreateSurveyRes;
 import com.example.libertyformapiserver.dto.survey.get.GetListSurveyRes;
 import com.example.libertyformapiserver.dto.survey.get.GetSurveyInfoRes;
 import com.example.libertyformapiserver.dto.survey.patch.PatchSurveyDeleteRes;
+import com.example.libertyformapiserver.dto.survey.patch.PatchSurveyModifyReq;
 import com.example.libertyformapiserver.jwt.NoIntercept;
 import com.example.libertyformapiserver.service.ObjectStorageService;
 import com.example.libertyformapiserver.service.SurveyService;
@@ -16,6 +17,7 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.validation.Validator;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -28,6 +30,8 @@ import java.util.List;
 @RequestMapping("/survey")
 @RequiredArgsConstructor
 public class SurveyController {
+    private Validator validator;
+
     private final SurveyService surveyService;
     private final ObjectStorageService objectStorageService;
 
@@ -46,12 +50,39 @@ public class SurveyController {
             @ApiResponse(code = 4002, message = "파일을 업로드 하는 도중 오류가 발생했습니다.")}
     )
     @PostMapping(value = "/create") // questionImgFiles은 설문 문항 번호로 구분이 됨 ex) 0.jpg, 1.png
-    public BaseResponse<PostCreateSurveyRes> createSurvey(@RequestPart @Validated PostCreateSurveyReq surveyReqDto, HttpServletRequest request
+    public BaseResponse<PostCreateSurveyRes> createSurvey(@Validated @RequestPart PostCreateSurveyReq surveyReqDto, HttpServletRequest request
             , @RequestParam(value = "thumbnailImg", required = false)MultipartFile thumbnailImgFile, @RequestParam(value = "questionImgs", required = false)List<MultipartFile> questionImgFiles){
+
         PostCreateSurveyRes postCreateSurveyRes = surveyService.createSurvey(surveyReqDto, JwtInfo.getMemberId(request), thumbnailImgFile, questionImgFiles);
         log.info("Create Survey : {}", postCreateSurveyRes.getSurvey().getCode());
 
-        return new BaseResponse<>(surveyService.createSurvey(surveyReqDto, JwtInfo.getMemberId(request), thumbnailImgFile, questionImgFiles));
+        return new BaseResponse<>(postCreateSurveyRes);
+    }
+
+    @ApiOperation(
+            value = "설문지 수정",
+            notes = "surveyId - 설문지 아이디, questions - 주관식, 감정, 선형대수 문항," +
+                    " choiceQuestions - 객관식 문항"
+    )
+    @ApiResponses({
+            @ApiResponse(code = 1000, message = "요청에 성공하였습니다."),
+            @ApiResponse(code = 2010, message = "존재하지 않는 유저입니다."),
+            @ApiResponse(code = 2011, message = "질문 유형 번호를 다시한번 확인해주시길 바랍니다."),
+            @ApiResponse(code = 2012, message = "질문 번호 순서가 올바르지 않습니다. 질문 번호를 다시한번 확인해주시기 바랍니다."),
+            @ApiResponse(code = 2013, message = "존재하지 않는 설문입니다."),
+            @ApiResponse(code = 2014, message = "해당 사용자의 설문이 아닙니다."),
+            @ApiResponse(code = 2015, message = "존재하지 않는 질문입니다."),
+            @ApiResponse(code = 2015, message = "존재하지 않는 선택지입니다."),
+            @ApiResponse(code = 2019, message = "해당 사용자의 질문이 아닙니다."),
+            @ApiResponse(code = 4001, message = "존재하지 않는 질문 유형입니다."),
+            @ApiResponse(code = 4002, message = "파일을 업로드 하는 도중 오류가 발생했습니다.")}
+    )
+    @PatchMapping("/modify")
+    public BaseResponse<String> modifySurvey(@RequestBody PatchSurveyModifyReq surveyModifyReq, HttpServletRequest request){
+        surveyService.modifySurvey(surveyModifyReq, JwtInfo.getMemberId(request));
+        log.info("Modify Survey Id : {}", surveyModifyReq.getSurvey().getSurveyId());
+
+        return new BaseResponse<>(BaseResponseStatus.SURVEY_MODIFY_SUCCESS);
     }
 
     @ApiOperation(
@@ -86,6 +117,8 @@ public class SurveyController {
 
         return new BaseResponse<>(getSurveyInfoRes);
     }
+
+
 
     @ApiOperation(
             value = "설문지 삭제하기",

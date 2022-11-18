@@ -24,4 +24,9 @@ public class QuestionType extends BaseEntity {
     private String name;
 
     private boolean hasChoices;
+
+    // 편의 메서드
+    public void changeQuestionType(long id){
+        this.id = id;
+    }
 }

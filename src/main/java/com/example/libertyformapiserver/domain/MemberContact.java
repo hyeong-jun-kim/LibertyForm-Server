@@ -2,33 +2,35 @@ package com.example.libertyformapiserver.domain;
 
 import com.example.libertyformapiserver.config.domain.BaseEntity;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-@NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@NoArgsConstructor
 @Getter
 @Entity
-public class SurveyParticipant extends BaseEntity {
+public class MemberContact extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     @ManyToOne
-    @JoinColumn(name = "survey_id")
-    private Survey survey;
-
-    @ManyToOne
     @JoinColumn(name = "member_id")
     private Member member;
 
+    @ManyToOne
+    @JoinColumn(name = "contact_id")
+    private Contact contact;
+
     // 편의 메서드
-    public SurveyParticipant(Survey survey, Member member){
-        this.survey = survey;
+    public MemberContact(Member member, Contact contact){
+        this.member = member;
+        this.contact = contact;
+    }
+
+    public void changeMember(Member member){
         this.member = member;
     }
 }

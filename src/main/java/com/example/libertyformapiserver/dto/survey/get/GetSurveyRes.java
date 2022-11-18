@@ -30,6 +30,11 @@ public class GetSurveyRes {
     private String name;
 
     @ApiModelProperty(
+            example = "https://objectstorage.kr-central-1.kakaoi.io/v1/586d691a32c5421b859e89fd7a7f8dcd/libertyform/img/survey/thumbnail/c0af32af-bfee-4e48-8260-27ac1cb5fe87-test.PNG"
+    )
+    private String thumbnailImgUrl;
+
+    @ApiModelProperty(
             example = "화장품 설문입니다. 최선을 다해서 임해주시기 바랍니다."
     )
     private String description;
@@ -53,6 +58,7 @@ public class GetSurveyRes {
                 .code(survey.getCode())
                 .name(survey.getName())
                 .description(survey.getDescription())
+                .thumbnailImgUrl(survey.getThumbnailImg())
                 .expirationDate(survey.getExpirationDate())
                 .createdAt(survey.getCreatedAt())
                 .build();

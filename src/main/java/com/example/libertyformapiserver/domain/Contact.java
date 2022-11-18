@@ -1,7 +1,6 @@
 package com.example.libertyformapiserver.domain;
 
 import com.example.libertyformapiserver.config.domain.BaseEntity;
-import com.example.libertyformapiserver.dto.choice.patch.PatchChoiceReq;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -12,24 +11,32 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Getter
 @Entity
-public class Choice extends BaseEntity {
+@Getter
+public class Contact extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    // 연락처에 등록된 사람
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "question_id")
-    private Question question;
+    @JoinColumn(name = "member_id")
+    private Member member;
 
-    private int number;
+    private String email;
 
     private String name;
 
+    private String relationship;
+
     // 편의 메서드
-    public void update(PatchChoiceReq choice){
-        this.number = choice.getNumber();
-        this.name = choice.getName();
+    public Contact(String email, String name, String relationship){
+        this.email = email;
+        this.name = name;
+        this.relationship = relationship;
+    }
+
+    public void changeMember(Member member){
+        this.member = member;
     }
 }

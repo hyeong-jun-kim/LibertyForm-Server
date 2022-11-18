@@ -32,6 +32,18 @@ public enum BaseResponseStatus {
     NOT_MATCH_SURVEY(false, 2014, "해당 사용자의 설문이 아닙니다."),
     NOT_EXIST_QUESTION(false, 2015, "존재하지 않는 질문입니다."),
     NOT_EXIST_CHOICE(false, 2016, "존재하지 않는 선택지 입니다"),
+    NOT_ALLOW_EMAIL(false, 2017, "자기 자신의 이메일은 추가하실 수 없습니다."),
+    ALREADY_REGISTER_EMAIL(false, 2018, "이미 연락처에 등록된 이메일입니다."),
+    NOT_EXIST_CONTACT(false, 2018, "연락처가 존재하지 않습니다."),
+    NOT_MATCH_QUESTION(false, 2019, "해당 사용자의 질문이 아닙니다."),
+    NOT_EXIST_CODE(false, 2020, "유효한 코드 번호가 아닙니다."),
+
+    /**
+     * 2500 : Request 성공
+     */
+    SURVEY_MODIFY_SUCCESS(true, 2500, "설문지 수정이 성공적으로 진행되었습니다."),
+    SURVEY_MANAGEMENT_CREATED(true, 2500, "해당 사용자들에게 설문이 발송이 정상적으로 수행되었습니다."),
+    CONTACT_DELETE_SUCCESS(true, 2500, "해당 이메일이 연락처에서 제거되었습니다."),
 
     /**
      * 3000 : Response 오류
@@ -42,13 +54,15 @@ public enum BaseResponseStatus {
      * 3500 : Response 성공
      */
     IMG_UPLOAD_SUCCESS(true, 3500, "이미지 업로드에 성공하였습니다."),
+    SEND_SURVEY_SUCCESS(true, 3501, "설문지 발송에 성공하였습니다."),
 
     /**
      * 4000 : Database, Server 오류
      */
     INTERNAL_SERVER_ERROR(false, 4000, "서버 오류입니다"),
     NOT_VALID_QUESTION_TYPE(false, 4001, "존재하지 않는 질문 유형입니다."),
-    FILE_UPLOAD_ERROR(false, 4002, "파일 업로드를 하는 도중에 오류가 발생했습니다.");
+    FILE_UPLOAD_ERROR(false, 4002, "파일 업로드를 하는 도중에 오류가 발생했습니다."),
+    THREAD_OVER_REQUEST(false, 4003, "잠시 후에 다시 시도해주세요");
 
     private final boolean isSuccess;
     private final int code;

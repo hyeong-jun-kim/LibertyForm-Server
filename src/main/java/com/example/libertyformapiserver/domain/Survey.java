@@ -1,6 +1,7 @@
 package com.example.libertyformapiserver.domain;
 
 import com.example.libertyformapiserver.config.domain.BaseEntity;
+import com.example.libertyformapiserver.dto.survey.patch.PatchSurveyReq;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -43,11 +44,18 @@ public class Survey extends BaseEntity {
     private LocalDate expirationDate;
 
     // 편의 메서드
+
+    public void generateCode(){
+        this.code = RandomStringUtils.randomAlphanumeric(12);
+    }
+
     public void changeThumbnailImg(String thumbnailImg){
         this.thumbnailImg = thumbnailImg;
     }
 
-    public void generateCode(){
-        this.code = RandomStringUtils.randomAlphanumeric(12);
+    public void update(PatchSurveyReq survey){
+        this.name = survey.getName();
+        this.description = survey.getDescription();
+        this.expirationDate = survey.getExpirationDate();
     }
 }
