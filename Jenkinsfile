@@ -79,8 +79,7 @@ pipeline{
                 {
                     git branch: "main",
                     credentialsId: githubCredential,
-                    url: 'https://github.com/Gachon-Kakao-Enterprise-Group-7/kub
-e-menifests'
+                    url: 'https://github.com/Gachon-Kakao-Enterprise-Group-7/kube-menifests'
                     sh "sed -i 's/libertyform-spring:.*\$/libertyform-spring:${currentBuild.number}/' deployment.yaml"
                     sh "git add deployment.yaml"
                     sh "git commit -m '[UPDATE] libertyform-spring ${currentBuild.number} image versioning'"
