@@ -36,8 +36,5 @@ out/
 ### VS Code ###
 .vscode/
 
-### Secret ###
-*.yml
-
 ### Log4j2 ###
 /logs
