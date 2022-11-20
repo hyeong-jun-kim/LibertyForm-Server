@@ -18,7 +18,7 @@ public class MultipleChoice extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "multipleChoiceResponseId")
     private MultipleChoiceResponse multipleChoiceResponse;
 

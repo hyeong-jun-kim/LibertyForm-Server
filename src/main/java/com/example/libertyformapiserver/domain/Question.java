@@ -25,7 +25,7 @@ public class Question extends BaseEntity {
     @JoinColumn(name = "survey_id")
     private Survey survey;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "question_id")
     private QuestionType questionType;
 
