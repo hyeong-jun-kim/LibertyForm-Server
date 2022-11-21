@@ -7,6 +7,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.CorsRegistration;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -33,5 +35,11 @@ public class AppConfig implements WebMvcConfigurer {
                 .order(1) // order는 인터셉터의 우선 순위를 정의한다.
                 .addPathPatterns("/**")
                 .excludePathPatterns("/swagger-ui/**", "/swagger-resources/**", "/v3/api-docs");
+    }
+
+    // CORS wildcard
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/**");
     }
 }

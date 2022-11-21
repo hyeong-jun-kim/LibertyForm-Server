@@ -24,8 +24,8 @@ spring:
 # ses 설정
 aws:
   ses:
-    access-key: AKIASERXD2NLUMVK5SVR
-    secret-key: 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
+    access-key: ASDSD123SAD
+    secret-key: 4353453fsafdSF234sdf
 
 ## Jwt Secret ##
 secret:

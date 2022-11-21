@@ -4,7 +4,7 @@ import static com.example.libertyformapiserver.domain.QContact.contact;
 import static com.example.libertyformapiserver.domain.QMemberContact.memberContact;
 import com.example.libertyformapiserver.domain.Contact;
 import com.example.libertyformapiserver.domain.Member;
-import com.example.libertyformapiserver.domain.MemberContact;
+import com.example.libertyformapiserver.dto.contact.ContactVO;
 import com.example.libertyformapiserver.dto.contact.get.GetContactRes;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +31,7 @@ public class ContactRepositoryCustom {
     }
 
     // 연락처 페이징 처리
-    public List<GetContactRes> findAllByMember(Member member, Pageable pageable){
+    public GetContactRes findAllByMember(Member member, Pageable pageable, int cursor){
         List<Contact> contacts =queryFactory.select(contact)
                 .from(memberContact)
                 .join(memberContact.contact, contact)
@@ -42,13 +42,23 @@ public class ContactRepositoryCustom {
                 .limit(pageable.getPageSize() + 1) // 마지막 페이지인지 확인을 위해 11개를 가져온다.
                 .fetch();
 
-        boolean isFinalPage = true;
+        long totalCount = queryFactory.select(contact.count())
+                .from(memberContact)
+                .join(memberContact.contact, contact)
+                .where(memberContact.member.eq(member))
+                .fetchOne();
+
+        long totalPage = totalCount / pageable.getPageSize();
+
+        boolean isPrevMove = cursor == 1? false: true;
+
+        boolean isNextMove = false;
 
         if(contacts.size() == pageable.getPageSize() + 1){ // 11개면 다음 페이지가 존재 함
             contacts.remove(pageable.getPageSize()); // 마지막 인덱스 지우기
-            isFinalPage = false;
+            isNextMove = true;
         }
 
-        return GetContactRes.toListDto(contacts);
+        return new GetContactRes(ContactVO.toListDto(contacts), cursor, pageable.getOffset(), isPrevMove, isNextMove);
     }
 }

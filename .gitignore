@@ -38,3 +38,6 @@ out/
 
 ### Log4j2 ###
 /logs
+
+### Secret ###
+*.yml

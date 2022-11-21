@@ -21,7 +21,7 @@ import java.util.List;
 
 @Configuration
 @EnableWebMvc
-public class    SwaggerConfig {
+public class SwaggerConfig {
 
     @Bean
     public Docket api(){

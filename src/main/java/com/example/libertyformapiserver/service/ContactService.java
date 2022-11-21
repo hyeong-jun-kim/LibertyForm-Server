@@ -4,6 +4,7 @@ import com.example.libertyformapiserver.config.exception.BaseException;
 import com.example.libertyformapiserver.domain.Contact;
 import com.example.libertyformapiserver.domain.Member;
 import com.example.libertyformapiserver.domain.MemberContact;
+import com.example.libertyformapiserver.dto.contact.ContactVO;
 import com.example.libertyformapiserver.dto.contact.get.GetContactRes;
 import com.example.libertyformapiserver.dto.contact.post.create.PostCreateContactReq;
 import com.example.libertyformapiserver.dto.contact.post.create.PostCreateContactRes;
@@ -18,7 +19,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static com.example.libertyformapiserver.config.response.BaseResponseStatus.*;
 
@@ -61,7 +61,7 @@ public class ContactService {
     }
 
     // 설문 발송 대상자 불러오기
-    public List<GetContactRes> getContactList(int cursor, long memberId){
+    public GetContactRes getContactList(int cursor, long memberId){
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new BaseException(INVALID_MEMBER));
 
@@ -72,7 +72,12 @@ public class ContactService {
         // 페이징 처리
         PageRequest paging = PageRequest.of(cursor, PAGING_SIZE, Sort.by(Sort.Direction.ASC, "createdAt"));
 
-        return contactRepositoryCustom.findAllByMember(member, paging);
+        GetContactRes contactRes = contactRepositoryCustom.findAllByMember(member, paging, cursor);
+
+        if(contactRes.getContacts().isEmpty()) // 페이지가 존재하지 않을 경우
+            throw new BaseException(NOT_EXIST_PAGE);
+
+        return contactRepositoryCustom.findAllByMember(member, paging, cursor);
     }
 
     // 연락처 삭제
