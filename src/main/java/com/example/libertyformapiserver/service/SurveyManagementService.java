@@ -37,7 +37,7 @@ public class SurveyManagementService {
 
         // 연락처 가져오기
         List<Contact> contacts = req.getEmails().stream()
-                .map(e -> contactRepositoryCustom.findEmailWithJoinByMemberAndEmail(member, e)
+                .map(e -> contactRepositoryCustom.findContactWithJoinByMemberAndEmail(member, e)
                         .orElseThrow(() -> new BaseException(NOT_EXIST_CONTACT)))
                 .collect(Collectors.toList());
 

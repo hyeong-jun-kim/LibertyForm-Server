@@ -4,8 +4,8 @@ import static com.example.libertyformapiserver.domain.QContact.contact;
 import static com.example.libertyformapiserver.domain.QMemberContact.memberContact;
 import com.example.libertyformapiserver.domain.Contact;
 import com.example.libertyformapiserver.domain.Member;
-import com.example.libertyformapiserver.dto.contact.ContactVO;
-import com.example.libertyformapiserver.dto.contact.get.GetContactRes;
+import com.example.libertyformapiserver.dto.contact.vo.ContactVO;
+import com.example.libertyformapiserver.dto.contact.get.GetPagingContactsRes;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -20,18 +20,27 @@ public class ContactRepositoryCustom {
     private final JPAQueryFactory queryFactory;
 
     // 연락처 중복 방지, 연락처 찾기 용
-    public Optional<Contact> findEmailWithJoinByMemberAndEmail(Member member, String email){
+    public Optional<Contact> findContactWithJoinByMemberAndEmail(Member member, String email){
         return Optional.ofNullable(queryFactory
                 .select(contact)
                 .from(memberContact)
                 .join(memberContact.contact, contact)
-//                .fetchJoin()
                 .where(memberContact.member.eq(member).and(contact.email.eq(email)))
                 .fetchFirst());
     }
 
+    // 연락처 모두 불러오기
+    public List<Contact> findContactsWithJoinByMember(Member member){
+        return queryFactory
+                .select(contact)
+                .from(memberContact)
+                .join(memberContact.contact, contact)
+                .where(memberContact.member.eq(member))
+                .fetch();
+    }
+
     // 연락처 페이징 처리
-    public GetContactRes findAllByMember(Member member, Pageable pageable, int currentPage){
+    public GetPagingContactsRes findAllByMember(Member member, Pageable pageable, int currentPage){
         List<Contact> contacts =queryFactory.select(contact)
                 .from(memberContact)
                 .join(memberContact.contact, contact)
@@ -59,6 +68,6 @@ public class ContactRepositoryCustom {
             isNextMove = true;
         }
 
-        return new GetContactRes(ContactVO.toListDto(contacts), totalPage, currentPage, isPrevMove, isNextMove);
+        return new GetPagingContactsRes(ContactVO.toListDto(contacts), totalPage, currentPage, isPrevMove, isNextMove);
     }
 }

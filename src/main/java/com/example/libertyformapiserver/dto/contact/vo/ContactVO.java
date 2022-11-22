@@ -1,4 +1,4 @@
-package com.example.libertyformapiserver.dto.contact;
+package com.example.libertyformapiserver.dto.contact.vo;
 
 import com.example.libertyformapiserver.domain.Contact;
 import io.swagger.annotations.ApiModelProperty;

@@ -1,7 +1,8 @@
 package com.example.libertyformapiserver.controller;
 
 import com.example.libertyformapiserver.config.response.BaseResponse;
-import com.example.libertyformapiserver.dto.contact.get.GetContactRes;
+import com.example.libertyformapiserver.dto.contact.get.GetContactsRes;
+import com.example.libertyformapiserver.dto.contact.get.GetPagingContactsRes;
 import com.example.libertyformapiserver.dto.contact.post.create.PostCreateContactReq;
 import com.example.libertyformapiserver.dto.contact.post.create.PostCreateContactRes;
 import com.example.libertyformapiserver.dto.jwt.JwtInfo;
@@ -54,12 +55,31 @@ public class ContactController {
             @ApiResponse(code = 2018, message = "존재하지 않는 연락처입니다.")
     })
     @GetMapping
-    public BaseResponse<GetContactRes> loadMyContacts(@RequestParam int currentPage, HttpServletRequest request){
+    public BaseResponse<GetContactsRes> loadMyContacts(HttpServletRequest request){
         long memberId = JwtInfo.getMemberId(request);
-        GetContactRes res = contactService.getContactList(currentPage, JwtInfo.getMemberId(request));
+        GetContactsRes getContactsRes = contactService.getMyContacts(JwtInfo.getMemberId(request));
         log.info("Load contact : {}", "memberId - " + memberId);
 
-        return new BaseResponse<>(res);
+        return new BaseResponse<>(getContactsRes);
+    }
+
+    @ApiOperation(
+            value = "설문 발송 대상자 불러오기 (Paging)",
+            notes = "페이징 처리된 자신의 설문 발송 대상자들을 불러옵니다."
+    )
+    @ApiResponses({
+            @ApiResponse(code = 1000, message = "요청에 성공하였습니다."),
+            @ApiResponse(code = 2010, message = "존재하지 않는 유저입니다."),
+            @ApiResponse(code = 2018, message = "존재하지 않는 연락처입니다."),
+            @ApiResponse(code = 4004, message = "존재하지 않는 페이지입니다.")
+    })
+    @GetMapping("{page}")
+    public BaseResponse<GetPagingContactsRes> loadMyContactsByPaging(@PathVariable("page") int page, HttpServletRequest request){
+        long memberId = JwtInfo.getMemberId(request);
+        GetPagingContactsRes contactRes = contactService.getMyPagingContacts(page, JwtInfo.getMemberId(request));
+        log.info("Load paging contact : {}", "memberId - " + memberId);
+
+        return new BaseResponse<>(contactRes);
     }
 
     @ApiOperation(
