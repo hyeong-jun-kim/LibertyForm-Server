@@ -61,7 +61,7 @@ public class ContactService {
     }
 
     // 설문 발송 대상자 불러오기
-    public GetContactRes getContactList(int cursor, long memberId){
+    public GetContactRes getContactList(int currentPage, long memberId){
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new BaseException(INVALID_MEMBER));
 
@@ -70,14 +70,14 @@ public class ContactService {
             throw new BaseException(NOT_EXIST_CONTACT);
 
         // 페이징 처리
-        PageRequest paging = PageRequest.of(cursor, PAGING_SIZE, Sort.by(Sort.Direction.ASC, "createdAt"));
+        PageRequest paging = PageRequest.of(currentPage-1, PAGING_SIZE, Sort.by(Sort.Direction.ASC, "createdAt"));
 
-        GetContactRes contactRes = contactRepositoryCustom.findAllByMember(member, paging, cursor);
+        GetContactRes contactRes = contactRepositoryCustom.findAllByMember(member, paging, currentPage);
 
         if(contactRes.getContacts().isEmpty()) // 페이지가 존재하지 않을 경우
             throw new BaseException(NOT_EXIST_PAGE);
 
-        return contactRepositoryCustom.findAllByMember(member, paging, cursor);
+        return contactRepositoryCustom.findAllByMember(member, paging, currentPage);
     }
 
     // 연락처 삭제

@@ -1,7 +1,6 @@
 package com.example.libertyformapiserver.controller;
 
 import com.example.libertyformapiserver.config.response.BaseResponse;
-import com.example.libertyformapiserver.dto.contact.ContactVO;
 import com.example.libertyformapiserver.dto.contact.get.GetContactRes;
 import com.example.libertyformapiserver.dto.contact.post.create.PostCreateContactReq;
 import com.example.libertyformapiserver.dto.contact.post.create.PostCreateContactRes;
@@ -16,7 +15,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
 
 import static com.example.libertyformapiserver.config.response.BaseResponseStatus.CONTACT_DELETE_SUCCESS;
 
@@ -56,9 +54,9 @@ public class ContactController {
             @ApiResponse(code = 2018, message = "존재하지 않는 연락처입니다.")
     })
     @GetMapping
-    public BaseResponse<GetContactRes> loadMyContacts(@RequestParam int cursor, HttpServletRequest request){
+    public BaseResponse<GetContactRes> loadMyContacts(@RequestParam int currentPage, HttpServletRequest request){
         long memberId = JwtInfo.getMemberId(request);
-        GetContactRes res = contactService.getContactList(cursor, JwtInfo.getMemberId(request));
+        GetContactRes res = contactService.getContactList(currentPage, JwtInfo.getMemberId(request));
         log.info("Load contact : {}", "memberId - " + memberId);
 
         return new BaseResponse<>(res);

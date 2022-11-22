@@ -31,7 +31,7 @@ public class ContactRepositoryCustom {
     }
 
     // 연락처 페이징 처리
-    public GetContactRes findAllByMember(Member member, Pageable pageable, int cursor){
+    public GetContactRes findAllByMember(Member member, Pageable pageable, int currentPage){
         List<Contact> contacts =queryFactory.select(contact)
                 .from(memberContact)
                 .join(memberContact.contact, contact)
@@ -50,7 +50,7 @@ public class ContactRepositoryCustom {
 
         long totalPage = totalCount / pageable.getPageSize();
 
-        boolean isPrevMove = cursor == 1? false: true;
+        boolean isPrevMove = currentPage == 1? false: true;
 
         boolean isNextMove = false;
 
@@ -59,6 +59,6 @@ public class ContactRepositoryCustom {
             isNextMove = true;
         }
 
-        return new GetContactRes(ContactVO.toListDto(contacts), cursor, pageable.getOffset(), isPrevMove, isNextMove);
+        return new GetContactRes(ContactVO.toListDto(contacts), totalPage, currentPage, isPrevMove, isNextMove);
     }
 }
