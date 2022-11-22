@@ -87,12 +87,27 @@ public class ContactService {
         // 페이징 처리
         PageRequest paging = PageRequest.of(currentPage-1, PAGING_SIZE, Sort.by(Sort.Direction.ASC, "createdAt"));
 
-        GetPagingContactsRes contactRes = contactRepositoryCustom.findAllByMember(member, paging, currentPage);
+        GetPagingContactsRes contactRes = contactRepositoryCustom.findPageContactsByMember(paging, member, currentPage);
 
         if(contactRes.getContacts().isEmpty()) // 페이지가 존재하지 않을 경우
             throw new BaseException(NOT_EXIST_PAGE);
 
-        return contactRepositoryCustom.findAllByMember(member, paging, currentPage);
+        return contactRepositoryCustom.findPageContactsByMember(paging, member, currentPage);
+    }
+
+    // 설문 발송 대상자 검색 페이징 처리해서 불러오기
+    public GetPagingContactsRes getMyPagingContactsByKeyword(int currentPage, String keyword, long memberId){
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new BaseException(INVALID_MEMBER));
+
+        List<MemberContact> memberContactList = member.getMemberContacts();
+        if(memberContactList == null)
+            throw new BaseException(NOT_EXIST_CONTACT);
+
+        // 페이징 처리
+        PageRequest paging = PageRequest.of(currentPage-1, PAGING_SIZE, Sort.by(Sort.Direction.ASC, "createdAt"));
+
+        return contactRepositoryCustom.findPageContactsByMemberAndKeyword(paging, member, keyword, currentPage);
     }
 
     // 연락처 삭제

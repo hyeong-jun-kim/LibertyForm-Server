@@ -40,24 +40,15 @@ public class ContactRepositoryCustom {
     }
 
     // 연락처 페이징 처리
-    public GetPagingContactsRes findAllByMember(Member member, Pageable pageable, int currentPage){
+    public GetPagingContactsRes findPageContactsByMember(Pageable pageable, Member member, int currentPage){
         List<Contact> contacts =queryFactory.select(contact)
                 .from(memberContact)
                 .join(memberContact.contact, contact)
                 .where(memberContact.member.eq(member))
                 .orderBy(contact.name.asc())
-                // TODO fetchJoin test
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize() + 1) // 마지막 페이지인지 확인을 위해 11개를 가져온다.
                 .fetch();
-
-        long totalCount = queryFactory.select(contact.count())
-                .from(memberContact)
-                .join(memberContact.contact, contact)
-                .where(memberContact.member.eq(member))
-                .fetchOne();
-
-        long totalPage = totalCount / pageable.getPageSize();
 
         boolean isPrevMove = currentPage == 1? false: true;
 
@@ -68,6 +59,30 @@ public class ContactRepositoryCustom {
             isNextMove = true;
         }
 
-        return new GetPagingContactsRes(ContactVO.toListDto(contacts), totalPage, currentPage, isPrevMove, isNextMove);
+        return new GetPagingContactsRes(ContactVO.toListDto(contacts), currentPage, isPrevMove, isNextMove);
+    }
+
+    // 연락처 검색 페이징 처리
+    public GetPagingContactsRes findPageContactsByMemberAndKeyword(Pageable pageable, Member member, String keyword, int currentPage){
+        List<Contact> contacts = queryFactory.select(contact)
+                .from(memberContact)
+                .join(memberContact.contact, contact)
+                .where(memberContact.member.eq(member)
+                        .and(contact.name.contains(keyword)))
+                .orderBy(contact.name.asc())
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize() + 1) // 마지막 페이지인지 확인을 위해 11개를 가져온다.
+                .fetch();
+
+        boolean isPrevMove = currentPage == 1? false: true;
+
+        boolean isNextMove = false;
+
+        if(contacts.size() == pageable.getPageSize() + 1){ // 11개면 다음 페이지가 존재 함
+            contacts.remove(pageable.getPageSize()); // 마지막 인덱스 지우기
+            isNextMove = true;
+        }
+
+        return new GetPagingContactsRes(ContactVO.toListDto(contacts), currentPage, isPrevMove, isNextMove);
     }
 }

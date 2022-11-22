@@ -46,7 +46,7 @@ public class ContactController {
     }
 
     @ApiOperation(
-            value = "설문 발송 대상자 불러오기",
+            value = "설문 발송 대상자 불러오기 (Default)",
             notes = "자신의 설문 발송 대상자들을 불러옵니다."
     )
     @ApiResponses({
@@ -73,7 +73,7 @@ public class ContactController {
             @ApiResponse(code = 2018, message = "존재하지 않는 연락처입니다."),
             @ApiResponse(code = 4004, message = "존재하지 않는 페이지입니다.")
     })
-    @GetMapping("{page}")
+    @GetMapping("/load/{page}")
     public BaseResponse<GetPagingContactsRes> loadMyContactsByPaging(@PathVariable("page") int page, HttpServletRequest request){
         long memberId = JwtInfo.getMemberId(request);
         GetPagingContactsRes contactRes = contactService.getMyPagingContacts(page, JwtInfo.getMemberId(request));
@@ -83,8 +83,27 @@ public class ContactController {
     }
 
     @ApiOperation(
-            value = "설문 발송 대상자 ",
-            notes = "자신의 설문 발송 대상자들을 불러옵니다."
+            value = "설문 발송 대상자 불러오기 (Keyword)",
+            notes = "페이징 처리된 자신의 설문 발송 대상자들을 불러옵니다."
+    )
+    @ApiResponses({
+            @ApiResponse(code = 1000, message = "요청에 성공하였습니다."),
+            @ApiResponse(code = 2010, message = "존재하지 않는 유저입니다."),
+            @ApiResponse(code = 2018, message = "존재하지 않는 연락처입니다."),
+            @ApiResponse(code = 4004, message = "존재하지 않는 페이지입니다.")
+    })
+    @GetMapping("/find/{page}")
+    public BaseResponse<GetPagingContactsRes> loadMyContactsByPaging(@RequestParam String keyword, @PathVariable("page") int page, HttpServletRequest request){
+        long memberId = JwtInfo.getMemberId(request);
+        GetPagingContactsRes contactRes = contactService.getMyPagingContactsByKeyword(page, keyword, JwtInfo.getMemberId(request));
+        log.info("Load paging by keyword contact : {}", "memberId - " + memberId);
+
+        return new BaseResponse<>(contactRes);
+    }
+
+    @ApiOperation(
+            value = "설문 발송 대상자 삭제하기",
+            notes = "이메일 주소를 통해 자신의 설문 발송 대상자를 삭제합니다."
     )
     @ApiResponses({
             @ApiResponse(code = 1000, message = "요청에 성공하였습니다."),

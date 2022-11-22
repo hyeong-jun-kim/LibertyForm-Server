@@ -15,11 +15,6 @@ public class GetPagingContactsRes {
     private List<ContactVO> contacts;
 
     @ApiModelProperty(
-            example = "3"
-    )
-    private long totalPage;
-
-    @ApiModelProperty(
             example = "1"
     )
     private long currentPage;
