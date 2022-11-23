@@ -1,6 +1,7 @@
 package com.example.libertyformapiserver.service;
 
 import com.example.libertyformapiserver.config.exception.BaseException;
+import com.example.libertyformapiserver.config.status.BaseStatus;
 import com.example.libertyformapiserver.domain.Contact;
 import com.example.libertyformapiserver.domain.Member;
 import com.example.libertyformapiserver.domain.MemberContact;
@@ -44,13 +45,22 @@ public class ContactService {
         if(member.getEmail().equals(email)) // 자기 자신의 이메일 등록 안됨
             throw new BaseException(NOT_ALLOW_EMAIL);
 
-        if(contactRepositoryCustom.findContactWithJoinByMemberAndEmail(member, email).isPresent()){
-            throw new BaseException(ALREADY_REGISTER_EMAIL) ;
+        Contact contact = contactRepositoryCustom.findContactWithJoinByMemberAndEmail(member, email)
+                .orElseGet(null);
+
+        if(contact != null){
+            if(contact.getStatus() == BaseStatus.INACTIVE){ // 연락처가 이미 존재할 경우 INACTIVE -> ACTIVE
+                contact.changeStatusActive();
+                return PostCreateContactRes.toDto(contact);
+
+            }else{ // 연락처가 이미 활성화 되어 있을경우
+                throw new BaseException(ALREADY_REGISTER_EMAIL);
+            }
         }
 
         Member targetMember = memberRepository.findMemberByEmail(email).orElseGet(() -> null);
 
-        Contact contact = new Contact(email, postCreateContactReq.getName(), postCreateContactReq.getRelationship());
+        contact = new Contact(email, postCreateContactReq.getName(), postCreateContactReq.getRelationship());
         if(targetMember != null)
             contact.changeMember(targetMember);
         contactRepository.save(contact);
@@ -80,16 +90,12 @@ public class ContactService {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new BaseException(INVALID_MEMBER));
 
-        List<MemberContact> memberContactList = member.getMemberContacts();
-        if(memberContactList == null)
-            throw new BaseException(NOT_EXIST_CONTACT);
-
         // 페이징 처리
         PageRequest paging = PageRequest.of(currentPage-1, PAGING_SIZE, Sort.by(Sort.Direction.ASC, "createdAt"));
 
         GetPagingContactsRes contactRes = contactRepositoryCustom.findPageContactsByMember(paging, member, currentPage);
 
-        if(contactRes.getContacts().isEmpty()) // 페이지가 존재하지 않을 경우
+        if(contactRes.getContacts().isEmpty() && currentPage != 1) // 페이지가 존재하지 않을 경우
             throw new BaseException(NOT_EXIST_PAGE);
 
         return contactRepositoryCustom.findPageContactsByMember(paging, member, currentPage);
@@ -101,8 +107,6 @@ public class ContactService {
                 .orElseThrow(() -> new BaseException(INVALID_MEMBER));
 
         List<MemberContact> memberContactList = member.getMemberContacts();
-        if(memberContactList == null)
-            throw new BaseException(NOT_EXIST_CONTACT);
 
         // 페이징 처리
         PageRequest paging = PageRequest.of(currentPage-1, PAGING_SIZE, Sort.by(Sort.Direction.ASC, "createdAt"));
@@ -119,6 +123,11 @@ public class ContactService {
         Contact contact = contactRepositoryCustom.findContactWithJoinByMemberAndEmail(member, email)
                         .orElseThrow(() -> new BaseException(NOT_EXIST_CONTACT));
 
-        contactRepository.delete(contact);
+        contact.changeStatusInActive(); // 연락처 비활성화
+
+        member.getMemberContacts().stream() // 연락처 조인테이블 비활성화
+                .filter(mc -> mc.getContact().getId() == contact.getId()).findFirst()
+                .orElseThrow(() -> new BaseException(NOT_EXIST_CONTACT))
+                .changeStatusInActive();
     }
 }

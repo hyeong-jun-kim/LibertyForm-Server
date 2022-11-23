@@ -294,7 +294,7 @@ public class SurveyService {
                             .filter(c -> c.getId() == choiceDto.getChoiceId()).findFirst().orElseGet(() -> null);
 
                     if (choice == null) { // 새로 생성된 객관식 질문이면 따로 저장
-                        choice = choiceDto.toEntity(question); // TODO question save 안해도 동작 되는지 보기
+                        choice = choiceDto.toEntity(question);
                         res.addExtraChoice(choice);
                         continue;
                     }
