@@ -46,7 +46,7 @@ public class ContactService {
             throw new BaseException(NOT_ALLOW_EMAIL);
 
         Contact contact = contactRepositoryCustom.findContactWithJoinByMemberAndEmail(member, email)
-                .orElseGet(null);
+                .orElseGet(() -> null);
 
         if(contact != null){
             if(contact.getStatus() == BaseStatus.INACTIVE){ // 연락처가 이미 존재할 경우 INACTIVE -> ACTIVE
