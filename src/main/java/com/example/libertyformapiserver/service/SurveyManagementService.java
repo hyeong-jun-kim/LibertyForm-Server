@@ -1,6 +1,7 @@
 package com.example.libertyformapiserver.service;
 
 import com.example.libertyformapiserver.config.exception.BaseException;
+import com.example.libertyformapiserver.config.status.BaseStatus;
 import com.example.libertyformapiserver.domain.*;
 import com.example.libertyformapiserver.dto.question.post.PostChoiceQuestionReq;
 import com.example.libertyformapiserver.dto.survey.get.GetSurveyInfoRes;
@@ -74,7 +75,7 @@ public class SurveyManagementService {
     private GetSurveyInfoRes getSurveyInfo(Survey survey) {
         long surveyId = survey.getId();
 
-        List<Question> questions = questionRepository.findQuestionsBySurveyId(surveyId);
+        List<Question> questions = questionRepository.findQuestionsBySurveyIdAndStatus(surveyId, BaseStatus.ACTIVE);
         List<PostChoiceQuestionReq> postChoiceQuestionReqList = new ArrayList<>();
 
         Iterator<Question> iter = questions.iterator(); // ConcurrentModificationException 방지를 위해 iterator 사용
@@ -84,7 +85,7 @@ public class SurveyManagementService {
 
             if (questionTypeId == 3 || questionTypeId == 4) {
                 long questionId = question.getId();
-                List<Choice> choiceList = choiceRepository.findChoicesByQuestionId(questionId);
+                List<Choice> choiceList = choiceRepository.findChoicesByQuestionIdAndStatus(questionId, BaseStatus.ACTIVE);
                 postChoiceQuestionReqList.add(PostChoiceQuestionReq.toVO(question, choiceList));
                 iter.remove();
             }

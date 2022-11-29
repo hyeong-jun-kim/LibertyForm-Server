@@ -37,6 +37,7 @@ public enum BaseResponseStatus {
     NOT_EXIST_CONTACT(false, 2018, "연락처가 존재하지 않습니다."),
     NOT_MATCH_QUESTION(false, 2019, "해당 사용자의 질문이 아닙니다."),
     NOT_EXIST_CODE(false, 2020, "유효한 코드 번호가 아닙니다."),
+    NOT_MATCH_CHOICE(false, 2021, "선택지의 질문 번호를 확인해주세요."),
 
     /**
      * 2500 : Request 성공

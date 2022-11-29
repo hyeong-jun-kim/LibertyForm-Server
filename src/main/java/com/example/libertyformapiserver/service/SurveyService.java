@@ -71,7 +71,7 @@ public class SurveyService {
         objectStorageService.uploadThumbnailImg(survey, thumbnailImgFile);
         createSurveyResDto.setThumbnailImgUrl(survey.getThumbnailImg());
 
-        List<Question> questionList = questionRepository.findQuestionsBySurveyId(survey.getId());
+        List<Question> questionList = questionRepository.findQuestionsBySurveyIdAndStatus(survey.getId(), BaseStatus.ACTIVE);
         objectStorageService.uploadQuestionImgs(questionList, questionImgFiles);
 
         checkQuestionNumber(createSurveyResDto.getQuestions());
@@ -83,17 +83,6 @@ public class SurveyService {
         List<Survey> surveys = surveyRepository.findSurveysByMemberIdAndStatus(memberId, BaseStatus.ACTIVE);
 
         return GetListSurveyRes.listEntitytoDto(surveys);
-    }
-
-    // 자신의 설문지 단일 조회
-    public GetSurveyInfoRes getMySurveyInfo(long surveyId, long memberId) {
-        Survey survey = surveyRepository.findByIdAndStatus(surveyId, BaseStatus.ACTIVE)
-                .orElseThrow(() -> new BaseException(NOT_EXIST_SURVEY));
-
-        if (survey.getMember().getId() != memberId) // 설문지 작성자가 해당 유저가 아닌 경우
-            throw new BaseException(NOT_MATCH_SURVEY);
-
-        return getSurveyInfo(survey);
     }
 
     // 피설문자 설문지 단일 조회
@@ -111,9 +100,14 @@ public class SurveyService {
         Survey survey = surveyRepository.findById(surveyId).orElseThrow(
                 () -> new BaseException(NOT_EXIST_SURVEY));
 
+        survey.update(surveyModifyReq.getSurvey());
+
         List<Question> questions = survey.getQuestions();
         // 삭제된 문항을 inActive 하기 위해서 일단 모두 InActive로 변경한다.
-        questions.forEach(q -> q.changeStatusInActive());
+        questions.forEach(q -> {
+            q.changeStatusInActive();
+            q.getChoices().forEach(c -> c.changeStatusInActive());
+        });
 
         PatchSurveyModifyRes res = new PatchSurveyModifyRes(survey, questions);
 
@@ -128,6 +122,9 @@ public class SurveyService {
 
         // 새로 추가된 질문, 객관식 저장하기
         insertNewQuestionsAndChoices(res);
+
+
+        surveyRepository.save(survey);
     }
 
     // 설문지 삭제
@@ -273,7 +270,6 @@ public class SurveyService {
 
                 question = choiceQuestionDto.getQuestion().toEntity(survey, type);
                 res.addExtraQuestion(question);
-                continue;
             } else {
                 // 설문지에 있는 질문이 아니면 예외처리
                 if(question.getSurvey().getId() != survey.getId())
@@ -299,6 +295,8 @@ public class SurveyService {
                         continue;
                     }
 
+                    if(choice.getQuestion().getId() != question.getId()) // 객관식이 해당 설문에 없을 때
+                        throw new BaseException(NOT_MATCH_CHOICE);
 
                     choice.update(choiceDto);
                     res.addChoiceNumber(choice);
@@ -330,9 +328,8 @@ public class SurveyService {
         List<Question> questions = res.getExtraQuestions();
         List<Choice> choices = res.getExtraChoices();
 
-        questions.stream().forEach(q -> questionRepository.save(q));
-
-        choices.stream().forEach(c -> choiceRepository.save(c));
+        questionRepository.saveAll(questions);
+        choiceRepository.saveAll(choices);
     }
     /* --- Modify End --- */
 
@@ -356,7 +353,7 @@ public class SurveyService {
     private GetSurveyInfoRes getSurveyInfo(Survey survey) {
         long surveyId = survey.getId();
 
-        List<Question> questions = questionRepository.findQuestionsBySurveyId(surveyId);
+        List<Question> questions = questionRepository.findQuestionsBySurveyIdAndStatus(surveyId, BaseStatus.ACTIVE);
         List<PostChoiceQuestionReq> postChoiceQuestionReqList = new ArrayList<>();
 
         Iterator<Question> iter = questions.iterator(); // ConcurrentModificationException 방지를 위해 iterator 사용
@@ -366,7 +363,7 @@ public class SurveyService {
 
             if (questionTypeId == 3 || questionTypeId == 4) {
                 long questionId = question.getId();
-                List<Choice> choiceList = choiceRepository.findChoicesByQuestionId(questionId);
+                List<Choice> choiceList = choiceRepository.findChoicesByQuestionIdAndStatus(questionId, BaseStatus.ACTIVE);
                 postChoiceQuestionReqList.add(PostChoiceQuestionReq.toVO(question, choiceList));
                 iter.remove();
             }

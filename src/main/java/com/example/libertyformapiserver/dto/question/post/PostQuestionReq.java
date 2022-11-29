@@ -16,6 +16,11 @@ import javax.validation.constraints.Size;
 @Setter
 public class PostQuestionReq {
     @ApiModelProperty(
+            example = "1"
+    )
+    private long questionId;
+
+    @ApiModelProperty(
             example = "3"
     )
     private long questionTypeId;
@@ -62,6 +67,7 @@ public class PostQuestionReq {
 
     public static PostQuestionReq toDto(Question question){
         return PostQuestionReq.builder()
+                .questionId(question.getId())
                 .questionTypeId(question.getQuestionType().getId())
                 .name(question.getName())
                 .description(question.getDescription())

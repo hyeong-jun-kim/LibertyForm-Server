@@ -15,6 +15,11 @@ public class PostQuestionRes {
     @ApiModelProperty(
             example = "1"
     )
+    private long questionId;
+
+    @ApiModelProperty(
+            example = "1"
+    )
     private long questionTypeId;
 
     @ApiModelProperty(
@@ -39,6 +44,7 @@ public class PostQuestionRes {
 
     static public PostQuestionRes toDto(Question question){
         return PostQuestionRes.builder()
+                .questionId(question.getId())
                 .questionTypeId(question.getQuestionType().getId())
                 .name(question.getName())
                 .description(question.getDescription())

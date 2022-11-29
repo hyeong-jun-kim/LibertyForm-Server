@@ -43,6 +43,7 @@ public class PatchSurveyModifyRes {
     }
 
     public void addExtraChoice(Choice choice){
+        choice.removeId();
         extraChoices.add(choice);
         addChoiceNumber(choice);
     }

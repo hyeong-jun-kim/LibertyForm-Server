@@ -16,6 +16,11 @@ import javax.validation.constraints.Size;
 @Getter
 @Builder
 public class PostChoiceReq {
+    @ApiModelProperty(
+            example = "1"
+    )
+    private long choiceId;
+
     @NotBlank(message = "객관식 문항 내용을 입력해주세요.")
     @Size(min = 1, max = 20, message = "1 ~ 20자 이내로 입력해주세요.")
     @ApiModelProperty(
@@ -38,6 +43,7 @@ public class PostChoiceReq {
 
     static public PostChoiceReq toDto(Choice choice){
         return PostChoiceReq.builder()
+                .choiceId(choice.getId())
                 .name(choice.getName())
                 .number(choice.getNumber())
                 .build();

@@ -1,5 +1,6 @@
 package com.example.libertyformapiserver.repository;
 
+import com.example.libertyformapiserver.config.status.BaseStatus;
 import com.example.libertyformapiserver.domain.Question;
 import com.example.libertyformapiserver.domain.Survey;
 import lombok.extern.java.Log;
@@ -9,6 +10,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface QuestionRepository extends JpaRepository<Question, Long> {
-    List<Question> findQuestionsBySurveyId(long surveyId);
+    List<Question> findQuestionsBySurveyIdAndStatus(long surveyId, BaseStatus status);
     Optional<Question> findQuestionBySurveyAndNumber(Survey survey, int number);
 }

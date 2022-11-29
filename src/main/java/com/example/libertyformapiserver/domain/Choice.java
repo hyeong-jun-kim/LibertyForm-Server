@@ -31,5 +31,10 @@ public class Choice extends BaseEntity {
     public void update(PatchChoiceReq choice){
         this.number = choice.getNumber();
         this.name = choice.getName();
+        this.changeStatusActive();
+    }
+
+    public void removeId(){
+        this.id = 0;
     }
 }
