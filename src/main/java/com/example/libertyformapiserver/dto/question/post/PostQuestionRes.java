@@ -33,6 +33,11 @@ public class PostQuestionRes {
     private String description;
 
     @ApiModelProperty(
+            example = "https://libertyform.shop/s3/neo.jpg"
+    )
+    private String questionImgUrl;
+
+    @ApiModelProperty(
             example = "1"
     )
     private Integer number;
@@ -48,6 +53,7 @@ public class PostQuestionRes {
                 .questionTypeId(question.getQuestionType().getId())
                 .name(question.getName())
                 .description(question.getDescription())
+                .questionImgUrl(question.getQuestionImgUrl())
                 .number(question.getNumber())
                 .answerRequired(question.isAnswerRequired())
                 .build();

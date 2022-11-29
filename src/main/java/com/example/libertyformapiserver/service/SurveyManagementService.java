@@ -5,6 +5,7 @@ import com.example.libertyformapiserver.config.status.BaseStatus;
 import com.example.libertyformapiserver.domain.*;
 import com.example.libertyformapiserver.dto.question.post.PostChoiceQuestionReq;
 import com.example.libertyformapiserver.dto.survey.get.GetSurveyInfoRes;
+import com.example.libertyformapiserver.dto.surveyManagement.get.GetSurveyManagementRes;
 import com.example.libertyformapiserver.dto.surveyManagement.post.PostSurveyManagementReq;
 import com.example.libertyformapiserver.repository.*;
 import lombok.RequiredArgsConstructor;
@@ -32,7 +33,7 @@ public class SurveyManagementService {
     private final ChoiceRepository choiceRepository;
 
     // 설문 발송 대상자 새로 생성하기
-    public void createSurveyManagement(PostSurveyManagementReq req, long memberId){
+    public void createSurveyManagement(PostSurveyManagementReq req, long memberId) {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new BaseException(INVALID_MEMBER));
 
@@ -45,10 +46,11 @@ public class SurveyManagementService {
         Survey survey = surveyRepository.findById(req.getSurveyId())
                 .orElseThrow(() -> new BaseException(NOT_EXIST_SURVEY));
 
-        if(survey.getMember().getId() != memberId)
+        if (survey.getMember().getId() != memberId)
             throw new BaseException(NOT_MATCH_SURVEY);
 
-        List<SurveyManagement> surveyManagements = contacts.stream().map(c -> new SurveyManagement(c, survey, req.getExpiredDate()))
+        List<SurveyManagement> surveyManagements = contacts.stream().map(contact
+                        -> new SurveyManagement(member, contact, survey, req.getExpiredDate()))
                 .collect(Collectors.toList());
 
         // 설문 발송 대상자에게 이메일 발송
@@ -58,7 +60,7 @@ public class SurveyManagementService {
     }
 
     // 설문 발송자가 메일에 적힌 설문 주소를 읽었을 경우
-    public GetSurveyInfoRes readSurvey(String code){
+    public GetSurveyInfoRes readSurvey(String code) {
         SurveyManagement surveyManagement = surveyManagementRepository.findByCode(code)
                 .orElseThrow(() -> new BaseException(NOT_EXIST_CODE));
 
@@ -69,8 +71,16 @@ public class SurveyManagementService {
         return getSurveyInfo(survey);
     }
 
-    // 편의 메서드
+    // 설문지 발송 대상자 조회
+    public GetSurveyManagementRes getSurveyManagements(long memberId) {
+        List<SurveyManagement> surveyManagements = surveyManagementRepository.findByMemberIdAndStatus(memberId, BaseStatus.ACTIVE);
+        return GetSurveyManagementRes.toDto(surveyManagements);
+    }
 
+
+    /**
+     * 편의 메서드
+     */
     // 설문지 정보 가져오기
     private GetSurveyInfoRes getSurveyInfo(Survey survey) {
         long surveyId = survey.getId();

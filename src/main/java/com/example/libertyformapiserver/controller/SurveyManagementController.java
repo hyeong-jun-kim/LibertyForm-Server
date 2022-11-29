@@ -3,6 +3,7 @@ package com.example.libertyformapiserver.controller;
 import com.example.libertyformapiserver.config.response.BaseResponse;
 import com.example.libertyformapiserver.dto.jwt.JwtInfo;
 import com.example.libertyformapiserver.dto.survey.get.GetSurveyInfoRes;
+import com.example.libertyformapiserver.dto.surveyManagement.get.GetSurveyManagementRes;
 import com.example.libertyformapiserver.dto.surveyManagement.post.PostSurveyManagementReq;
 import com.example.libertyformapiserver.jwt.NoIntercept;
 import com.example.libertyformapiserver.service.SurveyManagementService;
@@ -27,7 +28,7 @@ public class SurveyManagementController {
 
     @ApiOperation(
             value = "설문 대상자들에게 설문 메일 보내기",
-            notes = "지정한 이메일 주소로 설문 대상자들에게 설문 메일을 보냅니다."
+            notes = "연락처에 등록되어 있는 지정한 이메일 주소로 설문 대상자들에게 설문 메일을 보냅니다."
     )
     @ApiResponses({
             @ApiResponse(code = 2500, message = "해당 사용자들에게 설문이 발송이 정상적으로 수행되었습니다."),
@@ -59,6 +60,22 @@ public class SurveyManagementController {
     public BaseResponse<GetSurveyInfoRes> readSurvey(@PathVariable String code){
         GetSurveyInfoRes surveyInfoRes = surveyManagementService.readSurvey(code);
 
+        log.info("surveyManagementRead: ", code);
         return new BaseResponse<>(surveyInfoRes);
+    }
+
+    @ApiOperation(
+            value = "설문 발송 대상자 모두 불러오기",
+            notes = "설문 발송 대상자 모두 불러오기"
+    )
+    @ApiResponses({
+            @ApiResponse(code = 1000, message = "요청에 성공하였습니다.")
+    })
+    @GetMapping("/load")
+    public BaseResponse<GetSurveyManagementRes> getSurveyManagement(HttpServletRequest request){
+        GetSurveyManagementRes getSurveyManagementRes = surveyManagementService.getSurveyManagements(JwtInfo.getMemberId(request));
+
+        log.info("surveyManagementLoad: ", JwtInfo.getMemberId(request));
+        return new BaseResponse<>(getSurveyManagementRes);
     }
 }

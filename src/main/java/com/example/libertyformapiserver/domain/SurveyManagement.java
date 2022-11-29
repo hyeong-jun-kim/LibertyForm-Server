@@ -22,6 +22,10 @@ public class SurveyManagement extends BaseEntity {
     private long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    private Member member;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "contact_id")
     private Contact contact;
 
@@ -37,7 +41,8 @@ public class SurveyManagement extends BaseEntity {
     private ResponseStatus responseStatus = ResponseStatus.PENDING;
 
     // 편의 메서드
-    public SurveyManagement(Contact contact, Survey survey, LocalDate expiredTime){
+    public SurveyManagement(Member member, Contact contact, Survey survey, LocalDate expiredTime){
+        this.member = member;
         this.contact = contact;
         this.survey = survey;
         this.expiredDate = expiredTime;

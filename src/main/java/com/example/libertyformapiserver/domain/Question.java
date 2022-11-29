@@ -47,8 +47,8 @@ public class Question extends BaseEntity {
         this.questionImgUrl = questionImgUrl;
     }
 
-    public void update(PatchQuestionReq question){
-        this.questionType.changeQuestionType(question.getQuestionTypeId());
+    public void update(PatchQuestionReq question, QuestionType questionType){
+        this.questionType = questionType;
         this.name = question.getName();
         this.number = question.getNumber();
         this.description = question.getDescription();

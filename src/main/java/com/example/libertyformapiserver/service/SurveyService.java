@@ -123,8 +123,9 @@ public class SurveyService {
         // 새로 추가된 질문, 객관식 저장하기
         insertNewQuestionsAndChoices(res);
 
-
         surveyRepository.save(survey);
+
+        System.out.println("adsad");
     }
 
     // 설문지 삭제
@@ -233,10 +234,10 @@ public class SurveyService {
             Question question = questions.stream()
                     .filter(q -> q.getId() == questionDto.getQuestionId()).findFirst().orElseGet(() -> null);
 
-            if (question == null) { // 새로 생성된 질문이면 따로 저장
-                QuestionType questionType = questionTypeRepository.findById(questionDto.getQuestionTypeId())
-                        .orElseThrow(() -> new BaseException(NOT_VALID_QUESTION_TYPE));
+            QuestionType questionType = questionTypeRepository.findById(questionDto.getQuestionTypeId())
+                    .orElseThrow(() -> new BaseException(NOT_VALID_QUESTION_TYPE));
 
+            if (question == null) { // 새로 생성된 질문이면 따로 저장
                 question = questionDto.toEntity(survey, questionType);
                 res.addExtraQuestion(question);
                 continue;
@@ -246,7 +247,7 @@ public class SurveyService {
             if(question.getSurvey().getId() != survey.getId())
                 throw new BaseException(NOT_MATCH_QUESTION);
 
-            question.update(questionDto); // 기존에 있던 질문이면 업데이트
+            question.update(questionDto, questionType); // 기존에 있던 질문이면 업데이트
             res.addQuestionNumber(question);
         }
 
@@ -264,9 +265,10 @@ public class SurveyService {
             Question question = questions.stream()
                     .filter(q -> q.getId() == choiceQuestionDto.getQuestionId()).findFirst().orElseGet(() -> null);
 
+            long typeId = choiceQuestionDto.getQuestion().getQuestionTypeId();
+            QuestionType type = questionTypeRepository.findById(typeId).orElseThrow(() -> new BaseException(NOT_VALID_QUESTION_TYPE));
+
             if (question == null) { // 새로 생성된 질문이면 따로 저장
-                long typeId = choiceQuestionDto.getQuestion().getQuestionTypeId();
-                QuestionType type = questionTypeRepository.findById(typeId).orElseThrow(() -> new BaseException(NOT_VALID_QUESTION_TYPE));
 
                 question = choiceQuestionDto.getQuestion().toEntity(survey, type);
                 res.addExtraQuestion(question);
@@ -275,7 +277,7 @@ public class SurveyService {
                 if(question.getSurvey().getId() != survey.getId())
                     throw new BaseException(NOT_MATCH_QUESTION);
 
-                question.update(choiceQuestionDto.getQuestion());
+                question.update(choiceQuestionDto.getQuestion(), type);
                 res.addQuestionNumber(question);
             }
 
