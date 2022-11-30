@@ -16,8 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
-import static com.example.libertyformapiserver.config.response.BaseResponseStatus.CONTACT_DELETE_SUCCESS;
-import static com.example.libertyformapiserver.config.response.BaseResponseStatus.SURVEY_MANAGEMENT_CREATED;
+import static com.example.libertyformapiserver.config.response.BaseResponseStatus.*;
 
 @RestController
 @Log4j2
@@ -35,7 +34,8 @@ public class SurveyManagementController {
             @ApiResponse(code = 2010, message = "존재하는 사용자가 아닙니다."),
             @ApiResponse(code = 2013, message = "존재하지 않는 설문입니다."),
             @ApiResponse(code = 2014, message = "해당 사용자의 설문이 아닙니다."),
-            @ApiResponse(code = 2018, message = "연락처가 존재하지 않습니다.")
+            @ApiResponse(code = 2018, message = "연락처가 존재하지 않습니다."),
+            @ApiResponse(code = 2501, message = "해당 사용자들에게 설문이 발송이 정상적으로 수행되었습니다.")
     })
     @PostMapping("/create")
     public BaseResponse<String> createSurveyManagement(@RequestBody PostSurveyManagementReq req, HttpServletRequest request){
@@ -77,5 +77,23 @@ public class SurveyManagementController {
 
         log.info("surveyManagementLoad: ", JwtInfo.getMemberId(request));
         return new BaseResponse<>(getSurveyManagementRes);
+    }
+
+    @ApiOperation(
+            value = "피설문자 설문 제출 완료 처리",
+            notes = "SurveyManagement에 등록되어있는 code로 설문지 완료 처리를 진행할 수 있다."
+    )
+    @ApiResponses({
+            @ApiResponse(code = 1000, message = "요청에 성공하였습니다."),
+            @ApiResponse(code = 2020, message = "설문지 코드가 올바르지 않습니다."),
+            @ApiResponse(code = 2503, message = "해당 설문지에 대해 설문 제출 응답처리가 되었습니다.")
+    })
+    @NoIntercept
+    @GetMapping("/submit/{code}")
+    public BaseResponse<String> submitSurvey(@PathVariable String code){
+        surveyManagementService.submitSurvey(code);
+
+        log.info("surveyManagementComplete: ", code);
+        return new BaseResponse<>(SURVEY_MANAGEMENT_SUBMIT);
     }
 }

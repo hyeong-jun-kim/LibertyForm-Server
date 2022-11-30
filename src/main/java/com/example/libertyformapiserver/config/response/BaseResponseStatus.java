@@ -43,8 +43,9 @@ public enum BaseResponseStatus {
      * 2500 : Request 성공
      */
     SURVEY_MODIFY_SUCCESS(true, 2500, "설문지 수정이 성공적으로 진행되었습니다."),
-    SURVEY_MANAGEMENT_CREATED(true, 2500, "해당 사용자들에게 설문이 발송이 정상적으로 수행되었습니다."),
-    CONTACT_DELETE_SUCCESS(true, 2500, "해당 이메일이 연락처에서 제거되었습니다."),
+    SURVEY_MANAGEMENT_CREATED(true, 2501, "해당 사용자들에게 설문이 발송이 정상적으로 수행되었습니다."),
+    CONTACT_DELETE_SUCCESS(true, 2502, "해당 이메일이 연락처에서 제거되었습니다."),
+    SURVEY_MANAGEMENT_SUBMIT(true, 2503, "해당 설문지에 대해 설문 제출 응답처리가 되었습니다."),
 
     /**
      * 3000 : Response 오류

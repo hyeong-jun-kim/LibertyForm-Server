@@ -56,4 +56,6 @@ public class SurveyManagement extends BaseEntity {
     public void changeResponseStatusConfirm(){
         this.responseStatus = ResponseStatus.CONFIRM;
     }
+
+    public void changeResponseStatusSubmit() {this.responseStatus = ResponseStatus.SUBMIT; }
 }

@@ -108,7 +108,8 @@ public class ContactController {
     @ApiResponses({
             @ApiResponse(code = 1000, message = "요청에 성공하였습니다."),
             @ApiResponse(code = 2010, message = "존재하지 않는 유저입니다."),
-            @ApiResponse(code = 2018, message = "존재하지 않는 연락처입니다.")
+            @ApiResponse(code = 2018, message = "존재하지 않는 연락처입니다."),
+            @ApiResponse(code = 2502, message = "해당 이메일이 연락처에서 제거되었습니다."),
     })
     @PatchMapping("/delete")
     public BaseResponse<String> deleteContact(HttpServletRequest request, @RequestParam String email){

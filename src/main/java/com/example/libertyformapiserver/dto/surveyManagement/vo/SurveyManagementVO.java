@@ -61,6 +61,7 @@ public class SurveyManagementVO {
         return SurveyManagementVO.builder()
                 .surveyName(survey.getName())
                 .expiredDate(survey.getExpirationDate())
+                .contactName(contact.getName())
                 .email(contact.getEmail())
                 .relationship(contact.getRelationship())
                 .code(surveyManagement.getCode())

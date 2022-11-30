@@ -2,6 +2,7 @@ package com.example.libertyformapiserver.service;
 
 import com.example.libertyformapiserver.config.exception.BaseException;
 import com.example.libertyformapiserver.config.status.BaseStatus;
+import com.example.libertyformapiserver.config.status.ResponseStatus;
 import com.example.libertyformapiserver.domain.*;
 import com.example.libertyformapiserver.dto.question.post.PostChoiceQuestionReq;
 import com.example.libertyformapiserver.dto.survey.get.GetSurveyInfoRes;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -61,7 +63,7 @@ public class SurveyManagementService {
 
     // 설문 발송자가 메일에 적힌 설문 주소를 읽었을 경우
     public GetSurveyInfoRes readSurvey(String code) {
-        SurveyManagement surveyManagement = surveyManagementRepository.findByCode(code)
+        SurveyManagement surveyManagement = surveyManagementRepository.findByCodeAndResponseStatusNot(code, ResponseStatus.SUBMIT)
                 .orElseThrow(() -> new BaseException(NOT_EXIST_CODE));
 
         Survey survey = surveyManagement.getSurvey();
@@ -75,6 +77,14 @@ public class SurveyManagementService {
     public GetSurveyManagementRes getSurveyManagements(long memberId) {
         List<SurveyManagement> surveyManagements = surveyManagementRepository.findByMemberIdAndStatus(memberId, BaseStatus.ACTIVE);
         return GetSurveyManagementRes.toDto(surveyManagements);
+    }
+
+    // 설문 발송자 설문 완료처리
+    public void submitSurvey(String code){
+        SurveyManagement surveyManagement = surveyManagementRepository.findByCodeAndResponseStatusNot(code, ResponseStatus.SUBMIT)
+                .orElseThrow(() -> new BaseException(NOT_EXIST_CODE));
+
+        surveyManagement.changeResponseStatusSubmit();
     }
 
 

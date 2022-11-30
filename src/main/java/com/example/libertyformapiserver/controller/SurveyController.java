@@ -74,6 +74,7 @@ public class SurveyController {
             @ApiResponse(code = 2015, message = "존재하지 않는 질문입니다."),
             @ApiResponse(code = 2015, message = "존재하지 않는 선택지입니다."),
             @ApiResponse(code = 2019, message = "해당 사용자의 질문이 아닙니다."),
+            @ApiResponse(code = 2500, message = "설문지 수정이 성공적으로 진행되었습니다."),
             @ApiResponse(code = 4001, message = "존재하지 않는 질문 유형입니다."),
             @ApiResponse(code = 4002, message = "파일을 업로드 하는 도중 오류가 발생했습니다.")}
     )
