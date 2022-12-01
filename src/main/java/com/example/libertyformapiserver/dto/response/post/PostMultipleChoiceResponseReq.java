@@ -1,7 +1,7 @@
 package com.example.libertyformapiserver.dto.response.post;
 
 import com.example.libertyformapiserver.domain.*;
-import com.example.libertyformapiserver.dto.choice.vo.ChoiceVO;
+import com.example.libertyformapiserver.dto.choice.vo.ChoiceNumberVO;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,7 +20,7 @@ public class PostMultipleChoiceResponseReq {
     )
     private int questionNumber;
 
-    private List<ChoiceVO> choices;
+    private List<ChoiceNumberVO> choices;
 
     public MultipleChoiceResponse toEntity(Response response, Question question){
         return MultipleChoiceResponse.builder()

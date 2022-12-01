@@ -5,7 +5,7 @@ import com.example.libertyformapiserver.config.response.BaseResponseStatus;
 import com.example.libertyformapiserver.config.type.NumericType;
 import com.example.libertyformapiserver.config.type.TextType;
 import com.example.libertyformapiserver.domain.*;
-import com.example.libertyformapiserver.dto.choice.vo.ChoiceVO;
+import com.example.libertyformapiserver.dto.choice.vo.ChoiceNumberVO;
 import com.example.libertyformapiserver.dto.response.post.*;
 import com.example.libertyformapiserver.repository.*;
 import lombok.RequiredArgsConstructor;
@@ -31,8 +31,8 @@ public class ResponseService {
     private final TextResponseRepository textResponseRepository;
     private final NumericResponseRepository numericResponseRepository;
     private final SingleChoiceRepository singleChoiceRepository;
+    private final MultipleChoiceResponseRepository multipleChoiceResponseRepository;
     private final MultipleChoiceRepository multipleChoiceRepository;
-    private final ChoiceMultipleChoiceRepository choiceMultipleChoiceRepository;
     private final SurveyParticipantRepository surveyParticipantRepository;
 
     // 피 설문자 응답 저장
@@ -152,7 +152,7 @@ public class ResponseService {
 
             checkMatchQuestionType(question, 4);
             
-            List<ChoiceVO> choiceList = multipleChoiceResponseDto.getChoices();
+            List<ChoiceNumberVO> choiceList = multipleChoiceResponseDto.getChoices();
             List<Choice> choices = getExistChoiceList(question, choiceList);
 
             MultipleChoiceResponse multipleChoiceResponse = new MultipleChoiceResponse(response, question);
@@ -165,8 +165,8 @@ public class ResponseService {
             }
 
         }
-        multipleChoiceRepository.saveAll(multipleChoiceResponseList);
-        choiceMultipleChoiceRepository.saveAll(choiceMultipleChoiceResponseList);
+        multipleChoiceResponseRepository.saveAll(multipleChoiceResponseList);
+        multipleChoiceRepository.saveAll(choiceMultipleChoiceResponseList);
 
         return choiceMultipleChoiceResponseList;
     }
@@ -181,7 +181,7 @@ public class ResponseService {
                 .orElseThrow(() -> new BaseException(NOT_EXIST_CHOICE));
     }
 
-    private List<Choice> getExistChoiceList(Question question, List<ChoiceVO> choices){
+    private List<Choice> getExistChoiceList(Question question, List<ChoiceNumberVO> choices){
         return choices.stream().map(c -> choiceRepository.findChoiceByQuestionAndNumber(question, c.getChoiceNumber())
                         .orElseThrow(() -> new BaseException(NOT_EXIST_CHOICE))).collect(Collectors.toList());
     }

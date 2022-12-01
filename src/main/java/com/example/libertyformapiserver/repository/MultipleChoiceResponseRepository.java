@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 import java.util.Optional;
 
-public interface MultipleChoiceRepository extends JpaRepository<MultipleChoice, Long> {
-    List<MultipleChoice> findByMultipleChoiceResponse(MultipleChoiceResponse multipleChoiceResponse);
+public interface MultipleChoiceResponseRepository extends JpaRepository<MultipleChoiceResponse, Long> {
+    List<MultipleChoiceResponse> findByQuestionId(long questionId);
 
 }

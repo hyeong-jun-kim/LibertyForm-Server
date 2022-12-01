@@ -1,11 +1,10 @@
 package com.example.libertyformapiserver.repository;
 
-
-import com.example.libertyformapiserver.domain.NumericResponse;
 import com.example.libertyformapiserver.domain.SingleChoiceResponse;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.Optional;
+import java.util.List;
 
-public interface SingleChoiceRepository extends JpaRepository<SingleChoiceResponse, Long> {
+public interface SingleChoiceResponseRepository extends JpaRepository<SingleChoiceResponse, Long> {
+    List<SingleChoiceResponse> findByQuestionId(long questionId);
 }
