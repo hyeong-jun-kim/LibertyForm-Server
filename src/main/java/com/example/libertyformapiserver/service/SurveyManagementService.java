@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -74,8 +73,11 @@ public class SurveyManagementService {
     }
 
     // 설문지 발송 대상자 조회
-    public GetSurveyManagementRes getSurveyManagements(long memberId) {
-        List<SurveyManagement> surveyManagements = surveyManagementRepository.findByMemberIdAndStatus(memberId, BaseStatus.ACTIVE);
+    public GetSurveyManagementRes getSurveyManagements(long surveyId, long memberId) {
+        Survey survey = surveyRepository.findById(surveyId)
+                .orElseThrow(() -> new BaseException(NOT_EXIST_SURVEY));
+
+        List<SurveyManagement> surveyManagements = surveyManagementRepository.findBySurveyAndMemberIdAndStatus(survey, memberId, BaseStatus.ACTIVE);
         return GetSurveyManagementRes.toDto(surveyManagements);
     }
 

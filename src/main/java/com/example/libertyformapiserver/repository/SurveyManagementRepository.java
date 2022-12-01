@@ -11,5 +11,5 @@ import java.util.Optional;
 
 public interface SurveyManagementRepository extends JpaRepository<SurveyManagement, Long> {
     Optional<SurveyManagement> findByCodeAndResponseStatusNot(String code, ResponseStatus responseStatus);
-    List<SurveyManagement> findByMemberIdAndStatus(long memberId, BaseStatus status);
+    List<SurveyManagement> findBySurveyAndMemberIdAndStatus(Survey survey, long memberId, BaseStatus status);
 }

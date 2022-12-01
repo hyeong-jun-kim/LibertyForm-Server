@@ -72,8 +72,8 @@ public class SurveyManagementController {
             @ApiResponse(code = 1000, message = "요청에 성공하였습니다.")
     })
     @GetMapping("/load")
-    public BaseResponse<GetSurveyManagementRes> getSurveyManagement(HttpServletRequest request){
-        GetSurveyManagementRes getSurveyManagementRes = surveyManagementService.getSurveyManagements(JwtInfo.getMemberId(request));
+    public BaseResponse<GetSurveyManagementRes> getSurveyManagement(@RequestParam long surveyId, HttpServletRequest request){
+        GetSurveyManagementRes getSurveyManagementRes = surveyManagementService.getSurveyManagements(surveyId, JwtInfo.getMemberId(request));
 
         log.info("surveyManagementLoad: ", JwtInfo.getMemberId(request));
         return new BaseResponse<>(getSurveyManagementRes);
