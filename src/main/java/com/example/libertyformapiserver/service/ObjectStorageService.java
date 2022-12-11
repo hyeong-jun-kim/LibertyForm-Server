@@ -14,6 +14,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
@@ -42,11 +43,12 @@ public class ObjectStorageService {
     private final TextAnalysisRepository textAnalysisRepository;
 
     // 워드 클라우드 사진 저장
+    @Transactional
     public void uploadWordCloudImg(MultipartFile wordCloudFile, long questionId){
         if(wordCloudFile == null)
             return;
 
-        StringBuilder sb = new StringBuilder(STORAGE_URL).append(THUMBNAIL_PATH);
+        StringBuilder sb = new StringBuilder(STORAGE_URL).append(WORD_CLOUD_PATH);
         String storageURL = sb.toString();
 
         String worldCloudURL = uploadFile(storageURL, wordCloudFile);
@@ -54,7 +56,15 @@ public class ObjectStorageService {
         Question question = questionRepository.findById(questionId)
                 .orElseThrow(() -> new BaseException(BaseResponseStatus.NOT_EXIST_QUESTION));
 
-        TextAnalysis textAnalysis = TextAnalysis.builder().question(question).wordCloudImgUrl(worldCloudURL).build();
+        TextAnalysis textAnalysis = textAnalysisRepository.findById(questionId)
+                .orElseGet(() -> null);
+
+        if(textAnalysis == null){
+            textAnalysis = TextAnalysis.builder().question(question).wordCloudImgUrl(worldCloudURL).build();
+        }else{
+            textAnalysis.changeWordCloudImgUrl(worldCloudURL);
+        }
+
         textAnalysisRepository.save(textAnalysis);
     }
 

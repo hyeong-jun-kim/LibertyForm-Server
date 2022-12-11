@@ -26,4 +26,11 @@ public class TextAnalysis extends BaseEntity {
     private Question question;
 
     private String wordCloudImgUrl;
+
+    /**
+     * 편의 메서드
+     */
+    public void changeWordCloudImgUrl(String url){
+        this.wordCloudImgUrl = url;
+    }
 }

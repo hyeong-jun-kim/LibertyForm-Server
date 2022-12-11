@@ -88,6 +88,6 @@ public class FlaskService {
         final String WORLD_CLOUD_SHORT_URL = FLASK_BASE_URL + "/wordcloud/short/" + question.getId();
 
         // 워드 클라우드
-        restTemplateService.post(WORLD_CLOUD_SHORT_URL, null, shortTextDto);
+        restTemplateService.post(WORLD_CLOUD_SHORT_URL, HttpHeaders.EMPTY, shortTextDto, String.class);
     }
 }
