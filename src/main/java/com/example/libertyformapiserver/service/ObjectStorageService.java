@@ -4,7 +4,9 @@ import com.example.libertyformapiserver.config.exception.BaseException;
 import com.example.libertyformapiserver.config.response.BaseResponseStatus;
 import com.example.libertyformapiserver.domain.Question;
 import com.example.libertyformapiserver.domain.Survey;
+import com.example.libertyformapiserver.domain.TextAnalysis;
 import com.example.libertyformapiserver.repository.QuestionRepository;
+import com.example.libertyformapiserver.repository.TextAnalysisRepository;
 import lombok.RequiredArgsConstructor;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
@@ -31,9 +33,30 @@ public class ObjectStorageService {
     private final String THUMBNAIL_PATH = "/img/survey/thumbnail";
     private final String QUESTION_PATH = "/img/survey/question";
 
+    private final String WORD_CLOUD_PATH = "/img/survey/wordcloud";
+
     private final RestTemplateService restTemplateService;
 
     private final QuestionRepository questionRepository;
+
+    private final TextAnalysisRepository textAnalysisRepository;
+
+    // 워드 클라우드 사진 저장
+    public void uploadWordCloudImg(MultipartFile wordCloudFile, long questionId){
+        if(wordCloudFile == null)
+            return;
+
+        StringBuilder sb = new StringBuilder(STORAGE_URL).append(THUMBNAIL_PATH);
+        String storageURL = sb.toString();
+
+        String worldCloudURL = uploadFile(storageURL, wordCloudFile);
+
+        Question question = questionRepository.findById(questionId)
+                .orElseThrow(() -> new BaseException(BaseResponseStatus.NOT_EXIST_QUESTION));
+
+        TextAnalysis textAnalysis = TextAnalysis.builder().question(question).wordCloudImgUrl(worldCloudURL).build();
+        textAnalysisRepository.save(textAnalysis);
+    }
 
     // 섬네일 이미지 업로드
     public void uploadThumbnailImg(Survey survey, MultipartFile thumbnailFile){

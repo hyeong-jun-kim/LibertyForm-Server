@@ -2,6 +2,7 @@ package com.example.libertyformapiserver.controller;
 
 import com.example.libertyformapiserver.config.response.BaseResponse;
 import com.example.libertyformapiserver.config.response.BaseResponseStatus;
+import com.example.libertyformapiserver.dto.flask.post.PostEmotionAnalysisDto;
 import com.example.libertyformapiserver.dto.jwt.JwtInfo;
 import com.example.libertyformapiserver.dto.survey.create.PostCreateSurveyReq;
 import com.example.libertyformapiserver.dto.survey.create.PostCreateSurveyRes;
@@ -10,6 +11,7 @@ import com.example.libertyformapiserver.dto.survey.get.GetSurveyInfoRes;
 import com.example.libertyformapiserver.dto.survey.patch.PatchSurveyDeleteRes;
 import com.example.libertyformapiserver.dto.survey.patch.PatchSurveyModifyReq;
 import com.example.libertyformapiserver.jwt.NoIntercept;
+import com.example.libertyformapiserver.service.FlaskService;
 import com.example.libertyformapiserver.service.ObjectStorageService;
 import com.example.libertyformapiserver.service.SurveyService;
 import io.swagger.annotations.ApiOperation;
@@ -34,6 +36,8 @@ public class SurveyController {
 
     private final SurveyService surveyService;
     private final ObjectStorageService objectStorageService;
+
+    private final FlaskService flaskService;
 
     // swagger에서 multipartFile 테스트 불가, 해당 테스트 작업 시 postman으로 수행
     @ApiOperation(
@@ -136,14 +140,5 @@ public class SurveyController {
         log.info("Delete Survey : {}", patchSurveyDeleteRes.getSurveyId());
 
         return new BaseResponse<>(patchSurveyDeleteRes);
-    }
-
-    // 이미지 업로드 테스트
-    @NoIntercept
-    @PostMapping("/upload")
-    public BaseResponse<String> uploadImgFile(@RequestParam("image")MultipartFile multipartFile){
-        objectStorageService.uploadTest(multipartFile);
-
-        return new BaseResponse<>(BaseResponseStatus.IMG_UPLOAD_SUCCESS);
     }
 }

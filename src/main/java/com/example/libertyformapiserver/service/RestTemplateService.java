@@ -3,6 +3,7 @@ package com.example.libertyformapiserver.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.http.*;
+import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
@@ -26,6 +27,12 @@ public class RestTemplateService<T> {
     }
 
     public ResponseEntity<T> post(String url, HttpHeaders httpHeaders, Object body) {
+        restTemplate.getInterceptors().add((request, body_, execution) -> {
+            ClientHttpResponse response = execution.execute(request,body_);
+            response.getHeaders().setContentType(MediaType.APPLICATION_JSON);
+            return response;
+        });
+
         return callApiEndpoint(url, HttpMethod.POST, httpHeaders, body,(Class<T>)Object.class);
     }
 

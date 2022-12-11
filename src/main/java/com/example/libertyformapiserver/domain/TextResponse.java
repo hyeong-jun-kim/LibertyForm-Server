@@ -1,6 +1,7 @@
 package com.example.libertyformapiserver.domain;
 
 import com.example.libertyformapiserver.config.domain.BaseEntity;
+import com.example.libertyformapiserver.config.type.EmotionType;
 import com.example.libertyformapiserver.config.type.TextType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -32,11 +33,18 @@ public class TextResponse extends BaseEntity {
 
     private String value;
 
+    @Enumerated(EnumType.STRING)
+    private EmotionType emotion;
+
     /* 편의 메서드 */
     public TextResponse(Response response, Question question, TextType textType, String value){
         this.response = response;
         this.question = question;
         this.textType = textType;
         this.value = value;
+    }
+
+    public void changeEmotionType(EmotionType emotion){
+        this.emotion = emotion;
     }
 }

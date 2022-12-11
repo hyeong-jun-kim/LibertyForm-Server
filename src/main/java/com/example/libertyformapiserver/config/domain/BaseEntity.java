@@ -1,6 +1,7 @@
 package com.example.libertyformapiserver.config.domain;
 
 import com.example.libertyformapiserver.config.status.BaseStatus;
+import jdk.jfr.Timestamp;
 import lombok.Getter;
 import org.hibernate.annotations.ColumnDefault;
 import org.springframework.data.annotation.CreatedDate;

@@ -2,18 +2,20 @@ package com.example.libertyformapiserver.service;
 
 import com.example.libertyformapiserver.config.exception.BaseException;
 import com.example.libertyformapiserver.config.response.BaseResponseStatus;
+import com.example.libertyformapiserver.config.type.EmotionType;
 import com.example.libertyformapiserver.config.type.NumericType;
 import com.example.libertyformapiserver.config.type.TextType;
 import com.example.libertyformapiserver.domain.*;
 import com.example.libertyformapiserver.dto.choice.vo.ChoiceNumberVO;
+import com.example.libertyformapiserver.dto.flask.post.PostEmotionAnalysisDto;
 import com.example.libertyformapiserver.dto.response.post.*;
 import com.example.libertyformapiserver.repository.*;
+import io.swagger.models.auth.In;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.example.libertyformapiserver.config.response.BaseResponseStatus.*;
@@ -77,8 +79,22 @@ public class ResponseService {
         }
 
         return new PostResponseRes(response.getId(), textResponseResList, numericResponseRes, singleChoiceResponseRes, multipleChoiceResponseResList);
-
     }
+
+
+    // 감정 분석 업데이트
+    @Transactional(readOnly = false)
+    public void updateEmotionType(PostEmotionAnalysisDto dto){
+        HashMap<Long, Integer> resultMap = dto.getEmotionLists();
+
+        for (Map.Entry<Long, Integer> pair: resultMap.entrySet()){
+            TextResponse textResponse = textResponseRepository.findById(pair.getKey())
+                    .orElseThrow(() -> new BaseException(NOT_EXIST_RESPONSE));
+
+            textResponse.changeEmotionType(getEmotionType(pair.getValue()));
+        }
+    }
+
 
     private List<TextResponse> saveTextResponse(List<PostTextResponseReq> textResponseDtoList, Response response){
         ArrayList<TextResponse> textResponseList = new ArrayList<>();
@@ -196,5 +212,19 @@ public class ResponseService {
 
         // 일치하는 질문 유형이 없으면 예외처리
         throw new BaseException(NOT_MATCH_QUESTION_TYPE);
+    }
+
+    private EmotionType getEmotionType(Integer emotionTypeNum){
+        EmotionType emotionType = null;
+
+        if(emotionTypeNum == -1){
+            emotionType = EmotionType.BAD;
+        }else if(emotionTypeNum == 0){
+            emotionType = EmotionType.NOTHING;
+        }else if(emotionTypeNum == 1){
+            emotionType = EmotionType.GOOD;
+        }
+
+        return emotionType;
     }
 }
