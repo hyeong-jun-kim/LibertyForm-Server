@@ -28,6 +28,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @Log4j2
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/survey")
 @RequiredArgsConstructor

@@ -15,6 +15,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @Log4j2
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/login")
 @RequiredArgsConstructor

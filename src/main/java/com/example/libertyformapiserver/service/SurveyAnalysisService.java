@@ -29,6 +29,7 @@ public class SurveyAnalysisService {
     private final SurveyRepository surveyRepository;
     private final QuestionRepository questionRepository;
     private final TextResponseRepository textResponseRepository;
+    private final TextAnalysisRepository textAnalysisRepository;
     private final NumericResponseRepository numericResponseRepository;
     private final ChoiceRepositoryCustom choiceRepositoryCustom;
     private final SingleChoiceResponseRepository singleChoiceResponseRepository;
@@ -53,14 +54,6 @@ public class SurveyAnalysisService {
         return analysisRes;
     }
 
-
-    /**
-     * Flask 연동 관련 함수
-     */
-    // 워드 클라우드 S3 업로드
-    public void uploadWordCloudFile(TextType textType, long surveyId){
-    }
-
     /**
      * 편의 메서드
      */
@@ -82,7 +75,13 @@ public class SurveyAnalysisService {
                 case 1: case 2: // 단답형, 장문형
                     List<TextResponse> textResponses = textResponseRepository.findByQuestionId(q_id);
                     TextResponseVO textResponseVO = new TextResponseVO(textResponses.size(), PostQuestionRes.toDto(question));
-                    textResponseVO.setResponses(textResponses);
+                    textResponseVO.setResponsesAndEmotions(textResponses);
+
+                    TextAnalysis textAnalysis = textAnalysisRepository.findById(q_id)
+                            .orElseGet(() -> null);
+
+                    if(textAnalysis != null) // 워드 클라우드 이미지 경로 지정
+                        textResponseVO.setWordCloudImgUrl(textAnalysis.getWordCloudImgUrl());
 
                     analysisRes.addTextResponse(textResponseVO);
                     break;

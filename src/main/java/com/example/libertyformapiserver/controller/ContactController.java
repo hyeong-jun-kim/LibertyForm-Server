@@ -20,6 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 import static com.example.libertyformapiserver.config.response.BaseResponseStatus.CONTACT_DELETE_SUCCESS;
 
 @Log4j2
+@CrossOrigin(origins = "*")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/contact")

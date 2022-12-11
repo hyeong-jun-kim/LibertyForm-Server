@@ -19,6 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import static com.example.libertyformapiserver.config.response.BaseResponseStatus.*;
 
 @RestController
+@CrossOrigin(origins = "*")
 @Log4j2
 @RequiredArgsConstructor
 @RequestMapping("/manage")
