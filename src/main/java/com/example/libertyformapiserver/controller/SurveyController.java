@@ -28,7 +28,6 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @Log4j2
-@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/survey")
 @RequiredArgsConstructor
@@ -137,7 +136,7 @@ public class SurveyController {
     })
     @PatchMapping("/delete/{surveyId}")
     public BaseResponse<PatchSurveyDeleteRes> deleteSurvey(HttpServletRequest request, @PathVariable("surveyId") long surveyId){
-        PatchSurveyDeleteRes patchSurveyDeleteRes = surveyService.deleteSurvey(surveyId, JwtInfo.getMemberId(request));
+        PatchSurveyDeleteRes patchSurveyDeleteRes =  surveyService.deleteSurvey(surveyId, JwtInfo.getMemberId(request));
         log.info("Delete Survey : {}", patchSurveyDeleteRes.getSurveyId());
 
         return new BaseResponse<>(patchSurveyDeleteRes);

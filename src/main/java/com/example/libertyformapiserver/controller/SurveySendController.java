@@ -15,7 +15,6 @@ import java.util.List;
 import static com.example.libertyformapiserver.config.response.BaseResponseStatus.SEND_SURVEY_SUCCESS;
 
 @Log4j2
-@CrossOrigin(origins = "*")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/send")

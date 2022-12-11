@@ -26,7 +26,6 @@ import static com.example.libertyformapiserver.config.response.BaseResponseStatu
 import static com.example.libertyformapiserver.config.response.BaseResponseStatus.WORD_CLOUD_SUCCESS;
 
 @Log4j2
-@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/response")
 @RequiredArgsConstructor

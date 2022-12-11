@@ -36,4 +36,12 @@ public class AppConfig implements WebMvcConfigurer {
                 .addPathPatterns("/**")
                 .excludePathPatterns("/swagger-ui/**", "/swagger-resources/**", "/v3/api-docs");
     }
+
+    // React CORS 오류 해결을 위해 추가
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/**")
+                .allowedOrigins("https://liberty-form.shop")
+                .allowedMethods("OPTIONS", "GET", "POST", "PUT", "DELETE");
+    }
 }
