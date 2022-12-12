@@ -18,12 +18,12 @@ public class TextResponseVO extends CommonResponseVO {
     }
 
     private String wordCloudImgUrl;
-    private List<String> responses;
-    private List<String> emotions;
+    private ResponseVO responses;
+    private EmotionVO emotions;
 
     public void setResponsesAndEmotions(List<TextResponse> textResponses){
-        this.responses = textResponses.stream().map(t -> t.getValue()).collect(Collectors.toList());
-        this.emotions = textResponses.stream().map(t -> t.getEmotion().toString()).collect(Collectors.toList());
+        this.responses = ResponseVO.toEntity(textResponses.stream().map(t -> t.getValue()).collect(Collectors.toList()));
+        this.emotions = EmotionVO.toEntity(textResponses.stream().map(t -> t.getEmotion().toString()).collect(Collectors.toList()));
     }
 
     public void setWordCloudImgUrl(String url){

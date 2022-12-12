@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Transactional
 public class FlaskService {
-    private final String FLASK_BASE_URL = "http://121.163.214.192:5000";
+    private final String FLASK_BASE_URL = "http://210.109.60.182:5000";
 
     private final MemberRepository memberRepository;
 
@@ -37,7 +37,7 @@ public class FlaskService {
 
     // 단답형, 장문형 응답 리스트 플라스크 서버로 보내기
     @Async
-    public void sendTextResponse(long surveyId) {
+    public void sendTextResponseToFlaskBySurveyId(long surveyId) {
         Survey survey = surveyRepository.findById(surveyId)
                 .orElseThrow(() -> new BaseException(BaseResponseStatus.NOT_MATCH_SURVEY));
 
@@ -53,7 +53,7 @@ public class FlaskService {
         }
     }
 
-    // 장문형 응답 리스트 Flask로 보내기
+    // 장문형 응답 리스트 Flask로 보내기 (wordCloud, 감정 분석)
     private void sendLongTextResponse(Question question) {
         HashMap<Long, String> responseMap = new HashMap<>();
 
@@ -77,7 +77,7 @@ public class FlaskService {
         restTemplateService.post(EMOTION_ANALYSIS_URL, HttpHeaders.EMPTY, responseMap, String.class);
     }
 
-    // 단답형 응답 리스트 Flask로 보내기
+    // 단답형 응답 리스트 Flask로 보내기 (wordCloud)
     private void sendShortTextResponse(Question question) {
         List<TextResponse> textResponses = textResponseRepository.findByQuestionId(question.getId());
         if(textResponses.isEmpty())

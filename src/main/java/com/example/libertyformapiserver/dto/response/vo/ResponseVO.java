@@ -13,4 +13,10 @@ import java.util.List;
 @Getter
 public class ResponseVO {
     private List<String> responses;
+
+    public static ResponseVO toEntity(List<String> responses){
+        return ResponseVO.builder()
+                .responses(responses)
+                .build();
+    }
 }

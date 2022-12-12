@@ -7,10 +7,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.config.annotation.CorsRegistration;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.servlet.config.annotation.*;
 
 @Configuration
 @Slf4j
@@ -37,11 +35,11 @@ public class AppConfig implements WebMvcConfigurer {
                 .excludePathPatterns("/swagger-ui/**", "/swagger-resources/**", "/v3/api-docs");
     }
 
-    // React CORS 오류 해결을 위해 추가
-    @Override
-    public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**")
-                .allowedOrigins("https://liberty-form.shop")
-                .allowedMethods("OPTIONS", "GET", "POST", "PUT", "DELETE");
-    }
+//    // React CORS 오류 해결을 위해 추가
+//    @Override
+//    public void addCorsMappings(CorsRegistry registry) {
+//        registry.addMapping("/**")
+//                .allowedMethods(CorsConfiguration.ALL)
+//                .allowedOrigins(CorsConfiguration.ALL);
+//    }
 }

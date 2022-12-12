@@ -1,7 +1,6 @@
 package com.example.libertyformapiserver.controller;
 
 import com.example.libertyformapiserver.config.response.BaseResponse;
-import com.example.libertyformapiserver.config.response.BaseResponseStatus;
 import com.example.libertyformapiserver.dto.flask.post.PostEmotionAnalysisDto;
 import com.example.libertyformapiserver.dto.jwt.JwtInfo;
 import com.example.libertyformapiserver.dto.response.post.PostResponseReq;
@@ -100,7 +99,7 @@ public class ResponseController {
     @NoIntercept
     @GetMapping("/test/emotion")
     public BaseResponse<String> emotionTest(){
-        flaskService.sendTextResponse(37);
+        flaskService.sendTextResponseToFlaskBySurveyId(37);
 
         return new BaseResponse<>(EMOTION_ANALYSIS_SUCCESS);
     }
@@ -113,7 +112,7 @@ public class ResponseController {
     @NoIntercept
     @GetMapping("/test/wordcloud")
     public BaseResponse<String> wordCloudTest(){
-        flaskService.sendTextResponse(37);
+        flaskService.sendTextResponseToFlaskBySurveyId(37);
 
         return new BaseResponse<>(WORD_CLOUD_SUCCESS);
     }

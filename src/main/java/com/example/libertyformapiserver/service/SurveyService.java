@@ -223,6 +223,7 @@ public class SurveyService {
         return surveyResDto;
     }
 
+
     /**
      * 설문지 수정 메서드
      */
@@ -312,6 +313,7 @@ public class SurveyService {
 
         return res;
     }
+
     // 수정된 질문 번호 올바른지 체크
     private void checkModifyNumber(PatchSurveyModifyRes res){
         List<Integer> questionNumbers = res.getQuestionNumbers();
