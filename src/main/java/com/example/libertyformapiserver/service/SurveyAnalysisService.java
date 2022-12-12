@@ -74,6 +74,10 @@ public class SurveyAnalysisService {
             switch(questionTypeId){
                 case 1: case 2: // 단답형, 장문형
                     List<TextResponse> textResponses = textResponseRepository.findByQuestionId(q_id);
+
+                    if(textResponses.isEmpty())
+                        continue;
+
                     TextResponseVO textResponseVO = new TextResponseVO(textResponses.size(), PostQuestionRes.toDto(question));
                     textResponseVO.setResponsesAndEmotions(textResponses);
 
@@ -89,6 +93,9 @@ public class SurveyAnalysisService {
                     choices = choiceRepositoryCustom.findChoiceWithJoinSingleChoiceByQuestion(question);
                     responses = singleChoiceResponseRepository.findByQuestionId(question.getId())
                             .stream().map(c -> c.getChoice().getNumber()).collect(Collectors.toList());
+
+                    if(responses.isEmpty())
+                        continue;
 
                     choiceResponseVO = new ChoiceResponseVO(responses.size(), PostQuestionRes.toDto(question));
                     choiceResponseVO.setChoices(choices);
@@ -109,6 +116,8 @@ public class SurveyAnalysisService {
                                         .stream()
                                         .forEach(mc -> multipleResponses.add(mc.getChoice().getNumber())));
 
+                    if(multipleResponses.isEmpty())
+                        continue;
 
                     choiceResponseVO = new ChoiceResponseVO(multipleResponses.size(), PostQuestionRes.toDto(question));
                     choiceResponseVO.setChoices(choices);

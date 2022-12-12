@@ -24,7 +24,7 @@ public class SurveyScheduler {
         LocalDate localDate = LocalDate.now();
         localDate.minusDays(1);
 
-        List<Survey> surveys = surveyRepository.findByExpirationDateAndBaseStatus(localDate, BaseStatus.ACTIVE);
+        List<Survey> surveys = surveyRepository.findByExpirationDateAndStatus(localDate, BaseStatus.ACTIVE);
 
         surveys.forEach(s -> flaskService.sendTextResponseToFlaskBySurveyId(s.getId()));
     }
