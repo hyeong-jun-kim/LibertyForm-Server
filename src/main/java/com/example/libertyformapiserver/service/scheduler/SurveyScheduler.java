@@ -1,5 +1,6 @@
 package com.example.libertyformapiserver.service.scheduler;
 
+import com.example.libertyformapiserver.config.status.BaseStatus;
 import com.example.libertyformapiserver.domain.Survey;
 import com.example.libertyformapiserver.repository.SurveyRepository;
 import com.example.libertyformapiserver.service.FlaskService;
@@ -21,8 +22,9 @@ public class SurveyScheduler {
     @Scheduled(cron = "0 0 0 * * *")
     public void surveyAnalysisScheduleTask(){
         LocalDate localDate = LocalDate.now();
+        localDate.minusDays(1);
 
-        List<Survey> surveys = surveyRepository.findByExpirationDate(localDate);
+        List<Survey> surveys = surveyRepository.findByExpirationDateAndBaseStatus(localDate, BaseStatus.ACTIVE);
 
         surveys.forEach(s -> flaskService.sendTextResponseToFlaskBySurveyId(s.getId()));
     }

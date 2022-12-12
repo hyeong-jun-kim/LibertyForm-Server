@@ -12,5 +12,5 @@ public interface SurveyRepository extends JpaRepository<Survey, Long> {
     Optional<Survey> findByIdAndStatus(long surveyId, BaseStatus status);
     Optional<Survey> findByCodeAndStatus(String code, BaseStatus status);
     List<Survey> findSurveysByMemberIdAndStatus(long memberId, BaseStatus status);
-    List<Survey> findByExpirationDate(LocalDate expirationDate);
+    List<Survey> findByExpirationDateAndBaseStatus(LocalDate expirationDate, BaseStatus status);
 }

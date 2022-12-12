@@ -49,6 +49,7 @@ public enum BaseResponseStatus {
     SURVEY_MANAGEMENT_SUBMIT(true, 2503, "해당 설문지에 대해 설문 제출 응답처리가 되었습니다."),
     WORD_CLOUD_SUCCESS(true, 2504, "워드 클라우드 이미지가 성공적으로 업로드 되었습니다."),
     EMOTION_ANALYSIS_SUCCESS(true, 2505, "감정 분석이 성공적으로 업데이트 되었습니다."),
+    SURVEY_CLOSE_SUCCESS(true, 2505, "설문지 강제 마감이 성공적으로 진행되었습니다."),
 
     /**
      * 3000 : Response 오류

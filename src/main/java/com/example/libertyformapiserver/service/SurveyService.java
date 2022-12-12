@@ -24,6 +24,7 @@ import com.example.libertyformapiserver.utils.algorithm.Algorithms;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.event.TransactionalEventListener;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.*;
@@ -35,11 +36,15 @@ import static com.example.libertyformapiserver.config.response.BaseResponseStatu
 @RequiredArgsConstructor
 public class SurveyService {
     private final MemberRepository memberRepository;
+
     private final SurveyRepository surveyRepository;
     private final QuestionRepository questionRepository;
     private final ChoiceRepository choiceRepository;
     private final QuestionTypeRepository questionTypeRepository;
+
     private final ObjectStorageService objectStorageService;
+
+    private final FlaskService flaskService;
 
     // 설문지 생성
     @Transactional(readOnly = false, rollbackFor = {Exception.class, BaseException.class})
@@ -144,6 +149,21 @@ public class SurveyService {
         return patchSurveyDeleteRes;
     }
 
+    // 설문지 강제 마감
+    @Transactional(readOnly = false)
+    public void forceCloseSurvey(long surveyId, long memberId){
+        Survey survey = surveyRepository.findById(surveyId).orElseThrow
+                (() -> new BaseException(NOT_EXIST_SURVEY));
+
+        if (survey.getMember().getId() != memberId) {
+            throw new BaseException(NOT_MATCH_SURVEY);
+        }
+
+        survey.changeStatusExpired();
+
+        flaskService.sendTextResponseToFlaskBySurveyId(survey.getId());
+    }
+
 
     /**
      * 설문지 생성 메서드
@@ -222,7 +242,6 @@ public class SurveyService {
 
         return surveyResDto;
     }
-
 
     /**
      * 설문지 수정 메서드

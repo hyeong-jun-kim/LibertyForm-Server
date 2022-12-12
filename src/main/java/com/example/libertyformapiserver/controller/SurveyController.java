@@ -27,6 +27,8 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
+import static com.example.libertyformapiserver.config.response.BaseResponseStatus.SURVEY_CLOSE_SUCCESS;
+
 @Log4j2
 @RestController
 @RequestMapping("/survey")
@@ -63,6 +65,7 @@ public class SurveyController {
         return new BaseResponse<>(postCreateSurveyRes);
     }
 
+    // 설문지 수정
     @ApiOperation(
             value = "설문지 수정",
             notes = "surveyId - 설문지 아이디, questions - 주관식, 감정, 선형대수 문항," +
@@ -90,6 +93,7 @@ public class SurveyController {
         return new BaseResponse<>(BaseResponseStatus.SURVEY_MODIFY_SUCCESS);
     }
 
+    // 설문지 모두 불러오기
     @ApiOperation(
             value = "설문지 모두 불러오기",
             notes = "해당 유저에 대한 설문을 모두 불러옵니다. (대시보드 용)"
@@ -105,6 +109,7 @@ public class SurveyController {
         return new BaseResponse<>(surveyService.getAllUserSurvey(JwtInfo.getMemberId(request)));
     }
 
+    // 피설문자 설문지 정보 가져오기
     @ApiOperation(
             value = "피설문자 설문지 정보 가져오기",
             notes = "피설문자가 해당 설문에 대한 정보들을 가져옵니다"
@@ -124,7 +129,7 @@ public class SurveyController {
     }
 
 
-
+    // 설문지 삭제하기
     @ApiOperation(
             value = "설문지 삭제하기",
             notes = "surveyId를 통해 설문지를 삭제합니다."
@@ -140,5 +145,23 @@ public class SurveyController {
         log.info("Delete Survey : {}", patchSurveyDeleteRes.getSurveyId());
 
         return new BaseResponse<>(patchSurveyDeleteRes);
+    }
+
+    // 설문지 강제 마감
+    @ApiOperation(
+            value = "설문지 강제 마감",
+            notes = "surveyId를 통해 설문지를 강제로 마감합니다."
+    )
+    @ApiResponses({
+            @ApiResponse(code = 1000, message = "요청에 성공하였습니다."),
+            @ApiResponse(code = 2013, message = "존재하지 않는 설문입니다."),
+            @ApiResponse(code = 2014, message = "해당 사용자의 설문이 아닙니다.")
+    })
+    @GetMapping("/close/{surveyId}")
+    public BaseResponse<PatchSurveyDeleteRes> forceCloseSurvey(HttpServletRequest request, @PathVariable("surveyId") long surveyId){
+        surveyService.forceCloseSurvey(surveyId, JwtInfo.getMemberId(request));
+        log.info("Close Survey : {}", surveyId);
+
+        return new BaseResponse<>(SURVEY_CLOSE_SUCCESS);
     }
 }
