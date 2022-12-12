@@ -24,25 +24,26 @@ import static com.example.libertyformapiserver.config.response.BaseResponseStatu
 @Service
 public class EmailService {
     private final String BASE_PRIVATE_URL = "http://liberty-form.shop/psurvey/";
+    private final String BASE_PUBLIC_URL = "http://liberty-form.shop/survey/";
     private final String SUBJECT = "[LibertyForm] 설문지 발송 링크 안내입니다.";
 
     private final AmazonSimpleEmailService amazonSimpleEmailService;
 
-    // 설문지 발송 링크 이메일 전송
+    // 설문지 발송 링크 이메일 전송 (public)
     public void sendSurveyManagementEmail(Survey survey, List<String> receivers){
-        String content = getContent(survey.getName(), survey.getCode(), survey.getExpirationDate().toString());
+        String content = getContent(survey.getName(), BASE_PUBLIC_URL + survey.getCode(), survey.getExpirationDate().toString());
 
         sendSES(SUBJECT, content, receivers);
     }
 
     // 설문 관리를 이용해서 설문 발송 이메일 보내기
-    // 연락처에 있는 사람이 설문을 했는지 안했는지 추적할 수 있음
+    // 연락처에 있는 사람이 설문을 했는지 안했는지 추적할 수 있음 (private)
     public void sendSurveyManagementEmail(List<SurveyManagement> surveyManagements, List<String> receivers){
         for(int i = 0; i < surveyManagements.size(); i++){
             SurveyManagement surveyManagement = surveyManagements.get(i);
 
             Survey survey = surveyManagement.getSurvey();
-            sendSES(SUBJECT, getContent(survey.getName(), survey.getCode(), surveyManagement.getExpiredDate().toString()), Collections.singletonList(receivers.get(i)));
+            sendSES(SUBJECT, getContent(survey.getName(), BASE_PRIVATE_URL + survey.getCode(), surveyManagement.getExpiredDate().toString()), Collections.singletonList(receivers.get(i)));
         }
     }
 
@@ -73,9 +74,6 @@ public class EmailService {
     }
 
     private String getContent(String title, String code, String expiredDate){
-        StringBuilder linkSb = new StringBuilder();
-        linkSb.append(code);
-
         StringBuilder emailContentSb = new StringBuilder();
         emailContentSb.append("<!DOCTYPE html>");
         emailContentSb.append("<html>");
@@ -93,7 +91,7 @@ public class EmailService {
                         "	<p style=\"font-size: 16px; line-height: 26px; margin-top: 50px; padding: 0 5px;\">" +
                         "	    설문 작성을 위한 링크를 알려드립니다.<br/>" +
                         "		해당 설문의 마감 기한은 " + "<strong style=\"color:#29ABE2\">"+expiredDate+"</strong>입니다. <br/>" +
-                        "   <div style=\"width: 576px;height: 90px; margin-top: 50px; padding: 0 27px;color: #242424;font-size: 16px;font-weight: bold;background-color: #F9F9F9;vertical-align: middle;line-height: 90px;\">설문지 링크 : <strong style=\"font-style: normal;font-weight: bold;color: #29ABE2\">" + linkSb + "</strong></div>" +
+                        "   <div style=\"width: 576px;height: 90px; margin-top: 50px; padding: 0 27px;color: #242424;font-size: 16px;font-weight: bold;background-color: #F9F9F9;vertical-align: middle;line-height: 90px;\">설문지 링크 : <strong style=\"font-style: normal;font-weight: bold;color: #29ABE2\">" + code + "</strong></div>" +
                         "	<p style=\"font-size: 16px; line-height: 26px; margin-top: 50px; padding: 0 5px;\">" +
                         "		감사합니다.<br/>" +
                         "	<div style=\"border-top: 4px solid #29ABE2; margin: 40px auto; padding: 30px 0;\"></div>" +

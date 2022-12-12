@@ -79,7 +79,10 @@ public class SurveyAnalysisService {
                         continue;
 
                     TextResponseVO textResponseVO = new TextResponseVO(textResponses.size(), PostQuestionRes.toDto(question));
-                    textResponseVO.setResponsesAndEmotions(textResponses);
+                    textResponseVO.setResponses(textResponses);
+
+                    if(questionTypeId == 2) // 장문형일 경우 감정분석 추가
+                        textResponseVO.setEmotions(textResponses);
 
                     TextAnalysis textAnalysis = textAnalysisRepository.findById(q_id)
                             .orElseGet(() -> null);
